@@ -74,7 +74,9 @@
     "categorynameisreq": "Category Name required",
     "Send": "Send",
     "CreatOwnPackage": "Creat Own Package",
-    "phoneerror": "Phone Number is required"
-  
-     
+    "phoneerror": "Phone Number is required",
+    "select_category": "Select Category",
+    "message": "Message",
+    "editor": "Editor",
+    "send_to_all": "Send to all"
 }

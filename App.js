@@ -6,6 +6,7 @@ import LandingScreen from './SrcJs-Files/Screens/Login';
 import SignUpScreen from './SrcJs-Files/Screens/Signup'
 import Event_items from './SrcJs-Files/ListCustomviews/Event_items'
 import CreateEvent from './SrcJs-Files/Screens/CreateEvent'
+import SendEditor from './SrcJs-Files/Screens/SendEditor'
 import Todos from './SrcJs-Files/Screens/Todos'
 import Events from './SrcJs-Files/Screens/Events'
 import ChooseCategory from './SrcJs-Files/Screens/ChooseCategory'
@@ -16,7 +17,7 @@ import PreviewInvite from './SrcJs-Files/Screens/PreviewInvite'
 import CreatePackage from './SrcJs-Files/Screens/CreatePackage'
 import UploadMedia from './SrcJs-Files/Screens/UploadMedia'
 import Designer from './SrcJs-Files/Screens/Designer'
-import ForgotPass from './SrcJs-Files/Screens/ForgotPass'
+import ForgotPass from './SrcJs-Files/Screens/ForgotPass'  
 import SplashScreen from './SrcJs-Files/Screens/SplashScreen'
 import Profile from './SrcJs-Files/Screens/Profile'
 import ViewPort from './SrcJs-Files/Screens/ViewPort'
@@ -46,7 +47,7 @@ const App = () => {
   
   return (
     <NavigationContainer>
-      <RootStack.Navigator initialRouteName="SplashScreen">
+      <RootStack.Navigator initialRouteName="ViewPort">
         {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
         <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
         <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
@@ -66,11 +67,12 @@ const App = () => {
         <RootStack.Screen name="CategoryContactsSelection" component={CategoryContactsSelection} options={{ headerShown: false }} />
         <RootStack.Screen name="DatetimePickerComp" component={DatetimePickerComp} options={{ headerShown: false }} />
         <RootStack.Screen name="CreateEvent" component={CreateEvent} options={{ headerShown: true, title:Trans.translate('CreateEvents'), headerTitleAlign:'center', headerTintColor: mycolor.white,headerStyle:{ backgroundColor: mycolor.pink},headerTitleStyle:{fontWeight:'normal'}}} />
+        <RootStack.Screen name="SendEditor" component={SendEditor} options={{ headerShown: true, title:Trans.translate('editor'), headerTitleAlign:'center', headerTintColor: mycolor.white,headerStyle:{ backgroundColor: mycolor.pink},headerTitleStyle:{fontWeight:'normal'}}} />
         <RootStack.Screen name="EventDetails" component={EventDetails} options={{ headerShown: true, title:Trans.translate('EventDetails'), headerTitleAlign:'center', headerTintColor: mycolor.white,headerStyle:{ backgroundColor: mycolor.pink},headerTitleStyle:{fontWeight:'normal'}}} />
         <RootStack.Screen name="Todos" component={Todos} options={{ headerShown: true, title:Trans.translate('EventDetails'), headerTitleAlign:'center', headerTintColor: mycolor.white,headerStyle:{ backgroundColor: mycolor.pink},headerTitleStyle:{fontWeight:'normal'}}} />
         <RootStack.Screen name="Packages" component={Packages} options={{headerShown:false}} />
         <RootStack.Screen name="ChooseCategory" component={ChooseCategory} options={{ headerShown: true, title:Trans.translate('ChooseCategory'), headerTitleAlign:'center', headerTintColor: mycolor.white,headerStyle:{ backgroundColor: mycolor.pink},headerTitleStyle:{fontWeight:'normal'}}} />
-        <RootStack.Screen name="CreateCategory" component={CreateCategory} options={{ headerShown: true, title:Trans.translate('CreateCategory'), headerTitleAlign:'center', headerTintColor: mycolor.white,headerStyle:{ backgroundColor: mycolor.pink},headerTitleStyle:{fontWeight:'normal'}}} />
+        <RootStack.Screen name="CreateCategory" component={CreateCategory} options={{ headerShown: true, title:Trans.translate('CreateCategory'), headerTitleAlign:'center', headerTintColor: mycolor.white,headerStyle:{ backgroundColor: mycolor.pink},headerTitleStyle:{fontWeight:'normal'}}} /> 
 
 
         {/* <RootStack.Screen name="Home" component={Home} options={{headerShown:false}} /> */}

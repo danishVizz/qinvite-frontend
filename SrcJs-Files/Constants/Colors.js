@@ -9,7 +9,8 @@ const mycolor = {
     lightPink: "#F542604D",
     lightwhite: "#FCFCFC",
     dullgrat:'#65656514',
-    lightPink: "#F542604D"
+    lightPink: "#F542604D",
+    txtGray: '#707070'
   }
   export default mycolor;
   

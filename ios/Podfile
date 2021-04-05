@@ -1,3 +1,4 @@
+project 'QInvites', 'Dev' => :debug, 'Local' => :debug, 'Staging' => :debug
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/react-native-unimodules/cocoapods.rb'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
@@ -23,7 +24,7 @@ target 'QInvites' do
   #  end
 
 
-  pod 'RNImageTools', :path => '../node_modules/react-native-image-tools'
+  # pod 'RNImageTools', :path => '../node_modules/react-native-image-tools'
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 

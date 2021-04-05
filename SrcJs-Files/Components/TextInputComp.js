@@ -14,7 +14,7 @@ export default class TextInputComp extends Component {
         marginTop: this.props.top == undefined ? 13 : this.props.top,
         borderColor: this.props.empty ? 'red' : this.state.backgroundColor,
         borderWidth: this.props.empty ? 2 : 1.1
-      }, this.props.textviewstyle || {}]}>
+      }, this.props.textviewstyle || {}, this.props.style]}>
         <TouchableOpacity onPress={this.props.onPressRightBtn}>
           <Image resizeMode="contain" source={this.props.leftIcon} style={{ width: 22, height: 22, zIndex: 1, tintColor: this.props.tintcolor }} />
         </TouchableOpacity>
@@ -26,7 +26,7 @@ export default class TextInputComp extends Component {
           multiline={this.props.multiline || false}
           style={[styles.TextInput, this.props.textinstyle || {}]}
           onBlur={() => this.onBlur()}
-          value={this.props.value}
+          value={(this.props.value)}
           onFocus={() => this.onFocus()}
           selectionColor={mycolor.pink}
           keyboardType={this.props.inputtype}
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   TextInput: {
     width: '80%',
     paddingLeft: 20,
-    fontFamily: "NotoSansKR-Regular",
+    // fontFamily: "NotoSansKR-Regular",
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: "center",
