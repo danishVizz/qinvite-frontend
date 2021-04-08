@@ -4,6 +4,7 @@ import { StyleSheet, View, Image, TextInput, Text } from 'react-native';
 import mycolor from "../Constants/Colors";
 import CircleImageComp from "./CircleImageComp";
 import { CheckBox } from 'react-native-elements';
+import { TouchableOpacity } from "react-native";
 export default class ContactsComp extends Component {
     state = {
         backgroundColor: mycolor.lightgray,
@@ -11,16 +12,19 @@ export default class ContactsComp extends Component {
         changetext: true
     }
 
+    onPressButtonChildren(value,index) {
+        this.props.fromchildprops(value,index)
+      }
 
     render() {
         return (
 
             <View style={styles.conatiner}>
-                <View style={{ flex: 1, flexDirection: 'row', marginRight: 1, marginTop: 20}}>
+                <View style={{ flex: 1, flexDirection: 'row', marginRight: 1, marginTop: 20 }}>
                     <View style={{ flex: 2 }}>
                         <CircleImageComp imagestyle={{ height: 40, width: 40 }} style={{ height: 40, width: 40 }} imagesrc={this.props.imagepath} ></CircleImageComp>
                         <View style={{ position: 'absolute', alignSelf: 'center', bottom: -20, right: 0, borderColor: 'white' }}>
-                        <CheckBox
+                            <CheckBox
                                 checked={this.props.isChecked}
                                 checkedIcon={<Image source={require('../../assets/icon_check.png')} style={{ height: 20, width: 20 }} />}
                                 uncheckedIcon={<Image source={null} />}
@@ -33,13 +37,12 @@ export default class ContactsComp extends Component {
                         <Text>{this.props.status}</Text>
                     </View>
 
-                    <View style={{ flex: 1,justifyContent:'center' }}>
-                        <Image source={require('../../assets/icon_phallow.png')} style={{ height: 27, width: 16 }} resizeMode="contain"></Image>
-                    </View>
+                    <TouchableOpacity style={{ flex: 1,marginRight:5 }} onPress={()=>this.onPressButtonChildren(this.props.isphonellow,this.props.index)}>
+                        <Image source={this.props.phonestate} style={{ height: 27, width: 27}} resizeMode="contain"></Image>
+                    </TouchableOpacity>
                 </View>
                 <View
                     style={{
-                      
                         marginTop: 10,
                         backgroundColor: 'red',
                         borderBottomColor: '#E4E4E4',
@@ -75,7 +78,6 @@ const styles = StyleSheet.create({
         width: 120,
         borderRadius: 120,
         borderColor: 'white'
-
     }
 
 });

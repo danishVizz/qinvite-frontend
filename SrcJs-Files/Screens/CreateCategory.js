@@ -7,16 +7,18 @@ import mycolor from '../Constants/Colors';
 import Trans from '../Translation/translation'
 import ButtonComp from '../Components/ButtonComp';
 import InputSpinner from "react-native-input-spinner";
-
-
-
+import mykeys from '../Constants/keys';
 
 export default class CreateCategory extends Component {
 
     state = {
+        categoryid: '',
         categorynametxt: '',
         categoryError: false,
-        invitationcount: 0,
+        invitationcount: 1,
+        categorydata: [],
+        contactlist: [],
+        iseditcategory: false,
         isEnabled: false
     }
 
@@ -29,6 +31,7 @@ export default class CreateCategory extends Component {
                         <TextInputComp
                             placeholderTextColor={mycolor.lightgray}
                             textinstyle={{ paddingLeft: 5, width: '100%' }}
+                            value={this.state.categorynametxt}
                             onChangeText={(name) => this.setState({ categorynametxt: name, categoryError: false })}
                         />
                         {this.state.categoryError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.categoryerrortxt}</Text> : <View></View>}
@@ -49,10 +52,11 @@ export default class CreateCategory extends Component {
                             <InputSpinner
                                 style={styles.spinner}
                                 type={"real"}
-                                min={1}
+                                min={this.state.invitationcount}
                                 inputStyle={{ height: 40 }}
-                                step={1} s
+                                step={1} 
                                 skin='paper'
+                                value={this.state.invitationcount}
                                 colorRight={mycolor.darkgray}
                                 colorLeft={mycolor.darkgray}
                                 onChange={(num) => {
@@ -73,6 +77,20 @@ export default class CreateCategory extends Component {
         );
     }
 
+
+    componentDidMount() {
+        this.state.categorydata = this.props.route.params.categorydata ?? []
+        if (this.state.categorydata.length != 0) {
+            this.setState({
+                categoryid: this.state.categorydata.id,
+                categorynametxt: this.state.categorydata.name,
+                isEnabled:this.state.categorydata.phones=="1"?true:false,
+                invitationcount: this.state.categorydata.people_per_qr,
+                contactlist: this.state.categorydata.participants,
+            })
+        }
+    }
+
     async ontogglechange() {
         await this.setState({ isEnabled: !(this.state.isEnabled) })
     }
@@ -85,7 +103,8 @@ export default class CreateCategory extends Component {
         var data = {
             "categoryename": this.state.categorynametxt,
             "invitaitoncount": this.state.invitationcount,
-            "isphoneallowd": this.state.isEnabled
+            "isphoneallowd": this.state.isEnabled,
+            "contactlist": this.state.contactlist.length==0 ? [] : this.state.contactlist
         }
         this.props.navigation.navigate('CategoryContactsSelection', { "categorydata": data })
     }
@@ -107,7 +126,8 @@ export default class CreateCategory extends Component {
         return false;
     }
 
-    // ()=>this.props.navigation.navigate('CategoryContactSelection')
+
+
 }
 const styles = StyleSheet.create({
     container: {

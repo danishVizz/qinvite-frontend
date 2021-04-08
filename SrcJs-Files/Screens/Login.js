@@ -21,6 +21,8 @@ import Keys from "../Constants/keys";
 export default class Login extends Component {
 
   state = {
+    // emailtxt: '123456',
+    // passwordtxt: '123456',
     emailtxt: '',
     passwordtxt: '',
     isSecureTextEntry: true,
@@ -41,6 +43,7 @@ export default class Login extends Component {
             leftIcon={require('../../assets/icon_user.png')}
             placeholderTextColor={mycolor.lightgray}
             empty={this.state.emailEmpty}
+            value={this.state.emailtxt}
             onChangeText={(email) => this.setState({ emailtxt: email, emailEmpty: false })}
           />
           {this.state.emailEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.Emailerrortxt}</Text> : <View></View>}
@@ -48,6 +51,7 @@ export default class Login extends Component {
             placeholder={Trans.translate("Password")}
             marginTop='20'
             empty={this.state.passEmpty}
+            value={this.state.passwordtxt}
             leftIcon={require('../../assets/icon_pass.png')}
             placeholderTextColor={mycolor.lightgray}
             rightIcon={require('../../assets/icon_visiblity.png')}
@@ -111,18 +115,10 @@ export default class Login extends Component {
     ApiCalls.postApicall(formadata, "login").then(data => {
       this.logCallback("Response came", this.state.setLoginLoading = false);
       if (data.status == true) {
-        // this.setState({
-        //   isLoading: false,
-        // });
-        // this.props.navigation.navigate('Home')
-        // Prefs.save(mykeys.accessToken, data.data.token)
-        // console.log("token " + data.data.token)
           Prefs.save(Keys.userData, JSON.stringify(data.data))
-        // let value =await Prefs.get(Keys.userData)
-        // console.log("My Data " + JSON.parse(value))
         this.props.navigation.navigate('CombineComp')
-        //this.props.navigation.navigate('Tab');
-        // this.props.navigation.navigate('StoreCategoryScreen');
+        // this.props.navigation.navigate('ChooseCategory')
+ 
       } else {
         Alert.alert('Failed', data.message);
       }

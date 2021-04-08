@@ -78,5 +78,7 @@
     "select_category": "Select Category",
     "message": "Message",
     "editor": "Editor",
+    "AddText": "Add Text",
+    "CreateInvites": "Create Invites",
     "send_to_all": "Send to all"
 }

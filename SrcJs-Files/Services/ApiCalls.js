@@ -46,6 +46,27 @@ class ApiCalls{
           throw error.message;
         }
       }
+      async searchapicall(apiname,query) {
+        try {
+          var fullurl=Base_url+apiname;
+          let codeData = await fetch(`${fullurl}?keyword=${query}`, {
+            method: 'GET',
+            // headers: {
+            //   'Accept': 'application/json',
+            //   'Content-Type': 'application/json',
+            //   'Authorization': token
+            // },
+          });
+    
+          let result = await codeData
+          return result.json()
+    
+        }
+        catch (error) {
+          console.log(error)
+          throw error.message;
+        }
+      }
 
       async deletapicall(apiname,query) {
         try {

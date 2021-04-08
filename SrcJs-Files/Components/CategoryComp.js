@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import mycolor from '../Constants/Colors';
-
+import OptionsMenu from "react-native-options-menu";
 class  CategoryComp extends Component {
    
+    onPressButtonChildren(value,item) {
+        this.props.fromchildprops(value,item)
+      }
+
     render()
     {   return(
             <View>
@@ -15,8 +19,17 @@ class  CategoryComp extends Component {
                     {this.props.title}
         </Text>
             </View>
-            <Image source={this.props.innerright} style={[styles.checkboxphoto,this.props.innerrightimagestyle || {}]} />
-            <Image source={this.props.righticon} style={[styles.optionphoto,this.props.rightimagestyle || {}]} />
+            {/* <Image source={this.props.innerright} style={[styles.checkboxphoto,this.props.innerrightimagestyle || {}]} />
+            <Image source={this.props.righticon} style={[styles.optionphoto,this.props.rightimagestyle || {}]} /> */}
+              <View style={{flex:1,alignSelf:"center",marginRight:10}}>
+                <OptionsMenu
+                        button={require('../../assets/icon_option.png')}
+                        buttonStyle={{width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'center',alignSelf:'center' }}
+                        destructiveIndex={1}
+                        options={["Edit", "Delete"]}
+                        actions={[()=>this.onPressButtonChildren("edit",this.props.item),  ()=>this.onPressButtonChildren("delete",this.props.item)]} />
+
+            </View>
             </TouchableOpacity>
         </View>
         );

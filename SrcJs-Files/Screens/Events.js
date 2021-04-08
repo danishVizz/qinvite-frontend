@@ -4,6 +4,8 @@ import { FlatList, Image, View, StyleSheet, Alert, Text } from 'react-native'
 import Event_items from '../ListCustomviews/Event_items'
 import FloatingButtonComp from '../Components/FloatingButtonComp';
 import ApiCalls from '../Services/ApiCalls';
+import Prefs from '../Prefs/Prefs';
+import Keys from '../Constants/keys';
 
 import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native';
@@ -11,7 +13,7 @@ import { TouchableOpacity } from 'react-native';
 
 
 export default class Events extends Component {
-  
+
   state = {
     EventAllData: [],
     contentLoading: false
@@ -34,10 +36,10 @@ export default class Events extends Component {
           showsHorizontalScrollIndicator={false} />
 
         <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 0 }}>
-          <FloatingButtonComp imagesrc={require('../../assets/icon_event.png')} floatingclick={() => this.props.navigation.navigate("CreateEvent")}></FloatingButtonComp>
+          <FloatingButtonComp imagesrc={require('../../assets/icon_event.png')} floatingclick={() => this.props.navigation.navigate("CreateEvent", {"eventdata" : [] })}></FloatingButtonComp>
         </View>
 
-        <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" }}>
+        <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
           {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
         </View>
       </View>
@@ -47,12 +49,9 @@ export default class Events extends Component {
 
   getallData() {
     try {
-      
-   
       var filterarray = this.state.EventAllData
-      
       return filterarray
-      
+
     } catch {
       return this.state.EventAllData
     }
@@ -90,11 +89,11 @@ export default class Events extends Component {
 
 
   async getAllEvents() {
-    this.logCallback("getProducts :", this.state.contentLoading = true);
-    // var userdata = await Prefs.get(Keys.userData);
-    // var parsedata = JSON.parse(userdata)
+    this.logCallback("getAllEvents :", this.state.contentLoading = true);
+    var userdata = await Prefs.get(Keys.userData);
+    var parsedata = JSON.parse(userdata)
 
-    ApiCalls.getapicall("get_events", "19").then(data => {
+    ApiCalls.getapicall("get_events", parsedata.id).then(data => {
       this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
       if (data.status == true) {
         this.setState({ EventAllData: data.data })
@@ -112,12 +111,12 @@ export default class Events extends Component {
     this.logCallback("DeleteEvent :", this.state.contentLoading = true);
     // var userdata = await Prefs.get(Keys.userData);
     // var parsedata = JSON.parse(userdata)
-console.log("Event-Idddd"+id)
-    ApiCalls.deletapicall("delete_event",id ).then(data => {
+    console.log("Event-Idddd" + id)
+    ApiCalls.deletapicall("delete_event", id).then(data => {
       this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
       if (data.status == true) {
         const newList = this.state.EventAllData.filter((item) => item.id !== id);
-        this.setState({EventAllData:newList})
+        this.setState({ EventAllData: newList })
       } else {
         Alert.alert('Failed', data.message);
       }
@@ -131,42 +130,52 @@ console.log("Event-Idddd"+id)
 
   renderItem({ item, index }) {
     return (
-
-      // <TouchableWithoutFeedback style={{
-      //   marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, }} onPress={() => actionOnRow(item,props)}>
-      <TouchableOpacity  onPress={()=>this.actionOnRow(item)}>
-      <Event_items
-        fromchildprops={this.onPressButtonChildren}
-        item = {item}
-        image={item.image_url}
-        title={item.event_name}
-        description={item.event_address}
-      />
-       </TouchableOpacity>
+      <TouchableOpacity onPress={() => this.actionOnRow(item)}>
+        <Event_items
+          fromchildprops={this.onPressButtonChildren}
+          item={item}
+          image={item.image_url}
+          title={item.event_name}
+          description={item.event_address}
+        />
+      </TouchableOpacity>
     );
   };
 
-  onPressButtonChildren = (value,item) => {
+  onPressButtonChildren = (value, item) => {
     switch (value) {
       case 'delete':
         this.DeleteEvent(item.id)
         break
       case 'edit':
+        var newitem = {
+          "eventid": item.id,
+          "eventname": item.event_name,
+          "eventaddress": item.event_address,
+          "eventdate": item.event_date,
+          "no_of_receptionists": item.no_of_receptionists,
+          "receptionists": item.receptionists
+         
+        }
+        this.props.navigation.navigate('CreateEvent',
+          {
+            "eventdata": newitem
+          }
+        )
+        this
         break
       default:
       // this.props.navigation.navigate('EventDetails')
     }
-
-    // console.log("working" + value+" "+ item.id)
-    //press button chilldren 
   }
 
   actionOnRow(itemdata, props) {
     console.log('Selected Item :' + itemdata.event_name);
+    
     // navigation.navigate('EventDetails')
-    alert(itemdata.event_name)
+    //   alert(itemdata.event_name)
+    // }
   }
-
 
   successCallBackData = (data) => {
     console.log(data)// can get callback data here

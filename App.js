@@ -29,27 +29,28 @@ import DatetimePickerComp from './SrcJs-Files/Components/DatetimePickerComp'
 import Trans from './SrcJs-Files/Translation/translation';
 import * as RNLocalize from "react-native-localize";
 import mycolor from './SrcJs-Files/Constants/Colors';
+import SearchScreen from './SrcJs-Files/Screens/SearchScreen';
+import DumyEditor from './SrcJs-Files/Screens/DumyEditor';
+
 
 const RootStack = createStackNavigator();
-
-
- function handleLocalizationChange()  {
+ function handleLocalizationChange(){
   Trans.setI18nConfig();
-  useReducer(x => x + 1, 0);
+  // useReducer(x => x + 1, 0);
 };
 
 
 const App = () => {
-
   Trans.setI18nConfig();
   RNLocalize.addEventListener("change", handleLocalizationChange());
   RNLocalize.removeEventListener("change", handleLocalizationChange());
   
   return (
     <NavigationContainer>
-      <RootStack.Navigator initialRouteName="ViewPort">
+      <RootStack.Navigator initialRouteName="SplashScreen">
         {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
         <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
+        <RootStack.Screen name="DumyEditor" component={DumyEditor} options={{ headerShown: false }} />
         <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
         <RootStack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
         <RootStack.Screen name="Event_items" component={Event_items} options={{ headerShown: false }} />
@@ -63,6 +64,7 @@ const App = () => {
         <RootStack.Screen name="CreatePackage" component={CreatePackage} options={{ headerShown: false }} />
         <RootStack.Screen name="Designer" component={Designer} options={{ headerShown: false }} />
         <RootStack.Screen name="ViewPort" component={ViewPort} options={{ headerShown: false }} />
+        <RootStack.Screen name="SearchScreen" component={SearchScreen} options={{ headerShown: false }} />
         <RootStack.Screen name="ForgotPass" component={ForgotPass} options={{ headerShown: false }} />
         <RootStack.Screen name="CategoryContactsSelection" component={CategoryContactsSelection} options={{ headerShown: false }} />
         <RootStack.Screen name="DatetimePickerComp" component={DatetimePickerComp} options={{ headerShown: false }} />

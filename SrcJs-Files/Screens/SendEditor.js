@@ -1,20 +1,17 @@
 
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import { View, Text, StyleSheet, Image, StatusBar, Picker, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, StatusBar, Dimensions, Alert } from 'react-native';
 import { ScrollView, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { CheckBox } from "react-native-elements";
-import HeaderComp from '../Components/HeaderComp';
 import TextInputComp from '../Components/TextInputComp';
 import ButtonComp from '../Components/ButtonComp';
 import mycolor from '../Constants/Colors';
-import ApiCalls from '../Services/ApiCalls';
 import Trans from '../Translation/translation'
-import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from "moment";
 
+
+const WINDOW = Dimensions.get('window');
 export default class SendEditor extends Component {
 
   state = {
@@ -54,7 +51,7 @@ export default class SendEditor extends Component {
           <View style={styles.subContainer}>
             <View style={styles.innercontainer}>
               {/* <Image style={{ backgroundColor: 'gray', width: '100%', height: 203, borderRadius: 6 }} source={require('../../assets/logo.png')}></Image> */}
-              <Image resizeMode='contain' style={{ backgroundColor: 'gray', width: '100%', height: 203, borderRadius: 6 }} source={{uri: 'file://' + this.props.route.params.imgUrl}}></Image>
+              <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6 }} source={{uri: 'file://' + this.props.route.params.imgUrl}}></Image>
               <Text style={{ fontSize: 14, marginTop: 15, color: mycolor.txtGray }}>{Trans.translate("ReceptionistName")}</Text>
 
               <TextInputComp
@@ -97,7 +94,7 @@ export default class SendEditor extends Component {
               <View style={{ width: '100%', marginTop: 30, marginBottom: 30 }}>
                 <ButtonComp textstyle={{ color: 'white' }} text={Trans.translate('SendInvites')}
                   // onPress={() => this.props.navigation.navigate('Packages')}
-                  onPress={() => this.onSignupPress()}
+                  onPress={() => Alert.alert("Coming Soon")}
                 ></ButtonComp>
               </View>
             </View>

@@ -109,10 +109,7 @@ export default class CreatePackage extends Component {
         }
         var usersdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(usersdata)
-        console.log("MYDATA" + parsedata.id)
-
         var formadata = new FormData()
-
         formadata.append("package_name", this.state.packagenametxt)
         formadata.append("discount_code", this.state.discounttxt)
         formadata.append("user_id", parsedata.id)
