@@ -10,7 +10,9 @@ import PackagesComp from '../Components/PackagesComp';
 import ApiCalls from '../Services/ApiCalls';
 import HeaderComp2 from '../Components/HeaderComp2';
 import HeaderComp from '../Components/HeaderComp';
-
+import Prefs from '../Prefs/Prefs';
+import Keys from '../Constants/keys';
+import mykeys from '../Constants/keys';
 
 
 export class Packages extends Component {
@@ -33,22 +35,19 @@ export class Packages extends Component {
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
-          <StatusBar
+        <StatusBar
           backgroundColor={mycolor.pink}
         />
         <View style={{ flex: 8 }}>
-      
-   <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')}  textfonts={'bold'} textsize={18} titlepos="center" />
 
-      
-
+          <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')} textfonts={'bold'} textsize={18} titlepos="center" />
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
           </View>
           <FlatList
             data={this.state.packagesdata}
             renderItem={this.renderItem.bind(this)}
-            keyExtractor={(item) => item._id}
+            keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false} />
         </View>
@@ -86,12 +85,15 @@ export class Packages extends Component {
     this.setState({ isLoading: true })
     this.getAllPackages();
   }
-  
+
 
   actionOnRow(itemdata) {
     console.log('Selected Item :' + itemdata.package_name);
     // alert(itemdata.package_name)
     this.setState({ selectedItem: itemdata.id });
+    var invitedata=mykeys.invitealldata
+    invitedata={"Eventdata":invitedata["Eventdata"], "PackageData": itemdata.id }
+    mykeys.invitealldata=invitedata
     this.props.navigation.navigate('Todos')
   }
   logCallback = (log, callback) => {
@@ -104,10 +106,10 @@ export class Packages extends Component {
 
   async getAllPackages() {
     this.logCallback("getProducts :", this.state.contentLoading = true);
-    // var userdata = await Prefs.get(Keys.userData);
-    // var parsedata = JSON.parse(userdata)
+    var userdata = await Prefs.get(Keys.userData);
+    var parsedata = JSON.parse(userdata)
 
-    ApiCalls.getapicall("get_packages", "232132132").then(data => {
+    ApiCalls.getapicall("get_packages", parsedata.id).then(data => {
       this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
       if (data.status == true) {
         this.setState({ packagesdata: data.data })

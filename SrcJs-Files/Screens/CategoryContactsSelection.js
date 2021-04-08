@@ -15,21 +15,23 @@ import ContactsComp from '../Components/ContactsComp';
 import ApiCalls from "../Services/ApiCalls";
 import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
+import { TouchableOpacity } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
-     
+
 export default class CategoryContactsSelection extends Component {
-
-
     state = {
         ContactsList: [],
         isChecked: [],
         selectedLists: [],
-        catdata:{}
+        catdata: {},
+        isLoading: false,
+        isphoneallowed: false
     }
     render() {
-  
-        const data=this.props.route.params.categorydata.categoryename
-        
+
+        const data = this.props.route.params.categorydata.categoryename
+
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <StatusBar
@@ -38,7 +40,7 @@ export default class CategoryContactsSelection extends Component {
                 <HeaderComp2 textfonts={'bold'}
                     righttitle={Trans.translate('Resend')}
                     titlepos={'center'}
-                    leftBtnClicked={() => navigation.goBack()}
+                    leftBtnClicked={() => this.props.navigation.goBack()}
                     title={Trans.translate('SelectInvites')}
                     righttitle={Trans.translate('Save')}
                     righttextfonts={'bold'}
@@ -52,43 +54,54 @@ export default class CategoryContactsSelection extends Component {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
 
+                <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
+                    {this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
+                </View>
 
             </SafeAreaView>
 
         );
     }
+
+
+    logCallback = (log, callback) => {
+        console.log(log);
+        this.setState({
+            callback
+        });
+    }
+
+
     async CreateCategoryCall() {
 
 
         var usersdata = await Prefs.get(Keys.userData);
-        // var parsedata = JSON.parse(usersdata)
-        // console.log("MYDATA" + parsedata.id)
-    
-        
+        var parsedata = JSON.parse(usersdata)
+        console.log("MYDATA" + parsedata.id)
+
+
         var formadata = new FormData()
         formadata.append("category_name", this.props.route.params.categorydata.categoryename)
         formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
         formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
-        formadata.append("user_id", "19")
-        formadata.append("participants[]",JSON.stringify(this.state.selectedLists))
-        // formadata.append("no_of_people", this.state.invitationcounttxt)
-        // formadata.append("package_price", this.state.passwordtxt)
-        console.log(formadata)
+        formadata.append("user_id", parsedata.id)
+        this.state.selectedLists.map((item, index) => {
+            formadata.append("participants[" + index + "]", this.state.selectedLists[index])
+        });
 
-      
-        // this.logCallback('Creating Package Start', this.state.isLoading = true);
+        this.logCallback('Creating Package Start', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, "add_category").then(data => {
-            // this.logCallback("Response came", this.state.isLoading = false);
+            this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
+                this.props.navigation.navigate('ChooseCategory')
 
             } else {
                 Alert.alert('Failed', data.message);
             }
         }, error => {
-            // this.logCallback("Something Went Wrong", this.state.isLoading = false);
-            console.log("inerror")
-            console.log(error)
-            Alert.alert('Error', JSON.stringify(error));
+            this.logCallback("Something Went Wrong", this.state.isLoading = false);
+            this.props.navigation.navigate('ChooseCategory')
+            // Alert.alert('Error', JSON.stringify(error));
         }
         )
 
@@ -98,33 +111,48 @@ export default class CategoryContactsSelection extends Component {
         isChecked[index] = !this.state.isChecked[index];
         this.setState({ isChecked: isChecked });
         var contactdata = JSON.stringify({
-            "name": item.displayName,
-            "number": item.phoneNumbers[0]?.number
+            "name": item.name,
+            "number": item.number,
+            "isphoneallow": item.isphoneallow
         })
+
         if (isChecked[index] == true) {
             this.state.selectedLists.push(contactdata)
         } else {
             this.state.selectedLists.pop(contactdata)
         }
-        console.log("key is" + this.state.selectedLists)
 
     }
 
     renderItem({ item, index, props }) {
 
+        // item = JSON.parse(item);
+        // console.log("name : " + item.isphoneallow);
         return (
-            <TouchableWithoutFeedback style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF' }} onPress={() => this.isIconCheckedOrNot(item, index)}>
+            <TouchableOpacity style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF' }} onPress={() => this.isIconCheckedOrNot(item, index)}>
                 <ContactsComp
                     isChecked={this.state.isChecked[index]}
                     imagepath={require('../../assets/icon_lady.png')}
-                    contactname={item.displayName}
-                    status={item.phoneNumbers[0]?.number}
+                    contactname={item.name}
+                    index={index}
+                    isphonellow={item.isphoneallow}
+                    fromchildprops={this.onPressButtonChildren}
+                    phonestate={item.isphoneallow ? (require('../../assets/icon_phallow.png')) : (require('../../assets/icon_phnotallow.png'))}
+                    status={item.number}
 
                 />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         );
     };
 
+    onPressButtonChildren = (value, index) => {
+        var arr = this.state.ContactsList;
+        arr[index].isphoneallow = !(arr[index].isphoneallow);
+        this.setState({ ContactsList: arr });
+
+
+
+    }
 
     actionOnRow(key) {
         let authUsers = [...this.state.ContactsList]
@@ -145,23 +173,62 @@ export default class CategoryContactsSelection extends Component {
     }
 
     componentDidMount() {
-        PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-            {
-                'title': 'Contacts',
-                'message': 'This app would like to view your contacts.'
-            }
-        ).then(() => {
-            Contacts.getAll()
-                .then((contacts) => {
-                    this.setState({ ContactsList: contacts })
-                })
-        })
-            .catch((err) => {
-                console.log(err);
+        var categorydataaa = this.props.route.params.categorydata.contactlist;
+        var contactlist = []
+        if (categorydataaa.length!==0) {
+            console.log("??andarrrrrr????")
+            categorydataaa.map((item, index) => {
+                var contactdata = {
+                    "name": item.name,
+                    "number": item.number,
+                    "isphoneallow": item.isphoneallow == "1" ? true : false
+                }
+                let { isChecked } = this.state;
+                isChecked[index] = true;
+                this.setState({ isChecked: isChecked })
+                contactlist.push(contactdata)
+                this.state.selectedLists.push(contactdata)
             })
+          
+            this.setState({ ContactsList: contactlist }, () => console.log("??ContactListUpdated????" + this.state.ContactsList))
+
+        }
+        else {
+            console.log("??bhrrrrr????")
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    'title': 'Contacts',
+                    'message': 'This app would like to view your contacts.'
+                }
+            ).then(() => {
+                var contactlist = []
+                Contacts.getAll()
+                    .then((contacts) => {
+                 
+                        contacts.map(function (obj) {
+                            obj.isphoneallow = false;
+                            obj.name = obj.displayName
+                            obj.number = obj.phoneNumbers[0]?.number
+                            
+                            // contactlist.push(obj)
+                            // var obj1=JSON.parse(obj)
+                            // console.log(obj)
+                        });
+                        console.log(contacts)
+                        this.setState({ ContactsList: contacts })
+                    })
+
+            })
+
+
+                .catch((err) => {
+                    console.log(err);
+                })
+        }
     }
 }
+
 
 
 const styles = StyleSheet.create({
@@ -204,5 +271,3 @@ const styles = StyleSheet.create({
         color: 'white'
     }
 });
-;
-

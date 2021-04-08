@@ -26,7 +26,6 @@ export const CombineComp = (props) => {
   return (
 
     <Tab.Navigator
-    
       activeColor="#F54260"
       inactiveColor="#D9D9D9"
       barStyle={{ backgroundColor: mycolor.white, elevation: 10 }}>
@@ -38,16 +37,16 @@ export const CombineComp = (props) => {
             name="home"
           />)
       }}
-      listeners={({ navigation }) => ({
-        blur: () => navigation.setParams({ screen: undefined }),
-      })}
+        listeners={({ navigation }) => ({
+          blur: () => navigation.setParams({ screen: undefined }),
+        })}
       />
       {/* <Image
             resizeMode="contain"
             source={require('../../assets/icon_phone.png')} 
             style={{tintColor:'black',marginBottom:0,height:20,width:20}}
           /> */}
-      <Tab.Screen name="Packages" component={Packages } options={{
+      <Tab.Screen name="Packages" component={Packages} options={{
         tabBarLabel: Trans.translate('TabPackages'),
         tabBarIcon: ({ color }) => (
           <Icon
