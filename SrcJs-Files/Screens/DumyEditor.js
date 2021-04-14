@@ -8,6 +8,7 @@ import Trans from "../Translation/translation";
 import Draggable from 'react-native-draggable';
 import QRCode from 'react-native-qrcode-svg';
 import mycolor from "../Constants/Colors";
+import Keys from "../Constants/keys";
 import React, { Component } from 'react';
 import {
   Platform,
@@ -294,18 +295,18 @@ export default class DumyEditor extends Component {
               {this.processPicker()}
             </View>
 
-            <View style={{ paddingRight: 10, paddingLeft: 10 ,marginTop:50}}>
+            <View style={{ paddingRight: 10, paddingLeft: 10, marginTop: 50 }}>
               <ViewShot ref="viewShot" options={{ format: "jpg", quality: 1.0 }}>
                 <ImageBackground
                   resizeMode='contain'
                   source={{ uri: this.state.imagedata }}
                   // style={{ height: WINDOW.height/2, width: WINDOW.width, borderRadius: 5, borderWidth: 1}}
-                  style={{ width: WINDOW.width - 20, height: WINDOW.height / 2}}>
+                  style={{ width: WINDOW.width - 20, height: WINDOW.height / 2 }}>
 
 
-                  <Draggable x={WINDOW.width/2.5}  y={WINDOW.height/4} renderColor='green'>
+                  <Draggable x={WINDOW.width / 2.5} y={WINDOW.height / 4} renderColor='green'>
                     <QRCode
-                      style={{ alignSelf: 'flex-end'}}
+                      style={{ alignSelf: 'flex-end' }}
                       size={40}
                       value="http://awesome.link.qr"
                     />
@@ -313,7 +314,7 @@ export default class DumyEditor extends Component {
 
                   {ADDED_TEXTS}
                 </ImageBackground>
-               
+
               </ViewShot>
             </View>
             <View style={{ flexDirection: 'row', height: 50, alignContent: 'center', alignSelf: 'center', backgroundColor: mycolor.pink, margin: 10, borderRadius: 5, position: 'absolute', bottom: 20 }}>
@@ -335,7 +336,17 @@ export default class DumyEditor extends Component {
     this.refs.viewShot.capture().then(uri => {
       console.log("do something with ", uri);
       // Alert.alert(uri);
-      this.props.navigation.navigate('SendEditor', { imgUrl: uri });
+      var invitedata = Keys.invitealldata
+      invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": uri }
+      Keys.invitealldata = invitedata
+
+
+      if (Keys.invitealldata['CategoriesData'] == undefined) {
+        this.props.navigation.navigate('Todos');
+      }
+      else {
+        this.props.navigation.navigate('SendEditor', { "imagedata": uri });
+      }
     });
   }
 

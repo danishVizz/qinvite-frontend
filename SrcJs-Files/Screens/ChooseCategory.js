@@ -11,14 +11,24 @@ import { ActivityIndicator } from 'react-native';
 import Prefs from '../Prefs/Prefs'
 import Keys from '../Constants/keys'
 import ButtonComp from '../Components/ButtonComp';
+import AlertComp from '../Components/AlertComp';
 export default class ChooseCategory extends Component {
     state = {
         contentLoading: false,
         categoriesdata: [],
         isChecked: [],
-        selectedLists: []
+        selectedLists: [],
+        currentselected:'',
+        showalert: false
     }
     render() {
+        let Deletealert = (
+            this.state.showalert ?
+                <AlertComp
+                    onCancelPress={() => this.setState({ showalert: false })}
+                    onDeletePress={() => this.DeleteEvent(this.state.currentselected)}></AlertComp> : null
+        );
+
         return (
             <SafeAreaView style={styles.container}>
 
@@ -31,30 +41,33 @@ export default class ChooseCategory extends Component {
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
 
+
                     <View style={{ flex: 1, alignSelf: 'center', alignItems: "center", }}>
                         {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
                     </View>
                 </View>
+                {Deletealert}
 
-
+                <View style={{ height: "20%" }}>
+                    <View style={{ position: 'absolute', width: '100%', marginBottom: 5, bottom: 0 }}>
+                        <CategoryComp Onpress={() => this.props.navigation.navigate('CreateCategory', { "categorydata": [] })} innerright={null} lefticon={require('../../assets/icon_add.png')} title={Trans.translate('NewCategory')}></CategoryComp>
+                    </View>
+                </View>
                 <ButtonComp
                     onPress={() => this.onNextScreen()}
                     text={Trans.translate("Next")}
                     isloading={this.state.setLoginLoading}
-                    style={{ backgroundColor: mycolor.pink, marginTop: 20, marginLeft: 33, marginRight: 33 }}
+                    style={{ backgroundColor: mycolor.pink, marginBottom: 10, marginLeft: 22, marginRight: 22 }}
                     textcolor={mycolor.white}
                     textstyle={{ color: mycolor.white }} />
 
-                <View style={{ height: "20%" }}>
-                    <View style={{ position: 'absolute', width: '100%', marginBottom: 20, bottom: 0 }}>
-                        <CategoryComp Onpress={() => this.props.navigation.navigate('CreateCategory', { "categorydata": [] })} innerright={null} lefticon={require('../../assets/icon_add.png')} title={Trans.translate('NewCategory')}></CategoryComp>
-                    </View>
-                </View>
+          
 
             </SafeAreaView>
         );
-    }
 
+
+    }
     renderItem({ item, index }) {
         return (
 
@@ -73,17 +86,14 @@ export default class ChooseCategory extends Component {
 
 
     onPressButtonChildren = (value, item) => {
-
         switch (value) {
             case 'delete':
-                this.DeleteEvent(item.id)
+                this.setState({ showalert: true, currentselected:item.id })
                 break
             case 'edit':
-                this.props.navigation.navigate('CreateCategory',
-                    { "categorydata": item })
+                this.props.navigation.navigate('CreateCategory', { "categorydata": item })
                 break
             default:
-            // this.props.navigation.navigate('EventDetails')
         }
     }
 
@@ -92,16 +102,21 @@ export default class ChooseCategory extends Component {
         if (this.state.selectedLists.length == 0)
             Alert.alert("No category selected")
         else {
+            console.log('??selected categories?? ' + JSON.stringify(this.state.selectedLists))
             var invitedata = Keys.invitealldata
-            invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": { "SelectedCategories": this.state.selectedLists } }
+            invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": { "SelectedCategories": this.state.selectedLists }, "ImageData": invitedata["ImageData"] }
             Keys.invitealldata = invitedata
-            this.props.navigation.navigate('Todos')
+            console.log(Keys.invitealldata["CategoriesData"])
+            if (invitedata["ImageData"] == undefined)
+                this.props.navigation.navigate('Todos')
+            else
+                this.props.navigation.navigate('SendEditor')
+
         }
     }
     componentDidMount() {
         this.getAllCategories()
     }
-
 
     choosecategory = (item, index) => {
         let { isChecked } = this.state;
@@ -118,7 +133,7 @@ export default class ChooseCategory extends Component {
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
 
-        ApiCalls.getapicall("get_categories", parsedata.id).then(data => {
+        ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
                 this.setState({ categoriesdata: data.data })
@@ -133,12 +148,13 @@ export default class ChooseCategory extends Component {
     }
 
     async DeleteEvent(id) {
+        this.setState({showalert:false })
         this.logCallback("DeleteEvent :", this.state.contentLoading = true);
         ApiCalls.deletapicall("delete_category", id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
                 const newList = this.state.categoriesdata.filter((item) => item.id !== id);
-                this.setState({ categoriesdata: newList })
+                this.setState({ categoriesdata: newList})
             } else {
                 Alert.alert('Failed', data.message);
             }

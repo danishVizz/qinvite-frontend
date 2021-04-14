@@ -33,7 +33,7 @@ export default class CreatePackage extends Component {
             <SafeAreaView style={styles.container}>
                 <StatusBar
                     backgroundColor='#F54260' />
-                <HeaderComp2 alignSelf='center' textsize={18} textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CreatePackage')} titlepos='center' ></HeaderComp2>
+                <HeaderComp2 alignSelf='center' textsize={18}leftBtnClicked={()=>this.props.navigation.goBack()} textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CreatePackage')} titlepos='center' ></HeaderComp2>
 
 
 

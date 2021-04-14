@@ -1,66 +1,23 @@
 import React, { Component, useState } from 'react';
 import mycolor from '../Constants/Colors'
-import { FlatList, StyleSheet, StatusBar, Text, Pressable, View, Alert, Image } from 'react-native'
+import { FlatList, StyleSheet, StatusBar, Text, Pressable, View, Alert, Image, Modal } from 'react-native'
 import Trans from '../Translation/translation'
-import { useNavigation } from '@react-navigation/core';
 import FloatingButtonComp from '../Components/FloatingButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import DesignerComp from '../Components/DesignerComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextInputComp from '../Components/TextInputComp';
-import { Modal } from 'react-native';
 import CircleImageComp from '../Components/CircleImageComp';
 import { CheckBox } from 'react-native-elements';
+import ApiCalls from '../Services/ApiCalls';
+import Keys from '../Constants/keys';
 
-const list = [
-    {
-        title: 'Mike is Programming',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Jack is Play Basketball',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'John is Singing',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Rose is Dancing',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },]
-
-
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class Designer extends Component {
-    // const navigation = useNavigation();
-
 
     state = {
-        timeSlots: [
-            { id: '1', time: '10am - 11am' },
-            { id: '2', time: '11am - 12pm' },
-            { id: '3', time: '12pm - 1pm' },
-            { id: '4', time: '1pm - 2pm' },
-            { id: '5', time: '2pm - 3pm' },
-            { id: '6', time: '3pm - 4pm' },
-            { id: '7', time: '4pm - 5pm' },
-            { id: '8', time: '5pm - 6pm' },
-        ],
-
-        //checkBox
+        designerdata: [],
         modalVisible: false,
         checked: false,
     }
@@ -79,13 +36,12 @@ export default class Designer extends Component {
                     onRequestClose={() => {
                         Alert.alert("Modal has been closed.");
                         this.setState({ modalVisible: true })
-                    }}
-                >
+                    }}>
                     <View style={{ marginTop: 100, marginBottom: 50, marginLeft: 30, marginRight: 30, width: '80%', borderRadius: 0, borderWidth: 0, alignSelf: 'center', justifyContent: 'center', alignSelf: 'center', backgroundColor: mycolor.white }}>
                         <View style={styles.modalView}>
                             <Text style={{ fontSize: 24, fontWeight: 'bold', padding: 10, alignSelf: 'center', color: "black" }}>Choose Designer</Text>
                             <FlatList
-                                data={list}
+                                data={this.state.designerdata}
                                 renderItem={this.renderItem2}
                                 keyExtractor={(item) => item._id}
                                 showsVerticalScrollIndicator={false}
@@ -94,20 +50,18 @@ export default class Designer extends Component {
                     </View>
                 </Modal>
 
-
-
-
                 <View style={{ marginTop: 10, marginRight: 20, marginLeft: 20 }}>
                     <TextInputComp
                         onPressRightBtn={() => this.setState({ modalVisible: true })}
                         tintcolor={mycolor.lightgray}
+                        onChangeText={text => this.searchItems(text)}
                         leftIcon={require('../../assets/icon_search.png')}
                         textviewstyle={{ height: 40 }}></TextInputComp>
                 </View>
                 <FlatList
                     style={{ marginBottom: 30 }}
-                    data={list}
-                    renderItem={this.renderItem}
+                    data={this.state.designerdata}
+                    renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item._id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
@@ -115,7 +69,7 @@ export default class Designer extends Component {
 
                 <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 0 }}>
 
-                    <FloatingButtonComp imagesrc={require('../../assets/icon_upload.png')}></FloatingButtonComp>
+                    <FloatingButtonComp imagesrc={require('../../assets/icon_upload.png')} floatingclick={() => this.props.navigation.navigate("UploadMedia")}></FloatingButtonComp>
 
                     <FloatingButtonComp imagesrc={require('../../assets/icon_selection.png')} ></FloatingButtonComp>
                 </View>
@@ -123,6 +77,30 @@ export default class Designer extends Component {
             </SafeAreaView>
         );
     }
+
+
+    searchItems = text => {
+        console.log(this.state.designerdata)
+        var datatosearch = this.state.designerdata
+        if (text.length == 0) {
+            this.getAllDesigners()
+        }
+        let newData = datatosearch.filter(item => {
+            const itemData = `${item.first_name.toUpperCase()}`;
+            const textData = text.toUpperCase();
+            if (text.length > 0) {
+                return itemData.indexOf(textData) > -1;
+            }
+        });
+        this.setState({
+            designerdata: newData,
+            value: text,
+        });
+
+    };
+
+
+
     checkBox(index) {
         // let checkedCopy = this.state.checked
         // checkedCopy[index] = !checkedCopy[index]
@@ -130,30 +108,27 @@ export default class Designer extends Component {
         //     checked: checkedCopy,
         // })
     }
-    renderItem({ item, index, props }) {
+    renderItem({ item, index }) {
         console.log("inex: " + index);
         return (
 
             // <TouchableWithoutFeedback style={{
             //   marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, }} onPress={() => actionOnRow(item,props)}>
-            <DesignerComp
-                // toggle={() => this.onToggle(index)}
-                // propsfromparents={onPressButtonChildren.bind()}s
-                imagepath={item.image_url}
-                designername={'Bette J. Wright'}
-                designercontact={'090078601'}
-            />
-            // </TouchableWithoutFeedback>
+            <TouchableOpacity onPress={() => this.actionOnRow(item, index)}>
+                <DesignerComp
+                    // toggle={() => this.onToggle(index)}
+                    // propsfromparents={onPressButtonChildren.bind()}
+                    imagepath={item.image_url}
+                    designername={item.first_name}
+                    designercontact={item.phone}
+                />
+            </TouchableOpacity>
         );
     }
 
     renderItem2({ item, index, props }) {
         console.log("inex: " + index);
         return (
-
-            // <TouchableWithoutFeedback style={{
-            //   marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, }} onPress={() => actionOnRow(item,props)}>
-
             <View style={{ flex: 1, margin: 5, padding: 10, borderRadius: 5, borderColor: 'white', borderWidth: 5, flexDirection: "row", backgroundColor: "white" }}>
                 <CircleImageComp imagesrc={require('../../assets/icon_selection.png')}></CircleImageComp>
                 <View style={{ flex: 9 }}>
@@ -161,16 +136,51 @@ export default class Designer extends Component {
                     <Text style={{ marginLeft: 10, alignSelf: 'baseline', fontSize: 14, color: 'gray' }}>030078601</Text>
                 </View>
                 <CheckBox
-                    checked={this.state.checked}
+                    // checked={this.state.checked}
                     onPress={() => true}
                     checkedIcon={<Image source={require('../../assets/icon_check.png')} style={{ height: 20, width: 20 }} />}
                     uncheckedIcon={<Image source={require('../../assets/icon_logo.png')} style={{ height: 20, width: 20 }} />}
-                    value={checked}
+                    value={true}
                     onChange={() => this.checkBox(index)} />
             </View>
 
 
         );
+    }
+    componentDidMount() {
+        this.getAllDesigners()
+    }
+
+    logCallback = (log, callback) => {
+        console.log(log);
+        this.setState({
+            callback
+        });
+    }
+
+
+    actionOnRow(itemdata, index) {
+
+        this.props.navigation.navigate('DesignerDetails', { "DesingerData": itemdata })
+    }
+
+    async getAllDesigners() {
+        this.logCallback("getAllDesigner :", this.state.contentLoading = true);
+        // var userdata = await Prefs.get(Keys.userData);
+        // var parsedata = JSON.parse(userdata)
+
+        ApiCalls.getapicall("get_designers", "").then(data => {
+            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+            if (data.status == true) {
+                this.setState({ designerdata: data.data })
+            } else {
+                Alert.alert('Failed', data.message);
+            }
+        }, error => {
+            this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+            Alert.alert('Error', JSON.stringify(error));
+        }
+        )
     }
 
 }

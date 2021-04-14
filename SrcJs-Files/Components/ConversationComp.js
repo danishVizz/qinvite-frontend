@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Trans from '../Translation/translation'
-import { StyleSheet, View, Image, TextInput, Text} from 'react-native';
+import { StyleSheet, View, Image, TextInput, Text } from 'react-native';
 import mycolor from "../Constants/Colors";
 import CircleImageComp from "../Components/CircleImageComp";
 import { CheckBox } from 'react-native-elements';
@@ -29,16 +29,18 @@ export default class ConversationComp extends Component {
                         <Text>{this.props.contactname}</Text>
                         <Text>{this.props.status}</Text>
                     </View>
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1, alignSelf: 'flex-end' }}>
                         <Text>{this.props.time}</Text>
                     </View>
 
-                    <CheckBox
+                    {/* <CheckBox
+                    style={{backgroundColor:'red'}}
                         checked={this.props.isChecked}
                         checkedIcon={<Image source={require('../../assets/icon_check.png')} style={{ height: 20, width: 20 }} />}
-                        uncheckedIcon={<Image source={require('../../assets/icon_logo.png')} style={{ height: 20, width: 20 }} />}
+                        uncheckedIcon={<Image source={null} style={{ height: 20, width: 20 }} />}
                         onPress={this.props.OnCheckPress}
-                    />
+                    /> */}
+
                 </View>
                 <View
                     style={{

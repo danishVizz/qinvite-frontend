@@ -60,7 +60,7 @@ export default class Profile extends Component {
                         <EditTextComp value={this.state.citytxt} isEnable={this.state.allfieldsenabel} onChangeText={(city) => this.setState({ citytxt: city, eventnameError: false })} text={Trans.translate('City')}></EditTextComp>
                         <EditTextComp value={this.state.countrytxt} isEnable={this.state.allfieldsenabel} onChangeText={(country) => this.setState({ countrytxt: country, eventnameError: false })} text={Trans.translate('Country')}></EditTextComp>
 
-                        <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.OnDeleteAccount()}>
+                        <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.DeleteProfile()}>
                             <Image style={{ height: 17, width: 15 }} resizeMode='contain' source={require('../../assets/icon_delete.png')}></Image>
                             <Text style={{ alignItems: 'center', marginLeft: 10, fontSize: 14, color: mycolor.pink }}>{Trans.translate('DeleteAcc')}</Text>
                         </TouchableOpacity>
@@ -85,7 +85,7 @@ export default class Profile extends Component {
         this.setState({ idcardtxt: parsedata.username })
         this.setState({ citytxt: parsedata.city })
         this.setState({ countrytxt: parsedata.country })
-        this.setState({ user_id: parsedata.id })
+        this.setState({ user_id: parsedata.i})
     }
 
 
@@ -115,9 +115,9 @@ export default class Profile extends Component {
         )
     }
 
-    async DeleteEvent(id) {
+    async DeleteProfile() {
         this.logCallback("DeleteEvent :", this.state.contentLoading = true);
-        ApiCalls.deletapicall("delete_user", id).then(data => {
+        ApiCalls.deletapicall("delete_user", this.state.user_id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
                 this.props.navigation.navigate('LandingScreen')

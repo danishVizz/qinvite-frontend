@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
 import { FlatList, Image, View, StyleSheet } from 'react-native'
 
 import Trans from '../Translation/translation'
-import { useNavigation } from '@react-navigation/core';
 import ConversationComp from '../Components/ConversationComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -12,34 +11,36 @@ import { StatusBar } from 'expo-status-bar';
 
 
 
-function ContactListing(props) {
-    const navigation = useNavigation();
-    return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
-            <StatusBar
-                backgroundColor='#F54260'
-            />
-            <HeaderComp2 textfonts={'bold'}
-                righttitle={Trans.translate('Resend')}
-                titlepos={'center'}
-                leftBtnClicked={()=>navigation.goBack()}
-                title={Trans.translate('InvitedPeoples')}
-                leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
+export default class ContactListing extends Component {
 
-            <FlatList
-                data={list}
-                renderItem={renderItem}
-                keyExtractor={(item) => item._id}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false} />
+    render() {
+        var participants = this.props.route.params.Participants ?? []
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
+                <StatusBar
+                    backgroundColor='#F54260'
+                />
+                <HeaderComp2 textfonts={'bold'}
+                    righttitle={Trans.translate('Resend')}
+                    titlepos={'center'}
+                    leftBtnClicked={() => this.props.navigation.goBack()}
+                    title={Trans.translate('InvitedPeoples')}
+                    leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
-
-        </SafeAreaView>
-
-    );
+                <FlatList
+                    data={participants}
+                    renderItem={this.renderItem.bind(this)}
+                    keyExtractor={(item) => item._id}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false} />
 
 
-    function renderItem({ item, index, props }) {
+            </SafeAreaView>
+
+        );
+    }
+
+    renderItem({ item, index, props }) {
         console.log("inex: " + index);
         return (
 
@@ -47,112 +48,40 @@ function ContactListing(props) {
             //   marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, }} onPress={() => actionOnRow(item,props)}>
             <ConversationComp
                 // toggle={() => this.onToggle(index)}
-                propsfromparents={onPressButtonChildren.bind()}
+                // propsfromparents={onPressButtonChildren.bind()}
                 imagepath={require('../../assets/icon_lady.png')}
-                contactname={item.title}
-                status={item.description}
+                contactname={item.first_name}
+                status={item.email}
                 time={'10:52 Pm'}
             />
             // </TouchableWithoutFeedback>
         );
-    };
-
-    function onPressButtonChildren(value) {
-        switch (value) {
-            case 'delete':
-                break
-            case 'edit':
-                break
-            default:
-                navigation.navigate('EventDetails')
-        }
-
-        console.log("working" + value)
-        //press button chilldren 
     }
 
-    function actionOnRow(itemdata, props) {
+    // onPressButtonChildren(value) {
+    //     switch (value) {
+    //         case 'delete':
+    //             break
+    //         case 'edit':
+    //             break
+    //         default:
+    //             navigation.navigate('EventDetails')
+    //     }
+
+    //     console.log("working" + value)
+    //     //press button chilldren 
+    // }
+
+    actionOnRow(itemdata, props) {
         console.log('Selected Item :' + itemdata.title);
         // navigation.navigate('EventDetails')
         alert(itemdata.title)
     }
 }
-
 const successCallBackData = (data) => {
     console.log(data)// can get callback data here
 }
-const list = [
-    {
-        title: 'Mike is Programming',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Jack is Play Basketball',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'John is Singing',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Rose is Dancing',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Sarah is Writing',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Mike is Programming',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Jack is Play Basketball',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'John is Singing',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Rose is Dancing',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-    {
-        title: 'Sarah is Writing',
-        description: 'Test Description',
-        image_url: `https://source.unsplash.com/collection/${Math.floor(
-            Math.random() * 100,
-        )}/100x100`,
-    },
-];
+
 
 const styles = StyleSheet.create({
     container: {
@@ -194,6 +123,3 @@ const styles = StyleSheet.create({
         color: 'white'
     }
 });
-;
-
-export default ContactListing;

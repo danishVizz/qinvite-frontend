@@ -11,7 +11,9 @@ class ApiCalls{
 
           let logindata = await fetch(fullurl, {
             method: 'POST',
-            
+            headers: {
+              'Content-Type': 'multipart/form-data; ',
+            },
             body: formadata
           });
     
@@ -28,7 +30,7 @@ class ApiCalls{
       async getapicall(apiname,query) {
         try {
           var fullurl=Base_url+apiname;
-          let codeData = await fetch(`${fullurl}?user_id=${query}`, {
+          let codeData = await fetch(`${fullurl}${query}`, {
             method: 'GET',
             // headers: {
             //   'Accept': 'application/json',

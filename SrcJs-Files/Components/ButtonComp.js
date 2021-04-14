@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { StyleSheet, Text, ActivityIndicator, View } from 'react-native';
+import { StyleSheet, Text, ActivityIndicator, View,TouchableOpacity } from 'react-native';
 import mycolor from "../Constants/Colors";
 export default class ButtonComp extends Component {
   render() {

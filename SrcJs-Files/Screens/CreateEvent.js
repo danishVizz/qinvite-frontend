@@ -15,13 +15,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment";
 import mykeys from '../Constants/keys';
 import DropDownPicker from 'react-native-dropdown-picker';
+import MultiSelect from "react-multi-select-component";
+import Snackbar from 'react-native-snackbar';
 
 export default class CreateEvent extends Component {
 
   state = {
     eventname: '',
     eventdate: '',
-    recpntistcount: 1,
+    recpntistcount: 0,
     eventaddress: '',
     user: [],
     editreceptionistarr: [],
@@ -79,15 +81,16 @@ export default class CreateEvent extends Component {
                 textinstyle={{ paddingLeft: 0 }}
                 value={this.state.date}
                 keyboardType={'numeric'}
+                isEnable={false}
                 rightImgStyle={{ tintColor: mycolor.darkgray, marginRight: 40 }}
                 rightIcon={require('../../assets/icon_picker.png')}
                 onChangeText={(date) => this.setState({ eventdate: date })}
               />
               {this.state.eventDateError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.eventDateErrortxt}</Text> : <View></View>}
-
               {this.state.show ? this.renderPicker() : <View></View>}
-
+            
             </View>
+
             <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("Eventaddress")}</Text>
             <TextInputComp
               placeholder={Trans.translate("Eventaddress")}
@@ -96,21 +99,20 @@ export default class CreateEvent extends Component {
               value={this.state.eventaddress}
               onChangeText={(eventaddress) => this.setState({ eventaddress: eventaddress, eventAddressError: false })}
             />
+
             {this.state.eventAddressError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.eventAddressErrortxt}</Text> : <View></View>}
-
-
             <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("Recepionist")}</Text>
 
             <TextInputComp
-
               inputtype={'numeric'}
               placeholderTextColor={mycolor.lightgray}
               textinstyle={{ width: "100%" }}
               value={String(this.state.recpntistcount)}
-              onChangeText={(count) => this.setState({ recpntistcount: count, disabledropdown: false })}
+              onChangeText={(count) => this.setState({ recpntistcount: count, selectedvaluesarr: [] })}
             />
 
             <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("ReceptionistName")}</Text>
+
             {/* <View style={{ marginTop: 10, borderColor: mycolor.lightgray, borderRadius: 5, borderWidth: 1 }}>
               <Picker
                 selectedValue={this.state.selelectedvalue}
@@ -124,6 +126,7 @@ export default class CreateEvent extends Component {
 
               </Picker>
             </View> */}
+
             {this.state.loadDropDown ?
               <DropDownPicker
                 items={this.state.user}
@@ -132,16 +135,19 @@ export default class CreateEvent extends Component {
                 itemStyle={{
                   justifyContent: 'flex-start',
                 }}
-                close={()=>this.props.close}
+                close={() => this.props.close}
                 defaultValue={""}
                 // disabled={this.state.disabledropdown}
                 multiple={true}
+              
                 multipleText={"%d items have been selected."}
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder="Select Receptionists"
                 dropDownStyle={{ backgroundColor: '#fafafa' }}
-                onChangeItemMultiple={(item => this.updateUser(item))}
-                onChangeItem={(item => this.updateUser(item))} />
+                removeItem={(value => this.removeItem(value))}
+                onChangeItemMultiple={item => this.setState({
+                }, console.log("Multi......" + this.state.selectedCountries))}
+                onChangeItem={(item, index) => this.updateUser(item, index)}/>
               :
               null
             }
@@ -205,11 +211,13 @@ export default class CreateEvent extends Component {
   }
 
   async onSignupPress() {
+
     var check = this.checkforError()
     if (check) {
       return;
     }
     else {
+      console.log(":asdsa")
       var usersdata = await Prefs.get(Keys.userData);
       var parsedata = JSON.parse(usersdata)
       var data = {
@@ -321,8 +329,7 @@ export default class CreateEvent extends Component {
 
   async getAllReceptionists() {
     this.logCallback("getProducts :", this.state.contentLoading = true);
-    // var userdata = await Prefs.get(Keys.userData);
-    // var parsedata = JSON.parse(userdata)
+
     ApiCalls.getapicall("receptionists", "").then(data => {
       this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
       if (data.status == true) {
@@ -337,11 +344,10 @@ export default class CreateEvent extends Component {
           }
           var receptionists = {
             label: item.first_name,
-            value: item.id,
+            value: item,
             selected: isselected
           }
           receptionistsarr.push(receptionists)
-
         })
         this.setState({ user: receptionistsarr, loadDropDown: true }, () => console.log(this.state.user))
 
@@ -355,18 +361,32 @@ export default class CreateEvent extends Component {
     )
   }
 
-  updateUser = (selectedvalue) => {
-    console.log('>>>>SelectedItem' + selectedvalue)
-    if (this.state.recpntistcount > this.state.selectedvaluesarr.length) {
-      Alert.alert("You can select only " + this.state.recpntistcount + "receptionist")
-      // this.setState({ disabledropdown: true })
-      return
+  updateUser = (selectedvalue, index) => {
+    
+    if (this.state.recpntistcount < selectedvalue.length) {
+      // Alert.alert("You can select only " + this.state.recpntistcount + " receptionist")
+      Snackbar.show({
+        text: Trans.translate(`ReceptionistLimit`)+" "+this.state.recpntistcount,
+        duration: Snackbar.LENGTH_SHORT,
+      });
     }
     else {
-      this.setState({ selelectedvalue: selectedvalue })
-      this.setState({ selectedvaluesarr: this.state.selectedvaluesarr.concat(selectedvalue) })
+      this.setState({ selectedvaluesarr: selectedvalue }, () => console.log(this.state.selectedvaluesarr))
+      // var receptionistsarr = selectedvalue
+      // const index = receptionistsarr.findIndex((e) => e === selectedvalue);
+      // if (index == -1) {
+      //   receptionistsarr.push(selectedvalue)
+      //   console.log("Pushed")
+      // }
+      // else {
+      //   receptionistsarr.pop(selectedvalue)
+      //   console.log("Poped")
+      // }
     }
-    console.log("Array values " + this.state.selectedvaluesarr)
+
+  }
+  removeItem = (values) => {
+    console.log(values + "Hereeeee")
   }
 
   onChange = (event, selectedValue) => {
@@ -396,15 +416,18 @@ export default class CreateEvent extends Component {
       console.log("Time " + this.state.time)
       this.setState({ eventdate: selecteddatetime })
       this.setState({ eventDateError: false })
-
     }
   };
-
-
   renderPicker() {
     // if (this.state.picker) {
     return (
       <DateTimePicker
+      style={{
+        shadowColor: mycolor.darkgray,
+        shadowRadius: 10,
+        shadowOpacity: 1,
+        shadowOffset: { height: 0, width: 0 },
+      }}
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={-5}
         value={new Date()}

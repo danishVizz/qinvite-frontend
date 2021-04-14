@@ -47,16 +47,16 @@ export default class CategoryContactsSelection extends Component {
                     rightBtnClicked={() => this.CreateCategoryCall()}
                     leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
+                <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
+                    {this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
+                </View>
+
                 <FlatList
                     data={this.state.ContactsList}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item._id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
-
-                <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
-                    {this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
-                </View>
 
             </SafeAreaView>
 
@@ -110,6 +110,7 @@ export default class CategoryContactsSelection extends Component {
         let { isChecked } = this.state;
         isChecked[index] = !this.state.isChecked[index];
         this.setState({ isChecked: isChecked });
+        
         var contactdata = JSON.stringify({
             "name": item.name,
             "number": item.number,
@@ -175,8 +176,7 @@ export default class CategoryContactsSelection extends Component {
     componentDidMount() {
         var categorydataaa = this.props.route.params.categorydata.contactlist;
         var contactlist = []
-        if (categorydataaa.length!==0) {
-            console.log("??andarrrrrr????")
+        if (categorydataaa.length !== 0) {
             categorydataaa.map((item, index) => {
                 var contactdata = {
                     "name": item.name,
@@ -189,7 +189,7 @@ export default class CategoryContactsSelection extends Component {
                 contactlist.push(contactdata)
                 this.state.selectedLists.push(contactdata)
             })
-          
+
             this.setState({ ContactsList: contactlist }, () => console.log("??ContactListUpdated????" + this.state.ContactsList))
 
         }
@@ -205,12 +205,12 @@ export default class CategoryContactsSelection extends Component {
                 var contactlist = []
                 Contacts.getAll()
                     .then((contacts) => {
-                 
+
                         contacts.map(function (obj) {
                             obj.isphoneallow = false;
                             obj.name = obj.displayName
                             obj.number = obj.phoneNumbers[0]?.number
-                            
+
                             // contactlist.push(obj)
                             // var obj1=JSON.parse(obj)
                             // console.log(obj)

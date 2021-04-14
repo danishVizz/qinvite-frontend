@@ -48,6 +48,8 @@ export class Packages extends Component {
             data={this.state.packagesdata}
             renderItem={this.renderItem.bind(this)}
             keyExtractor={(item) => item.id}
+            // refreshing={false}
+            // onRefresh={this.getAllPackages()}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false} />
         </View>
@@ -109,7 +111,7 @@ export class Packages extends Component {
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
 
-    ApiCalls.getapicall("get_packages", parsedata.id).then(data => {
+    ApiCalls.getapicall("get_packages", "?user_id="+parsedata.id).then(data => {
       this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
       if (data.status == true) {
         this.setState({ packagesdata: data.data })

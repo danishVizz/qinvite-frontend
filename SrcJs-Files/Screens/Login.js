@@ -21,10 +21,10 @@ import Keys from "../Constants/keys";
 export default class Login extends Component {
 
   state = {
-    // emailtxt: '123456',
-    // passwordtxt: '123456',
-    emailtxt: '',
-    passwordtxt: '',
+    emailtxt: '123456',
+    passwordtxt: '123456',
+    // emailtxt: '',
+    // passwordtxt: '',
     isSecureTextEntry: true,
     emailEmpty: false,
     passEmpty: false,

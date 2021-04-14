@@ -18,6 +18,7 @@ export default class TextInputComp extends Component {
         <TouchableOpacity onPress={this.props.onPressRightBtn}>
           <Image resizeMode="contain" source={this.props.leftIcon} style={{ width: 22, height: 22, zIndex: 1, tintColor: this.props.tintcolor }} />
         </TouchableOpacity>
+      
         <TextInput
           underlineColorAndroid="transparent"
           placeholder={this.props.placeholder}

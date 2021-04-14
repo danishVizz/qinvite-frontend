@@ -11,7 +11,7 @@ import { TouchableOpacity } from 'react-native';
 
 
 
-export default class Events extends Component {
+export default class AllRequests extends Component {
 
   state = {
     EventAllData: [],

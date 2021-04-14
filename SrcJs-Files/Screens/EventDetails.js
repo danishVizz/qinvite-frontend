@@ -5,44 +5,62 @@ import mycolor from '../Constants/Colors';
 import EventDetailsComp from '../Components/EventDetailsComp'
 import CircleImageComp from '../Components/CircleImageComp'
 import Translation from '../Translation/translation'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 export default class EventDetails extends Component {
 
+    state = {
+        eventdata: []
+    }
+
     render() {
+
+        var eventdata = this.props.route.params.eventdata ?? []
+
         return (
             <SafeAreaView style={styles.container}>
-                <View style={styles.imagecontainer}>
-                    <Image source={require('../../assets/logo.png')} style={{ resizeMode: 'center' }}></Image>
-                </View>
-                <Text style={{ marginLeft: 20, marginRight: 20, fontSize: 24, fontWeight: 'normal', color: mycolor.darkgray }}>Joyce S. Bell Wedding</Text>
+                <ScrollView>
 
-                <View style={styles.innercontainer}>
-                    <EventDetailsComp lefticon={require('../../assets/icon_eventday.png')} title="Tue 15 Mar,2021" description="05:00 PM - 06:00 PM"></EventDetailsComp>
-                    <EventDetailsComp lefticon={require('../../assets/icon_location.png')} title="Tue 15 Mar,2021" description="523 Pinewood Drive Park Ridge, IL 60068"></EventDetailsComp>
-                    <EventDetailsComp lefticon={require('../../assets/icon_pricetag.png')} title="Tue 15 Mar,2021" description="Contains 800-1000 Invitation Cards and it costs 9000 QR"></EventDetailsComp>
-                </View>
-                <TouchableOpacity>
-                    <Text style={{ marginLeft: 20,marginTop:19, marginRight: 20, fontSize: 14, fontWeight: 'bold', color: mycolor.darkgray}}>{Translation.translate('Participants')}</Text>
-                    <View style={styles.participant}>
-
-                        <CircleImageComp imagesrc={require('../../assets/icon_avatar.jpg')} style={{marginLeft:10}}></CircleImageComp>
-                        <CircleImageComp imagesrc={require('../../assets/icon_avatar.jpg')} style={{marginLeft:-15}}></CircleImageComp>
-                        <CircleImageComp imagesrc={require('../../assets/icon_avatar.jpg')} style={{marginLeft:-15}}></CircleImageComp>
-                <Text style={{marginLeft:20,fontSize:12,flex:1}}> Participants </Text>
-            
-                <Image source={require('../../assets/icon_arrowright.png')} style={{height:15,width:15,marginRight:10}} resizeMode='contain'></Image>
+                    <View style={styles.imagecontainer}>
+                        <Image source={eventdata.event_card==""?require('../../assets/logo.png'): eventdata.event_card} resizeMode='center'></Image>
                     </View>
-                </TouchableOpacity>
-               
 
+                    <Text style={{ marginLeft: 20, marginRight: 20, fontSize: 24, fontWeight: 'normal', color: mycolor.darkgray }}>{eventdata.event_name}</Text>
+
+                    <View style={styles.innercontainer}>
+                        <EventDetailsComp lefticon={require('../../assets/icon_eventday.png')} title={eventdata.event_date} description=""></EventDetailsComp>
+                        <EventDetailsComp lefticon={require('../../assets/icon_location.png')} title={eventdata.event_address} description=""></EventDetailsComp>
+                        <EventDetailsComp lefticon={require('../../assets/icon_pricetag.png')} title={eventdata.package_details.package_name}description={`Contains ${eventdata.package_details.package_people} Invitation Cards and it costs ${eventdata.package_details.package_price} QR`}></EventDetailsComp>
+                    </View>
+
+                    <TouchableOpacity onPress={()=>this.Participantsdetail(eventdata)}>
+
+                        <Text style={{ marginLeft: 20, marginTop: 19, marginRight: 20, fontSize: 14, fontWeight: 'bold', color: mycolor.darkgray }}>{Translation.translate('Participants')} </Text>
+
+                        <View style={styles.participant}>
+
+                            <CircleImageComp imagesrc={require('../../assets/icon_avatar.jpg')} style={{ marginLeft: 10 }}></CircleImageComp>
+
+                            <CircleImageComp imagesrc={require('../../assets/icon_avatar.jpg')} style={{ marginLeft: -15 }}></CircleImageComp>
+
+                            <CircleImageComp imagesrc={require('../../assets/icon_avatar.jpg')} style={{ marginLeft: -15 }}></CircleImageComp>
+
+                            <Text style={{marginLeft: 20, fontSize: 12, flex: 1 }}> {`${eventdata.receptionists.length} Invited`} </Text>
+
+                            <Image source={require('../../assets/icon_arrowright.png')} style={{ height: 15, width: 15, marginRight: 10 }} resizeMode='contain'></Image>
+                    
+                        </View>
+                    </TouchableOpacity>
+                </ScrollView>
             </SafeAreaView>
-
-        );
+            );
+    }
+    Participantsdetail(eventdata)
+    {
+        console.log(eventdata.receptionists)
+        this.props.navigation.navigate('ContactListing',{'Participants': eventdata.receptionists})
     }
 }
 const styles = StyleSheet.create({
-
-
     container: {
         flex: 1,
         backgroundColor: "#fff",
@@ -54,6 +72,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: mycolor.lightgray,
         borderRadius: 5,
+        alignSelf: 'center',
         flexDirection: 'column'
     },
     innercontainer: {
@@ -63,7 +82,7 @@ const styles = StyleSheet.create({
     },
     participant: {
         flexDirection: 'row',
-        alignItems:'center',
+        alignItems: 'center',
         height: 60, marginTop: 10, marginBottom: 30, marginLeft: 35, marginRight: 35, borderColor: mycolor.lightgray, borderRadius: 5, borderWidth: 0.5, backgroundColor: '#FCFCFC'
     },
 });
