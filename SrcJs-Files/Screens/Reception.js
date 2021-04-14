@@ -1,0 +1,172 @@
+import React, { Component } from 'react';
+import mycolor from '../Constants/Colors'
+import { FlatList, Image, View, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native'
+import ReceptionTabComp from '../Components/ReceptionTabComp'
+import Trans from '../Translation/translation'
+
+import { Icon } from "react-native-elements";
+import ConversationComp from '../Components/ConversationComp';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import HeaderComp2 from '../Components/HeaderComp2';
+import { StatusBar } from 'expo-status-bar';
+import Contacts from 'react-native-contacts';
+import { PermissionsAndroid } from 'react-native'
+import { TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import ContactsComp from '../Components/ContactsComp';
+import ApiCalls from "../Services/ApiCalls";
+import Keys from "../Constants/keys";
+import Prefs from "../Prefs/Prefs";
+import CreateEvent from './CreateEvent';
+import Events from './Events';
+
+const Tab = createMaterialBottomTabNavigator();
+const TopTab = createMaterialTopTabNavigator();
+
+const BottomNavigator = (props) => {
+    return (
+        <ReceptionTabComp navigation={props.navigation}></ReceptionTabComp>
+    );
+}
+
+export default class Reception extends Component {
+
+    state = {
+        ContactsList: [{ "name": "Haroon Shaukat", "status": false }, { "name": "Mubashir Mobi", "status": true }, { "name": "Haroon Iqbal", "status": false }],
+        isChecked: [],
+        selectedLists: [],
+        catdata: {}
+    }
+    render() {
+        return (
+            // <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
+            //     <StatusBar
+            //         backgroundColor='#F54260'
+            //     />
+            //     {/* <HeaderComp2
+            //         // textfonts={'bold'}
+            //         // righttitle={Trans.translate('Resend')}
+            //         titlepos={'center'}
+            //         leftBtnClicked={() => navigation.goBack()}
+            //         title="Events"
+            //         // righttitle={Trans.translate('Save')}
+            //         // righttextfonts={'bold'}
+            //         // rightBtnClicked={() => this.CreateCategoryCall()}
+            //         leftBtn={require('../../assets/icon_back.png')}></HeaderComp2> */}
+
+            //     <View style={{ backgroundColor: mycolor.pink, padding: 20 }}>
+            //         <View style={{ flexDirection: 'row', backgroundColor: '#fff', height: 40, alignItems: 'center', borderRadius: 4 }}>
+            //             <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/icon_search.png')}></Image>
+            //             <TextInput style={{ flex: 4 }} placeholder="Search"></TextInput>
+            //             <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/icon_search.png')}></Image>
+            //         </View>
+
+            //     </View>
+
+
+            //     <FlatList
+            //         data={this.state.ContactsList}
+            //         renderItem={this.renderItem.bind(this)}
+            //         keyExtractor={(item) => item._id}
+            //         showsVerticalScrollIndicator={false}
+            //         showsHorizontalScrollIndicator={false} />
+
+
+            // </SafeAreaView>
+            <Tab.Navigator
+                activeColor="#F54260"
+                inactiveColor="#D9D9D9"
+                barStyle={{ backgroundColor: mycolor.white, elevation: 10 }}>
+                <Tab.Screen name="Home" component={BottomNavigator} options={{
+                    tabBarLabel: Trans.translate('Home'),
+                    tabBarIcon: ({ color }) => (
+                        <Icon
+                            color={color}
+                            name="home"
+                        />)
+                }}
+                    listeners={({ navigation }) => ({
+                        blur: () => navigation.setParams({ screen: undefined }),
+                    })}
+                />
+                <Tab.Screen name="Packages" component={CreateEvent} options={{
+                    tabBarLabel: Trans.translate('TabPackages'),
+                    tabBarIcon: ({ color }) => (
+                        <Icon
+                            color={color}
+                            name="payment"
+                        />
+                    )
+                }} />
+
+                <Tab.Screen name="Profile" component={Events} options={{
+                    tabBarLabel: Trans.translate('Profile'),
+                    tabBarIcon: ({ color }) => (
+                        <Icon
+                            color={color}
+                            name="person"
+                        />
+                    )
+                }} />
+            </Tab.Navigator>
+        );
+    }
+
+    renderItem({ item, index, props }) {
+        return (
+            <View style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF', paddingLeft: 20, paddingRight: 20 }}>
+                <View style={styles.searchView}>
+                    <Image resizeMode='cover' style={styles.searchImg} source={require('../../assets/icon_lady.png')}></Image>
+                    <View style={{ flexDirection: 'row', marginLeft: 15, flex: 1, height: 60, alignItems: 'center', borderBottomWidth: 0.5, borderBottomColor: mycolor.lightgray }}>
+                        <Text style={{ fontSize: 14 }}>{item.name}</Text>
+                        <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => this.actionOnRow(index)}>
+                            {(item.status == true) ?
+                                <View style={{ width: 50, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Image resizeMode='cover' style={{ height: 12, width: 12 }} source={require('../../assets/green_tick.png')}></Image>
+                                </View>
+                                :
+                                <Text style={{ fontSize: 12, color: mycolor.pink }}>Check In</Text>
+                            }
+                        </TouchableOpacity>
+                        {/* <Divider></Divider> */}
+                    </View>
+                </View>
+            </View>
+        );
+    };
+
+
+    actionOnRow(index) {
+        console.log('good');
+        var list = this.state.ContactsList;
+        list[index].status = !(list[index].status);
+        this.setState({ ContactsList: list });
+    }
+
+    componentDidMount() {
+
+    }
+}
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    searchView: {
+        flexDirection: 'row',
+        height: 60,
+        alignItems: 'center'
+    },
+    searchImg: {
+        width: 20,
+        height: 20,
+        tintColor: mycolor.lightgray,
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 14,
+        marginBottom: 14
+    }
+});
+
