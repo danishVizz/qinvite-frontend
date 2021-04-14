@@ -78,5 +78,7 @@
     "select_category": "Select Category",
     "message": "Message",
     "editor": "Editor",
-    "send_to_all": "Send to all"
+    "send_to_all": "Send to all",
+    "guest_list": "Guest List",
+    "wedding": "Wedding"
 }
