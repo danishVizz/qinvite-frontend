@@ -30,6 +30,7 @@ export const CombineComp = (props) => {
       inactiveColor="#D9D9D9"
       barStyle={{ backgroundColor: mycolor.white, elevation: 10 }}>
       <Tab.Screen name="Home" component={BottomNavigator} options={{
+        
         tabBarLabel: Trans.translate('Home'),
         tabBarIcon: ({ color }) => (
           <Icon

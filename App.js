@@ -37,6 +37,7 @@ import SearchScreen from './SrcJs-Files/Screens/SearchScreen';
 import DumyEditor from './SrcJs-Files/Screens/DumyEditor';
 import { render } from 'react-dom';
 import UploadDesign from './SrcJs-Files/Screens/DesignerScreens/UploadDesign';
+import RequestDetails from './SrcJs-Files/Screens/DesignerScreens/RequestDetails';
 
 
 const RootStack = createStackNavigator();
@@ -50,7 +51,6 @@ export default class App extends Component {
   constructor(props) {
     super(props)
     Trans.setI18nConfig();
-
     RNLocalize.addEventListener("change", handleLocalizationChange());
     RNLocalize.removeEventListener("change", handleLocalizationChange());
   }
@@ -59,9 +59,10 @@ export default class App extends Component {
 
     return (
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName="CombineComp">
+        <RootStack.Navigator initialRouteName="Events">
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
-          <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
+          <RootStack.Screen name="LandingScreen"  component={LandingScreen} options={{ headerShown: false }} />
+          <RootStack.Screen name="RequestDetails"  component={RequestDetails} options={{ headerShown: false }} />
           <RootStack.Screen name="DumyEditor" component={DumyEditor} options={{ headerShown: false }} />
           <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />

@@ -427,13 +427,14 @@ export default class CreateEvent extends Component {
         shadowRadius: 10,
         shadowOpacity: 1,
         shadowOffset: { height: 0, width: 0 },
+        color: 'red'
       }}
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={-5}
         value={new Date()}
         mode={this.state.mode}
         is24Hour={false}
-        display="default"
+        display="calendar"
         onChange={this.onChange}
       />
     );
