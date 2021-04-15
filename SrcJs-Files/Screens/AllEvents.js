@@ -20,7 +20,6 @@ import moment from "moment";
 var query = ""
 export default class AllEvents extends Component {
 
-
     state = {
         originalList: [],
         list: [],

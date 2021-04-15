@@ -20,6 +20,9 @@ import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
 import CreateEvent from './CreateEvent';
 import Events from './Events';
+import ScannerScreen from './ScannerScreen';
+import GuestList from './GuestList';
+// import GuestList from './GuestList';
 
 const Tab = createMaterialBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
@@ -78,7 +81,7 @@ export default class Reception extends Component {
                 activeColor="#F54260"
                 inactiveColor="#D9D9D9"
                 barStyle={{ backgroundColor: mycolor.white, elevation: 10 }}>
-                <Tab.Screen name="Home" component={BottomNavigator} options={{
+                <Tab.Screen name="Home" component={ScannerScreen} options={{
                     tabBarLabel: Trans.translate('Home'),
                     tabBarIcon: ({ color }) => (
                         <Icon
@@ -90,7 +93,7 @@ export default class Reception extends Component {
                         blur: () => navigation.setParams({ screen: undefined }),
                     })}
                 />
-                <Tab.Screen name="Packages" component={CreateEvent} options={{
+                <Tab.Screen name="Packages" component={GuestList} options={{
                     tabBarLabel: Trans.translate('TabPackages'),
                     tabBarIcon: ({ color }) => (
                         <Icon
@@ -100,7 +103,7 @@ export default class Reception extends Component {
                     )
                 }} />
 
-                <Tab.Screen name="Profile" component={Events} options={{
+                <Tab.Screen name="Profile" component={BottomNavigator} options={{
                     tabBarLabel: Trans.translate('Profile'),
                     tabBarIcon: ({ color }) => (
                         <Icon

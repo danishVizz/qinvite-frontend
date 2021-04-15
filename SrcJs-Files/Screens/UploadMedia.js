@@ -9,7 +9,7 @@ import HeaderComp2 from '../Components/HeaderComp2';
 import * as ImagePicker from 'react-native-image-picker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Alert, Dimensions } from 'react-native';
-import Snackbar from 'react-native-snackbar';
+// import Snackbar from 'react-native-snackbar';
 
 const WINDOW = Dimensions.get('window');
 export default class UploadMedia extends Component {
@@ -59,10 +59,10 @@ export default class UploadMedia extends Component {
             this.props.navigation.navigate('DumyEditor', { "imagedata": this.state.imageuri })
         }
         else {
-            Snackbar.show({
-                text: Trans.translate("ImageSelection"),
-                duration: Snackbar.LENGTH_SHORT,
-            });
+            // Snackbar.show({
+            //     text: Trans.translate("ImageSelection"),
+            //     duration: Snackbar.LENGTH_SHORT,
+            // });
         }
     }
     chooseImage = () => {

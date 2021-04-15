@@ -90,5 +90,7 @@
     "changedesigner": "Change Designer",
     "guestlist": "Guest List",
     "progresswait": "Designer is working on it please wait",
-    "pleasewaitdesigner": "No design received yet! Kindly contact to your designer and make sure about deadline. You can add guest lists while designer is working on your design"
+    "pleasewaitdesigner": "No design received yet! Kindly contact to your designer and make sure about deadline. You can add guest lists while designer is working on your design",
+    "check_in": "Check in",
+    "cancel": "Cancel"
   }

@@ -16,9 +16,7 @@ import ApiCalls from "../Services/ApiCalls";
 import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
 
-
 export default class GuestList extends Component {
-
 
     state = {
         ContactsList: [{"name": "Haroon Shaukat", "status": false}, {"name": "Mubashir Mobi", "status": true}, {"name": "Haroon Iqbal", "status": false}],
@@ -57,9 +55,7 @@ export default class GuestList extends Component {
         );
     }
 
-
     renderItem({ item, index, props }) {
-
         return (
             <View style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF', paddingLeft: 20, paddingRight: 20 }}>
                 <View style={{ flexDirection: 'row', height: 60, alignItems: 'center' }}>
