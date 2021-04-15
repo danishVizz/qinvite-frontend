@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
 import { FlatList, Image, View, StyleSheet, Alert } from 'react-native'
-
 import Trans from '../Translation/translation'
-import ConversationComp from '../Components/ConversationComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import HeaderComp2 from '../Components/HeaderComp2';
 import { StatusBar } from 'expo-status-bar';
 import Contacts from 'react-native-contacts';
@@ -134,6 +131,7 @@ export default class CategoryContactsSelection extends Component {
     //     )
 
     // }
+
     isIconCheckedOrNot = (item, index) => {
         let { isChecked } = this.state;
         isChecked[index] = !this.state.isChecked[index];

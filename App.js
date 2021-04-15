@@ -59,7 +59,7 @@ export default class App extends Component {
 
     return (
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName="Events">
+        <RootStack.Navigator initialRouteName="CreateCategory">
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
           <RootStack.Screen name="LandingScreen"  component={LandingScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="RequestDetails"  component={RequestDetails} options={{ headerShown: false }} />
