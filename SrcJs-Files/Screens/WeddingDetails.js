@@ -90,7 +90,7 @@ export default class WeddingDetails extends Component {
                     <Image resizeMode='cover' style={{ height: 40, width: 40, borderRadius: 20, backgroundColor: 'gray' }} source={require('../../assets/icon_lady.png')}></Image>
                     <View style={{ flexDirection: 'row', marginLeft: 15, flex: 1, height: 60, alignItems: 'center' }}>
                         <Text style={{ fontSize: 14, color: mycolor.darkgray }}>{item.name}</Text>
-                        <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => this.actionOnRow(index)}>
+                        <TouchableOpacity style={{ marginLeft: 'auto' }}>
                             {(item.check_in == "1") ?
                                 <View style={{ width: 50, justifyContent: 'center', alignItems: 'center' }}>
                                     <Image resizeMode='cover' style={{ height: 12, width: 12 }} source={require('../../assets/green_tick.png')}></Image>
@@ -144,7 +144,6 @@ export default class WeddingDetails extends Component {
     }
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -185,5 +184,4 @@ const styles = StyleSheet.create({
         color: 'white'
     }
 });
-;
 

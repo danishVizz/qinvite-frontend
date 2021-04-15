@@ -9,14 +9,11 @@ import Keys from '../Constants/keys';
 import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 
-
-
 export default class Events extends Component {
 
   state = {
     EventAllData: [],
     contentLoading: false
-
   }
 
   _onPress() {
@@ -27,6 +24,7 @@ export default class Events extends Component {
     console.log(this.props.navigation);
     return (
       <View style={{ flex: 1, backgroundColor: mycolor.white }}>
+
         <FlatList
           data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
           renderItem={this.renderItem.bind(this)}
@@ -219,5 +217,5 @@ const styles = StyleSheet.create({
     color: 'white'
   }
 });
-;
+
 

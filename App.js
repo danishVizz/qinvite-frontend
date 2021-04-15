@@ -24,7 +24,8 @@ import Profile from './SrcJs-Files/Screens/Profile'
 import ViewPort from './SrcJs-Files/Screens/ViewPort'
 import CategoryContactsSelection from './SrcJs-Files/Screens/CategoryContactsSelection'
 import GuestList from './SrcJs-Files/Screens/GuestList'
-import WeddingDetails from './SrcJs-Files/Screens/WeddingDetails'
+import WeddingDetails from './SrcJs-Files/Screens/WeddingDetails' 
+import ScannerScreen from './SrcJs-Files/Screens/WeddingDetails'
 import Reception from './SrcJs-Files/Screens/Reception'
 import Packages from './SrcJs-Files/Screens/Packages'
 import TabNavComp from './SrcJs-Files/Components/TabNavComp'
@@ -92,7 +93,8 @@ export default class App extends Component {
           <RootStack.Screen name="CreateCategory" component={CreateCategory} options={{ headerShown: true, title: Trans.translate('CreateCategory'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
           <RootStack.Screen name="GuestList" component={GuestList} options={{ headerShown: false }} />
           <RootStack.Screen name="Reception" component={Reception} options={{ headerShown: false }} />
-          <RootStack.Screen name="WeddingDetails" component={WeddingDetails} options={{ headerShown: false }} />
+          <RootStack.Screen name="WeddingDetails" component={WeddingDetails} options={{ headerShown: false }} /> 
+          <RootStack.Screen name="ScannerScreen" component={ScannerScreen} options={{ headerShown: false }} />
           {/* <RootStack.Screen name="Home" component={Home} options={{headerShown:false}} /> */}
 
 

@@ -16,7 +16,7 @@ import moment from "moment";
 import mykeys from '../Constants/keys';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MultiSelect from "react-multi-select-component";
-import Snackbar from 'react-native-snackbar';
+// import Snackbar from 'react-native-snackbar';
 
 export default class CreateEvent extends Component {
 
@@ -365,10 +365,10 @@ export default class CreateEvent extends Component {
     
     if (this.state.recpntistcount < selectedvalue.length) {
       // Alert.alert("You can select only " + this.state.recpntistcount + " receptionist")
-      Snackbar.show({
-        text: Trans.translate(`ReceptionistLimit`)+" "+this.state.recpntistcount,
-        duration: Snackbar.LENGTH_SHORT,
-      });
+      // Snackbar.show({
+      //   text: Trans.translate(`ReceptionistLimit`)+" "+this.state.recpntistcount,
+      //   duration: Snackbar.LENGTH_SHORT,
+      // });
     }
     else {
       this.setState({ selectedvaluesarr: selectedvalue }, () => console.log(this.state.selectedvaluesarr))
