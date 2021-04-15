@@ -17,6 +17,7 @@ import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
 import { TouchableOpacity } from 'react-native';
 import { ActivityIndicator } from 'react-native';
+import TextInputComp from '../Components/TextInputComp';
 
 
 export default class CategoryContactsSelection extends Component {
@@ -30,8 +31,10 @@ export default class CategoryContactsSelection extends Component {
     }
     render() {
 
-        const data = this.props.route.params.categorydata.categoryename
+        // const data = this.props.route.params.categorydata.categoryename
 
+
+        
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <StatusBar
@@ -44,11 +47,19 @@ export default class CategoryContactsSelection extends Component {
                     title={Trans.translate('SelectInvites')}
                     righttitle={Trans.translate('Save')}
                     righttextfonts={'bold'}
-                    rightBtnClicked={() => this.CreateCategoryCall()}
+                    // rightBtnClicked={() => this.CreateCategoryCall()}
                     leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
                 <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
                     {this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
+                </View>
+
+                <View style={{ marginTop: 10, marginRight: 20, marginLeft: 20 }}>
+                    <TextInputComp
+                        tintcolor={mycolor.lightgray}
+                        onChangeText={text => this.searchItems(text)}
+                        leftIcon={require('../../assets/icon_search.png')}
+                        textviewstyle={{ height: 40 }}></TextInputComp>
                 </View>
 
                 <FlatList
@@ -64,6 +75,25 @@ export default class CategoryContactsSelection extends Component {
     }
 
 
+    searchItems = text => {
+        var datatosearch = this.state.designerdata
+        if (text.length == 0) {
+            this.getAllDesigners()
+        }
+        let newData = datatosearch.filter(item => {
+            const itemData = `${item.first_name.toUpperCase()}`;
+            const textData = text.toUpperCase();
+            if (text.length > 0) {
+                return itemData.indexOf(textData) > -1;
+            }
+        });
+        this.setState({
+            designerdata: newData,
+            value: text,
+        });
+
+    }
+
     logCallback = (log, callback) => {
         console.log(log);
         this.setState({
@@ -72,40 +102,38 @@ export default class CategoryContactsSelection extends Component {
     }
 
 
-    async CreateCategoryCall() {
+    // async CreateCategoryCall() {
+    //     var usersdata = await Prefs.get(Keys.userData);
+    //     var parsedata = JSON.parse(usersdata)
+    //     console.log("MYDATA" + parsedata.id)
 
 
-        var usersdata = await Prefs.get(Keys.userData);
-        var parsedata = JSON.parse(usersdata)
-        console.log("MYDATA" + parsedata.id)
+    //     var formadata = new FormData()
+    //     formadata.append("category_name", this.props.route.params.categorydata.categoryename)
+    //     formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
+    //     formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
+    //     formadata.append("user_id", parsedata.id)
+    //     this.state.selectedLists.map((item, index) => {
+    //         formadata.append("participants[" + index + "]", this.state.selectedLists[index])
+    //     });
 
+    //     this.logCallback('Creating Package Start', this.state.isLoading = true);
+    //     ApiCalls.postApicall(formadata, "add_category").then(data => {
+    //         this.logCallback("Response came", this.state.isLoading = false);
+    //         if (data.status == true) {
+    //             this.props.navigation.navigate('ChooseCategory')
 
-        var formadata = new FormData()
-        formadata.append("category_name", this.props.route.params.categorydata.categoryename)
-        formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
-        formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
-        formadata.append("user_id", parsedata.id)
-        this.state.selectedLists.map((item, index) => {
-            formadata.append("participants[" + index + "]", this.state.selectedLists[index])
-        });
+    //         } else {
+    //             Alert.alert('Failed', data.message);
+    //         }
+    //     }, error => {
+    //         this.logCallback("Something Went Wrong", this.state.isLoading = false);
+    //         this.props.navigation.navigate('ChooseCategory')
+    //         // Alert.alert('Error', JSON.stringify(error));
+    //     }
+    //     )
 
-        this.logCallback('Creating Package Start', this.state.isLoading = true);
-        ApiCalls.postApicall(formadata, "add_category").then(data => {
-            this.logCallback("Response came", this.state.isLoading = false);
-            if (data.status == true) {
-                this.props.navigation.navigate('ChooseCategory')
-
-            } else {
-                Alert.alert('Failed', data.message);
-            }
-        }, error => {
-            this.logCallback("Something Went Wrong", this.state.isLoading = false);
-            this.props.navigation.navigate('ChooseCategory')
-            // Alert.alert('Error', JSON.stringify(error));
-        }
-        )
-
-    }
+    // }
     isIconCheckedOrNot = (item, index) => {
         let { isChecked } = this.state;
         isChecked[index] = !this.state.isChecked[index];

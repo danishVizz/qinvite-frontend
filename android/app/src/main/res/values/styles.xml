@@ -15,9 +15,13 @@
 
   
 
-<style name="DialogDatePicker.Theme" parent="Theme.AppCompat.Light.Dialog">
+<style name="DialogDatePicker.Theme" parent="Theme.AppCompat.DayNight.Dialog">
+
+         <item name="android:windowBackground">#181818</item>
         <item name="colorAccent">#F54260</item>
         <item name="android:textColor">#F54260</item>
         <item name="android:textColorPrimary">#F54260</item>
     </style>
+
+
 </resources>

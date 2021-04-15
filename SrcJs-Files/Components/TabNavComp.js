@@ -36,8 +36,12 @@ export default class TabNavComp extends Component {
             >
           </this.Tab.Screen>
 
-          <this.Tab.Screen name="Active"
+          <this.Tab.Screen
+          
+         
+          name="Active"
               // component={Events}
+        
             children={() => <Events type="Active"  navigation={this.props.navigation}/>}
             >
           </this.Tab.Screen>

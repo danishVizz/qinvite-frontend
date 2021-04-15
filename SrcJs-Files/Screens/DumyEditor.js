@@ -329,9 +329,6 @@ export default class DumyEditor extends Component {
       </View>
     );
   }
-
-
-
   saveImg() {
     this.refs.viewShot.capture().then(uri => {
       console.log("do something with ", uri);

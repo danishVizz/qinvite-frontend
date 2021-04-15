@@ -51,7 +51,7 @@ export default class UploadDesign extends Component {
                                 checkedIcon={<Image source={require('../../../assets/icon_check.png')} style={{ height: 20, width: 20 }} />}
                                 uncheckedIcon={<Image source={require('../../../assets/icon_oval.png')} style={{ height: 20, width: 20 }} />}
                                 title={Trans.translate('SpaceAdjusted')}
-                            ></CheckBox>
+                            ></CheckBox> 
                             <CheckBox
                                 checked={this.state.langenglish}
                                 textStyle={{ fontSize: 10, fontFamily: 'normal', color: "#474645" }}

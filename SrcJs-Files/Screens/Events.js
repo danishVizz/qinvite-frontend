@@ -29,6 +29,7 @@ export default class Events extends Component {
           data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item) => item.id}
+          
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false} />
 
@@ -83,6 +84,7 @@ export default class Events extends Component {
 
 
   async getAllEvents() {
+    this.logCallback("Getting Events....:", this.state.contentLoading = true);
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
     ApiCalls.getapicall("get_events", "?user_id=" + parsedata.id).then(data => {

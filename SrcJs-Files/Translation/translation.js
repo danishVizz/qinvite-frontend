@@ -22,7 +22,7 @@ class Trans {
   
  setI18nConfig = () => {
     // fallback if no available language fits
-    const fallback = { languageTag: "ar", isRTL: false };
+    const fallback = { languageTag: "ara", isRTL: false };
   
     const { languageTag, isRTL } =
       RNLocalize.findBestAvailableLanguage(Object.keys(this.translationGetters)) ||

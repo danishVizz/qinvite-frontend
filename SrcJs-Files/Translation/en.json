@@ -96,6 +96,8 @@
     "PointtoPonder": "Point to Ponder", 
     "SpaceAdjusted": "Adjusted space for QR code in design", 
     "DesignQuality": "Design is in High Quality", 
+    "DeadLine": "Your Deadline", 
+    "SubmitDesign": "Submit Design", 
     "Filesizehint": "Minimum File Size 2mb File Type (jpg, jpeg, png, pdf)", 
     "pleasewaitdesigner": "No design received yet! Kindly contact to your designer and make sure about deadline. You can add guest lists while designer is working on your design",
     "guest_list": "Guest List",
