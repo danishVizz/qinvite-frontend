@@ -38,12 +38,12 @@ export default class DesignerRequests extends Component {
 
           <this.Tab.Screen name="Accepted"
               // component={Events}
-            children={() => <Events type="Accepted"  navigation={this.props.navigation}/>}
+            children={() => <AllRequests type="Accepted"  navigation={this.props.navigation}/>}
             >
           </this.Tab.Screen>
           <this.Tab.Screen name="Rejected"
               // component={Events}
-            children={() => <Events type="Rejected" navigation={this.props.navigation} />}
+            children={() => <AllRequests type="Rejected" navigation={this.props.navigation} />}
             >
           </this.Tab.Screen>
 

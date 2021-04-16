@@ -80,7 +80,6 @@ export default class Designer extends Component {
 
 
     searchItems = text => {
-        console.log(this.state.designerdata)
         var datatosearch = this.state.designerdata
         if (text.length == 0) {
             this.getAllDesigners()
@@ -97,9 +96,7 @@ export default class Designer extends Component {
             value: text,
         });
 
-    };
-
-
+    }
 
     checkBox(index) {
         // let checkedCopy = this.state.checked

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
 import { FlatList, Image, View, StyleSheet, Alert } from 'react-native'
+
 import Trans from '../Translation/translation'
+import ConversationComp from '../Components/ConversationComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import HeaderComp2 from '../Components/HeaderComp2';
 import { StatusBar } from 'expo-status-bar';
 import Contacts from 'react-native-contacts';
@@ -16,7 +19,7 @@ import { TouchableOpacity } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import TextInputComp from '../Components/TextInputComp';
 
-
+var contactlist = []
 export default class CategoryContactsSelection extends Component {
     state = {
         ContactsList: [],
@@ -28,10 +31,6 @@ export default class CategoryContactsSelection extends Component {
     }
     render() {
 
-        // const data = this.props.route.params.categorydata.categoryename
-
-
-        
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <StatusBar
@@ -44,10 +43,10 @@ export default class CategoryContactsSelection extends Component {
                     title={Trans.translate('SelectInvites')}
                     righttitle={Trans.translate('Save')}
                     righttextfonts={'bold'}
-                    // rightBtnClicked={() => this.CreateCategoryCall()}
+                    rightBtnClicked={() => this.CreateCategoryCall()}
                     leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
-                <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
+                <View style={{ alignSelf: 'center', alignItems: "center" }}>
                     {this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
                 </View>
 
@@ -58,14 +57,14 @@ export default class CategoryContactsSelection extends Component {
                         leftIcon={require('../../assets/icon_search.png')}
                         textviewstyle={{ height: 40 }}></TextInputComp>
                 </View>
-
-                <FlatList
-                    data={this.state.ContactsList}
-                    renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item) => item._id}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false} />
-
+                <View style={{ flex: 1 }}>
+                    <FlatList
+                        data={this.state.ContactsList}
+                        renderItem={this.renderItem.bind(this)}
+                        keyExtractor={(item) => item._id}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false} />
+                </View>
             </SafeAreaView>
 
         );
@@ -73,22 +72,49 @@ export default class CategoryContactsSelection extends Component {
 
 
     searchItems = text => {
-        var datatosearch = this.state.designerdata
+
+        var datatosearch = this.state.ContactsList
         if (text.length == 0) {
-            this.getAllDesigners()
+
+            this.setState({ ContactsList: this.state.ContactListReplicae })
+            var orignallist = this.state.ContactsList
+            var selectedlist = this.state.selectedLists
+            console.log("Repliacaa")
+            console.log(this.state.ContactListReplicae)
+
+            // orignallist.map((item, key) => {
+            //       console.log("-------------nunm-------------"+item.number)
+            //     const index =selectedlist.findIndex((e) => e.number === item.number)
+
+            //     console.log("FindIndexxxxx"+item.name)
+            //     this.isIconCheckedOrNot(item,index)
+            // })
+            // var count = 0;
+            // for (let i of orignallist) {
+            //     for (let j of selectedlist) {
+            //         if (JSON.stringify(i) === JSON.stringify(j)) {
+            //             console.log("desired index : "+count);
+            //             break;
+            //         }
+            //     }
+            //     count = count + 1;
+            // }
+
+            return
         }
-        let newData = datatosearch.filter(item => {
-            const itemData = `${item.first_name.toUpperCase()}`;
+
+        let newData = datatosearch.filter((item, valindex) => {
+            const itemData = `${item.name.toUpperCase()}`;
             const textData = text.toUpperCase();
             if (text.length > 0) {
-                return itemData.indexOf(textData) > -1;
+                var index = itemData.indexOf(textData) > -1;
+                return index
             }
         });
         this.setState({
-            designerdata: newData,
+            ContactsList: newData,
             value: text,
         });
-
     }
 
     logCallback = (log, callback) => {
@@ -98,67 +124,69 @@ export default class CategoryContactsSelection extends Component {
         });
     }
 
+    async CreateCategoryCall() {
+        var usersdata = await Prefs.get(Keys.userData);
+        var parsedata = JSON.parse(usersdata)
+        console.log("MYDATA" + parsedata.id)
 
-    // async CreateCategoryCall() {
-    //     var usersdata = await Prefs.get(Keys.userData);
-    //     var parsedata = JSON.parse(usersdata)
-    //     console.log("MYDATA" + parsedata.id)
+        var formadata = new FormData()
+        formadata.append("category_name", this.props.route.params.categorydata.categoryename)
+        formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
+        formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
+        formadata.append("user_id", parsedata.id)
+        // this.state.selectedLists.map((item, index) => {
+        //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
+        // });
+     
+            formadata.append("participants", JSON.stringify(this.state.selectedLists))
+      
 
+        this.logCallback('Creating Package Start', this.state.isLoading = true);
+        ApiCalls.postApicall(formadata, "add_category").then(data => {
+            this.logCallback("Response came", this.state.isLoading = false);
+            if (data.status == true) {
+                this.props.navigation.navigate('ChooseCategory')
 
-    //     var formadata = new FormData()
-    //     formadata.append("category_name", this.props.route.params.categorydata.categoryename)
-    //     formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
-    //     formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
-    //     formadata.append("user_id", parsedata.id)
-    //     this.state.selectedLists.map((item, index) => {
-    //         formadata.append("participants[" + index + "]", this.state.selectedLists[index])
-    //     });
+            } else {
+                Alert.alert('Failed', data.message);
+            }
+        }, error => {
+            this.logCallback("Something Went Wrong", this.state.isLoading = false);
+            this.props.navigation.navigate('ChooseCategory')
+            // Alert.alert('Error', JSON.stringify(error));
+        }
+        )
 
-    //     this.logCallback('Creating Package Start', this.state.isLoading = true);
-    //     ApiCalls.postApicall(formadata, "add_category").then(data => {
-    //         this.logCallback("Response came", this.state.isLoading = false);
-    //         if (data.status == true) {
-    //             this.props.navigation.navigate('ChooseCategory')
-
-    //         } else {
-    //             Alert.alert('Failed', data.message);
-    //         }
-    //     }, error => {
-    //         this.logCallback("Something Went Wrong", this.state.isLoading = false);
-    //         this.props.navigation.navigate('ChooseCategory')
-    //         // Alert.alert('Error', JSON.stringify(error));
-    //     }
-    //     )
-
-    // }
-
+    }
+    // ichecked = [{number:true},{}]
     isIconCheckedOrNot = (item, index) => {
-        let { isChecked } = this.state;
-        isChecked[index] = !this.state.isChecked[index];
-        this.setState({ isChecked: isChecked });
-        
-        var contactdata = JSON.stringify({
+        // let { isChecked } = this.state;
+        // isChecked[index] = !this.state.isChecked[index];
+        // this.setState({ isChecked: isChecked });
+        var arr = this.state.ContactsList;
+        arr[index].isSelected = !(arr[index].isSelected)
+        this.setState({ ContactsList: arr });
+
+        var contactdata = JSON.stringify({ 
             "name": item.name,
             "number": item.number,
             "isphoneallow": item.isphoneallow
         })
 
-        if (isChecked[index] == true) {
+        if (this.state.ContactsList[index].isSelected == true) {
             this.state.selectedLists.push(contactdata)
         } else {
             this.state.selectedLists.pop(contactdata)
         }
+        console.log("SelectedIndextoChange" + index)
 
     }
 
     renderItem({ item, index, props }) {
-
-        // item = JSON.parse(item);
-        // console.log("name : " + item.isphoneallow);
         return (
             <TouchableOpacity style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF' }} onPress={() => this.isIconCheckedOrNot(item, index)}>
                 <ContactsComp
-                    isChecked={this.state.isChecked[index]}
+                    isChecked={this.state.ContactsList[index].isSelected}
                     imagepath={require('../../assets/icon_lady.png')}
                     contactname={item.name}
                     index={index}
@@ -201,58 +229,67 @@ export default class CategoryContactsSelection extends Component {
 
     componentDidMount() {
         var categorydataaa = this.props.route.params.categorydata.contactlist;
-        var contactlist = []
-        if (categorydataaa.length !== 0) {
-            categorydataaa.map((item, index) => {
-                var contactdata = {
-                    "name": item.name,
-                    "number": item.number,
-                    "isphoneallow": item.isphoneallow == "1" ? true : false
-                }
-                let { isChecked } = this.state;
-                isChecked[index] = true;
-                this.setState({ isChecked: isChecked })
-                contactlist.push(contactdata)
-                this.state.selectedLists.push(contactdata)
-            })
+        var isphoneallow = this.props.route.params.categorydata.isphoneallowd
+        console.log("dsfsadfsadfs" + JSON.stringify(categorydataaa))
+        // console.log("catdaaaaaa" + categorydataaa)
+        // var contactlist = []
+        // if (categorydataaa.length !== 0) {
+        //     categorydataaa.map((item, index) => {
+        //         var contactdata = {
+        //             "name": item.name,
+        //             "number": item.number,
+        //             "isSelected": true,
+        //             "isphoneallow": item.isphoneallow == "1" ? true : false
+        //         }
+        //         // let { isChecked } = this.state;
+        //         // isChecked[index] = true;
+        //         // this.setState({ isChecked: isChecked })
+        //         contactlist.push(contactdata)
+        //         this.state.selectedLists.push(contactdata)
+        //     })
 
-            this.setState({ ContactsList: contactlist }, () => console.log("??ContactListUpdated????" + this.state.ContactsList))
+        //     this.setState({ ContactsList: contactlist, ContactListReplicae: contactlist }, () => console.log("??ContactListUpdated????" + this.state.ContactsList))
 
-        }
-        else {
-            console.log("??bhrrrrr????")
-            PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    'title': 'Contacts',
-                    'message': 'This app would like to view your contacts.'
-                }
-            ).then(() => {
-                var contactlist = []
-                Contacts.getAll()
-                    .then((contacts) => {
+        // }
+        // else {
 
-                        contacts.map(function (obj) {
-                            obj.isphoneallow = false;
-                            obj.name = obj.displayName
-                            obj.number = obj.phoneNumbers[0]?.number
+        PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+            {
+                'title': 'Contacts',
+                'message': 'This app would like to view your contacts.'
+            }
+        ).then(() => {
+            var contactlist = []
+            Contacts.getAll()
+                .then((contacts) => {
+                    contacts.map(function (obj) {
+                        var isselected = false
+                        const index = categorydataaa.findIndex((e) => e.name === obj.displayName);
+                        if (index != -1) {
+                            isselected = true
+                        }
+                        obj.isphoneallow = isphoneallow;
+                        obj.name = obj.displayName
+                        obj.isSelected = isselected
+                        obj.number = obj.phoneNumbers[0]?.number
 
-                            // contactlist.push(obj)
-                            // var obj1=JSON.parse(obj)
-                            // console.log(obj)
-                        });
-                        console.log(contacts)
-                        this.setState({ ContactsList: contacts })
-                    })
-
-            })
+                        // contactlist.push(obj)
+                        // var obj1=JSON.parse(obj)
+                        // console.log(obj)
+                    });
 
 
-                .catch((err) => {
-                    console.log(err);
+
+                    this.setState({ ContactsList: contacts, ContactListReplicae: contacts })
                 })
-        }
+
+        })
+            .catch((err) => {
+                console.log(err);
+            })
     }
+    // }
 }
 
 

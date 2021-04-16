@@ -301,7 +301,7 @@ export default class DumyEditor extends Component {
                   resizeMode='contain'
                   source={{ uri: this.state.imagedata }}
                   // style={{ height: WINDOW.height/2, width: WINDOW.width, borderRadius: 5, borderWidth: 1}}
-                  style={{ width: WINDOW.width - 20, height: WINDOW.height / 2 }}>
+                  style={{ width: WINDOW.width - 20, height: WINDOW.height / 2,backgroundColor: '#fff'}}>
 
 
                   <Draggable x={WINDOW.width / 2.5} y={WINDOW.height / 4} renderColor='green'>
