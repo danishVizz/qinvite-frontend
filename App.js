@@ -39,7 +39,7 @@ import DumyEditor from './SrcJs-Files/Screens/DumyEditor';
 import { render } from 'react-dom';
 import UploadDesign from './SrcJs-Files/Screens/DesignerScreens/UploadDesign';
 import RequestDetails from './SrcJs-Files/Screens/DesignerScreens/RequestDetails';
-
+import DesignerRequests from './SrcJs-Files/Screens/DesignerScreens/DesignerRequests';
 
 const RootStack = createStackNavigator();
 function handleLocalizationChange() {
@@ -60,7 +60,11 @@ export default class App extends Component {
 
     return (
       <NavigationContainer>
+<<<<<<< HEAD
         <RootStack.Navigator initialRouteName="Events">
+=======
+        <RootStack.Navigator initialRouteName="DesignerRequests">
+>>>>>>> 00fc1d1d2849290bab898d929eb60e24d65c91d0
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
           <RootStack.Screen name="LandingScreen"  component={LandingScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="RequestDetails"  component={RequestDetails} options={{ headerShown: false }} />
@@ -94,7 +98,8 @@ export default class App extends Component {
           <RootStack.Screen name="GuestList" component={GuestList} options={{ headerShown: false }} />
           <RootStack.Screen name="Reception" component={Reception} options={{ headerShown: false }} />
           <RootStack.Screen name="WeddingDetails" component={WeddingDetails} options={{ headerShown: false }} /> 
-          <RootStack.Screen name="ScannerScreen" component={ScannerScreen} options={{ headerShown: false }} />
+          <RootStack.Screen name="ScannerScreen" component={ScannerScreen} options={{ headerShown: false }} /> 
+          <RootStack.Screen name="DesignerRequests" component={DesignerRequests} options={{ headerShown: false }} />
           {/* <RootStack.Screen name="Home" component={Home} options={{headerShown:false}} /> */}
 
 
