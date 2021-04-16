@@ -77,7 +77,7 @@
     "SelectInvites": "Select Invites",
     "categorynameisreq": "Category Name required",
     "Send": "Send",
-    "CreatOwnPackage": "Creat Own Package",
+    "CreatOwnPackage": "Create Own Package",
     "phoneerror": "Phone Number is required",
     "select_category": "Select Category",
     "message": "Message",
@@ -103,5 +103,6 @@
     "guest_list": "Guest List",
     "wedding": "Wedding",
     "check_in": "Check in",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "requests": "Requests"
 }

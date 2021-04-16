@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
-import mycolor from '../Constants/Colors'
+import mycolor from '../../Constants/Colors';
 import { FlatList, Image, View, StyleSheet, Alert, Text } from 'react-native'
-import Event_items from '../../ListCustomviews/Event_items'
+import Request_items from '../../ListCustomviews/Request_items'
 import FloatingButtonComp from '../../Components/FloatingButtonComp';
 import ApiCalls from '../../Services/ApiCalls';
 import Prefs from '../../Prefs/Prefs';
@@ -12,7 +12,7 @@ import { TouchableOpacity } from 'react-native';
 export default class AllRequests extends Component {
     state = {
         EventAllData: [],
-        contentLoading: false
+        contentLoading: true
     }
 
     _onPress() {
@@ -21,20 +21,15 @@ export default class AllRequests extends Component {
 
 
     render() {
-       
+
         return (
             <View style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <FlatList
-                    data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
+                    data={this.props.type == "All" ? this.getallData() : this.props.type == "Accepted" ? this.getActiveData() : this.getCloseData()}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
-
-                <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 0 }}>
-                    <FloatingButtonComp imagesrc={require('../../../assets/icon_event.png')} floatingclick={() => this.props.navigation.navigate("CreateEvent", { "eventdata": [] })}></FloatingButtonComp>
-                </View>
-
                 <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
                     {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                 </View>
@@ -52,16 +47,18 @@ export default class AllRequests extends Component {
 
     }
     getActiveData() {
+        console.log("getActiveData()")
         try {
-            var filterarray = this.state.EventAllData.filter(eventdata => eventdata.event_status == "1")
+            var filterarray = this.state.EventAllData.filter(eventdata => eventdata.design_status == "1")
             return filterarray
         } catch {
             return this.state.EventAllData
         }
     }
     getCloseData() {
+        console.log("getCloseData()")
         try {
-            var filterarray = this.state.EventAllData.filter(eventdata => eventdata.event_status == "2")
+            var filterarray = this.state.EventAllData.filter(eventdata => eventdata.design_status == "2")
             return filterarray
         } catch {
             return this.state.EventAllData
@@ -84,7 +81,8 @@ export default class AllRequests extends Component {
     async getAllEvents() {
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
-        ApiCalls.getapicall("get_events", "?user_id=" + parsedata.id).then(data => {
+        parsedata.id = "17";
+        ApiCalls.getapicall("get_event_requests", "?designer_id=" + parsedata.id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
                 this.setState({ EventAllData: data.data })
@@ -100,9 +98,6 @@ export default class AllRequests extends Component {
 
     async DeleteEvent(id) {
         this.logCallback("DeleteEvent :", this.state.contentLoading = true);
-        // var userdata = await Prefs.get(Keys.userData);
-        // var parsedata = JSON.parse(userdata)
-        console.log("Event-Idddd" + id)
         ApiCalls.deletapicall("delete_event", id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
@@ -122,50 +117,58 @@ export default class AllRequests extends Component {
     renderItem({ item, index }) {
         return (
             <TouchableOpacity onPress={() => this.actionOnRow(item)}>
-                <Event_items
+                <Request_items
                     fromchildprops={this.onPressButtonChildren}
                     item={item}
                     image={item.image_url}
                     title={item.event_name}
-                    description={item.event_address}
+                    description={item.event_date}
                 />
             </TouchableOpacity>
         );
     };
 
     onPressButtonChildren = (value, item) => {
-        switch (value) {
-            case 'delete':
-                this.DeleteEvent(item.id)
-                break
-            case 'edit':
-                var newitem = {
-                    "eventid": item.id,
-                    "eventname": item.event_name,
-                    "eventaddress": item.event_address,
-                    "eventdate": item.event_date,
-                    "no_of_receptionists": item.no_of_receptionists,
-                    "receptionists": item.receptionists
-                }
+        console.log("value : " + value);
+        console.log(item);
+        this.changeDesignerStatus(value, item.event_id);
+    }
 
-                this.props.navigation.navigate('CreateEvent',
-                    {
-                        "eventdata": newitem
-                    })
+    async changeDesignerStatus(status, id) {
+        this.logCallback("getAllDesigner :", this.state.contentLoading = true);
 
-                this
-                break
-            default:
-            // this.props.navigation.navigate('EventDetails')
+        var formadata = new FormData()
+        formadata.append("design_status", status);
+        formadata.append("event_id", id);
+
+        ApiCalls.postApicall(formadata, "accept_design").then(data => {
+            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+            if (data.status == true) {
+                // var arr = this.state.EventAllData;
+                // for ( let obj of arr) {
+                //     if (obj.event_id == id) {
+                //         if (status == "accept") {
+                //             obj.design_status = "1"
+                //         }else {
+                //             obj.design_status = "2"
+                //         }
+                //         console.log("changed event id: "+obj.event_id)
+                //     }
+                // }
+                // this.setState({EventAllData: arr});
+            } else {
+                Alert.alert('Failed', data.message);
+            }
+        }, error => {
+            this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+            Alert.alert('Error', JSON.stringify(error));
         }
+        )
     }
 
     actionOnRow(itemdata, props) {
         console.log('Selected Item :' + itemdata.event_name);
-        this.props.navigation.navigate('EventDetails', {
-            "eventdata": itemdata
-
-        })
+        this.props.navigation.navigate('RequestDetails', { detail: itemdata })
     }
 
 

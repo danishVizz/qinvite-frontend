@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import { View } from 'react-native-animatable';
 import mycolor from '../../Constants/Colors'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Events from '../../Screens/DesignerScreens/AllRequests'
+// import Events from '../../Screens/DesignerScreens/AllRequests'
+import AllRequests from '../../Screens/DesignerScreens/AllRequests'
 import HeaderComp from '../../Components/HeaderComp'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Trans from '../../Translation/translation';
 
 export default class DesignerRequests extends Component {
 
@@ -23,11 +25,9 @@ export default class DesignerRequests extends Component {
   }
 
   render() {
-    console.log("this.props.navigation TABNAV");
-    console.log(this.props.navigation);
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
-        <HeaderComp style={{}} title='Events' textsize={20} textfonts='bold' rightBtn={require('../../../assets/icon_search.png')} tintColor='white'rightBtnClicked={()=>this.props.navigation.navigate('SearchScreen')} />
+        <HeaderComp style={{}} title={Trans.translate('requests')} titlepos='center' textsize={20} textfonts='bold' />
         <this.Tab.Navigator
           tabBarOptions={this.tabBarOptions}>
           <this.Tab.Screen name="All"
@@ -38,12 +38,12 @@ export default class DesignerRequests extends Component {
 
           <this.Tab.Screen name="Accepted"
               // component={Events}
-            children={() => <Events type="Accepted"  navigation={this.props.navigation}/>}
+            children={() => <AllRequests type="Accepted"  navigation={this.props.navigation}/>}
             >
           </this.Tab.Screen>
           <this.Tab.Screen name="Rejected"
               // component={Events}
-            children={() => <Events type="Rejected" navigation={this.props.navigation} />}
+            children={() => <AllRequests type="Rejected" navigation={this.props.navigation} />}
             >
           </this.Tab.Screen>
 
