@@ -28,7 +28,7 @@ export default class Login extends Component {
     isSecureTextEntry: true,
     emailEmpty: false,
     passEmpty: false,
-    setLoginLoading:false
+    setLoginLoading: false
   }
 
   render() {
@@ -62,8 +62,8 @@ export default class Login extends Component {
           {this.state.passEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
 
 
-           <TouchableOpacity onPress={()=>this.props.navigation.navigate('ForgotPass')}style={{alignSelf:'flex-end'}}>
-          <Text style={{ color: '#707070', textAlign: 'right', alignSelf: 'flex-end', marginTop: 10, }}>{Trans.translate('Forgotpass')}</Text>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPass')} style={{ alignSelf: 'flex-end' }}>
+            <Text style={{ color: '#707070', textAlign: 'right', alignSelf: 'flex-end', marginTop: 10, }}>{Trans.translate('Forgotpass')}</Text>
           </TouchableOpacity>
 
           <View style={{ minWidth: "100%" }}>
@@ -78,7 +78,7 @@ export default class Login extends Component {
             <ButtonComp
               onPress={() => this.props.navigation.navigate('SignUpScreen')}
               text={Trans.translate("SignUp")}
-              
+
               style={{ backgroundColor: mycolor.white, marginTop: 20 }}
               textcolor={mycolor.darkgray}
               textstyle={{ color: mycolor.pink }} />
@@ -115,10 +115,10 @@ export default class Login extends Component {
     ApiCalls.postApicall(formadata, "login").then(data => {
       this.logCallback("Response came", this.state.setLoginLoading = false);
       if (data.status == true) {
-          Prefs.save(Keys.userData, JSON.stringify(data.data))
+        Prefs.save(Keys.userData, JSON.stringify(data.data))
         this.props.navigation.navigate('CombineComp')
         // this.props.navigation.navigate('ChooseCategory')
- 
+
       } else {
         Alert.alert('Failed', data.message);
       }
@@ -178,6 +178,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 33, marginRight: 33
   },
-
-
 });

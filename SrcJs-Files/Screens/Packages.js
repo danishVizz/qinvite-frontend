@@ -13,6 +13,7 @@ import HeaderComp from '../Components/HeaderComp';
 import Prefs from '../Prefs/Prefs';
 import Keys from '../Constants/keys';
 import mykeys from '../Constants/keys';
+import { TouchableOpacity } from 'react-native';
 
 
 export class Packages extends Component {
@@ -65,7 +66,7 @@ export class Packages extends Component {
 
   renderItem({ item, index }) {
     return (
-      <TouchableWithoutFeedback style={this.state.selectedItem === item.id ? {
+      <TouchableOpacity style={this.state.selectedItem === item.id ? {
         marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, borderColor: mycolor.pink, borderWidth: 2, borderRadius: 5
       } : {
         marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, backgroundColor: mycolor.white
@@ -78,7 +79,7 @@ export class Packages extends Component {
           price={item.package_price}
           invitationcount={item.package_people}
         />
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   };
 

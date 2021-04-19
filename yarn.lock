@@ -8680,7 +8680,7 @@
   dependencies:
     "minimist" "^1.2.5"
 
-"moment@^2.22.0":
+"moment@^2.22.0", "moment@^2.29.1":
   "integrity" "sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ=="
   "resolved" "https://registry.npmjs.org/moment/-/moment-2.29.1.tgz"
   "version" "2.29.1"
@@ -9770,6 +9770,11 @@
   "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-3.3.2.tgz"
   "version" "3.3.2"
 
+"react-native-image-to-pdf@^1.2.0":
+  "integrity" "sha512-EgrdcrHHBrL6gwDFwL9S7Ztd211RZuC1csLnXNpz2pBN385OR33fODzmNwlrpZwwviLVEIURO0vCjxCXyyjdcQ=="
+  "resolved" "https://registry.npmjs.org/react-native-image-to-pdf/-/react-native-image-to-pdf-1.2.0.tgz"
+  "version" "1.2.0"
+
 "react-native-input-spinner@^1.7.7":
   "integrity" "sha512-6zYFU2uhChJ+JC/5yujlZu+r5PYQSYIXluUqTNR3jOCKai0dlCkWiz7d3K2rM7Q2SAIiw4bSBR6mWZIuhL+DEg=="
   "resolved" "https://registry.npmjs.org/react-native-input-spinner/-/react-native-input-spinner-1.7.7.tgz"
@@ -9908,6 +9913,10 @@
   "resolved" "https://registry.npmjs.org/react-native-snackbar/-/react-native-snackbar-2.4.0.tgz"
   "version" "2.4.0"
 
+"react-native-store-photos-album@github:francisco-sanchez-molina/react-native-store-photos-album":
+  "resolved" "git+ssh://git@github.com/francisco-sanchez-molina/react-native-store-photos-album.git#26e9f1327c44d639e8f17e66788d484c03256cc3"
+  "version" "0.1.2"
+
 "react-native-svg@^12.1.0", "react-native-svg@^6.2.0", "react-native-svg@^6.5.3":
   "integrity" "sha512-bKyKHrSvOK09MqsFkQiD4NZp7nM4uf+MoEtWKPfOste8g/3ilc+ZXQDc95iur7xgi0GURHHCXZbz2i8g0cX8sg=="
   "resolved" "https://registry.npmjs.org/react-native-svg/-/react-native-svg-6.5.3.tgz"
@@ -10035,7 +10044,7 @@
     "whatwg-fetch" "^3.0.0"
     "ws" "^6.1.4"
 
-"react-native@*", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@^0.63.2", "react-native@^0.64.0-rc.1", "react-native@>= 0.60.0", "react-native@>=0.20.0", "react-native@>=0.42.0", "react-native@>=0.50.0", "react-native@>=0.59", "react-native@>=0.60", "react-native@>=0.60.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>=0.63.4", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.63.2":
+"react-native@*", "react-native@^0.41.2", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@^0.63.2", "react-native@^0.64.0-rc.1", "react-native@>= 0.60.0", "react-native@>=0.20.0", "react-native@>=0.42.0", "react-native@>=0.50.0", "react-native@>=0.59", "react-native@>=0.60", "react-native@>=0.60.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>=0.63.4", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.63.2":
   "integrity" "sha512-I4kM8kYO2mWEYUFITMcpRulcy4/jd+j9T6PbIzR0FuMcz/xwd+JwHoLPa1HmCesvR1RDOw9o4D+OFLwuXXfmGw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.63.4.tgz"
   "version" "0.63.4"

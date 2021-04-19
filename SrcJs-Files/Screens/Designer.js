@@ -24,7 +24,7 @@ export default class Designer extends Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-                <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('ChooseDesigner')} titlepos='center' ></HeaderComp2>
+                <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('ChooseDesigner')} titlepos='center' leftBtnClicked={()=>this.props.navigation.goBack()}></HeaderComp2>
                 <StatusBar
                     backgroundColor={mycolor.pink}
                 />

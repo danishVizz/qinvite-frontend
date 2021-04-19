@@ -19,7 +19,7 @@ export default class HeaderComp extends Component {
          
         </View>
         <TouchableOpacity style={{ flex: 2, justifyContent: 'center', paddingRight: 18 }} onPress={this.props.rightBtnClicked}>
-          <Image style={{width: 20, height: 20, left: 0, tintColor: this.props.tintColor || {} }} source={this.props.rightBtn}></Image>
+          <Image style={{width: 20, height: 20, left: 0, tintColor: this.props.tintColor }} source={this.props.rightBtn}></Image>
         </TouchableOpacity>
       </View>
 

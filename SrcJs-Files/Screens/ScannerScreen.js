@@ -26,14 +26,26 @@ const WINDOW = Dimensions.get('window');
 export default class ScannerScreen extends Component {
     state = {
         showAlert: false,
-        isLoading: false
+        isLoading: false,
+        name: 'Aisha Alobaidi',
+        phone: '+974 3333 9082',
+        person: 1,
+        kids: 0,
+        phoneAllowed: 1,
+        host: 'Mariam'
     }
 
     onSuccess = e => {
-        // Linking.openURL(e.data).catch(err =>
         this.setState({ showAlert: true });
-        console.log(e);
-        // );
+        console.log(JSON.parse(e.data));
+        let response = JSON.parse(e.data)
+        this.setState({
+            name: response.name,
+            phone: response.number,
+            person: response.category.people_per_qr,
+            phoneAllowed: response.isphoneallow,
+            host: response.host_data.first_name
+        });
     };
 
     render() {
@@ -46,15 +58,13 @@ export default class ScannerScreen extends Component {
                 />
                 <View style={{ flexDirection: 'row', height: 60, width: '100%', alignItems: 'center', paddingLeft: 20, paddingRight: 20, backgroundColor: mycolor.pink }}>
                     
-                    <Text style={{ color: '#FFF', fontSize: 16 }}>Event ends in </Text>
+                    <Text style={{ color: '#FFF', fontSize: 16 }}>{Trans.translate('event_ends_in')} </Text>
                     <CountDown
                         size={10}
                         until={1000}
                         onFinish={() => alert('Finished')}
                         digitStyle={{ padding: 0 }}
                         digitTxtStyle={{ color: '#FFF', fontSize: 16, fontWeight: 'normal' }}
-                        // timeLabelStyle={{ color: 'red', fontSize: 16 }}
-                        // separatorStyle={{ color: '#1CC625' }}
                         timeToShow={['H', 'M', 'S']}
                         timeLabels={{ m: null, s: null }}
                         showSeparator
@@ -100,21 +110,21 @@ export default class ScannerScreen extends Component {
     alertView() {
         return (
             <View style={{ width: '100%' }}>
-                <Text style={{ fontSize: 28, marginTop: 45, fontWeight: 'bold', color: mycolor.darkgray }}>Aisha Alobaidli</Text>
-                <Text style={{ fontSize: 16, marginTop: 23, color: mycolor.darkgray, fontWeight: '500' }}>+974 3333 9082</Text>
-                <Text style={{ fontSize: 16, marginTop: 10, color: mycolor.darkgray, fontWeight: '500' }}>Invited By Host: Mariam</Text>
+                <Text style={{ fontSize: 28, marginTop: 45, fontWeight: 'bold', color: mycolor.darkgray }}>{this.state.name}</Text>
+                <Text style={{ fontSize: 16, marginTop: 23, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.phone}</Text>
+                <Text style={{ fontSize: 16, marginTop: 10, color: mycolor.darkgray, fontWeight: '500' }}>{Trans.translate('invited_by_host')+": "+this.state.host}</Text>
                 <View style={{ flexDirection: 'row', marginTop: 50, width: '100%' }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={{ width: 50, height: 27 }} source={require('../../assets/union.png')}></Image>
-                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>1 Person</Text>
+                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.person+' '+ Trans.translate('person')}</Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={{ width: 33, height: 32 }} source={require('../../assets/kids.png')}></Image>
-                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>0 Kids</Text>
+                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.kids+' '+ Trans.translate('kids')}</Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={{ width: 18, height: 33 }} source={require('../../assets/phone.png')}></Image>
-                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>Allowed</Text>
+                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.phoneAllowed == '1' ? Trans.translate('allowed') : 'Not Allowed'}</Text>
                     </View>
                 </View>
                 <View style={{ marginTop: 100, justifyContent: 'center', alignContent: 'center', color: 'white', fontSize: 14, fontWeight: 'bold' }}>

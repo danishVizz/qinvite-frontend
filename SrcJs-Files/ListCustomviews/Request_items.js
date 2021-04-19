@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
+import moment from 'moment';
+import Trans from '../Translation/translation';
 
-
-
-class Event_items extends Component {
+class Request_items extends Component {
 
     onPressButtonChildren(value, item) {
         this.props.fromchildprops(value, item)
@@ -22,10 +22,7 @@ class Event_items extends Component {
                                 {this.props.title}
                             </Text>
                             <Text style={styles.description}>
-                                {this.props.description}
-                            </Text>
-                            <Text style={{ marginTop: 4, fontSize: 12 }}>
-                                {this.props.description}
+                                {moment(this.props.description).format('DD/MM/YYYY')}
                             </Text>
                         </View>
                         {/* <Image source={require('../../assets/icon_option.png')}style={styles.leftphoto}/> */}
@@ -37,8 +34,8 @@ class Event_items extends Component {
                         button={require('../../assets/icon_option.png')}
                         buttonStyle={{ width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'flex-end' }}
                         destructiveIndex={1}
-                        options={["Edit", "Delete"]}
-                        actions={[() => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item)]} />
+                        options={[Trans.translate('accept'), Trans.translate('reject')]}
+                        actions={[() => this.onPressButtonChildren("accept", this.props.item), () => this.onPressButtonChildren("reject", this.props.item)]} />
 
                 </View>
             </View>
@@ -48,8 +45,6 @@ class Event_items extends Component {
         this.props.updateState();
     }
 };
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -85,8 +80,9 @@ const styles = StyleSheet.create({
 
     },
     description: {
-        fontSize: 12,
-        marginTop: 8
+        fontSize: 14,
+        marginTop: 8,
+        color: "#C9C9C9"
     },
     photo: {
         height: 29,
@@ -109,4 +105,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Event_items;
+export default Request_items;

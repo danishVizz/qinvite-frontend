@@ -36,7 +36,7 @@ export default class GuestList extends Component {
                     // righttitle={Trans.translate('Resend')}
                     titlepos={'center'}
                     leftBtnClicked={() => navigation.goBack()}
-                    title={Trans.translate('guest_list')}
+                    title={Trans.translate('guestlist')}
                     // righttitle={Trans.translate('Save')}
                     // righttextfonts={'bold'}
                     // rightBtnClicked={() => this.CreateCategoryCall()}
@@ -69,7 +69,7 @@ export default class GuestList extends Component {
                                     <Image resizeMode='cover' style={{ height: 12, width: 12 }} source={require('../../assets/green_tick.png')}></Image>
                                 </View>
                                 :
-                                <Text style={{ fontSize: 12, color: mycolor.pink }}>Check In</Text>
+                                <Text style={{ fontSize: 12, color: mycolor.pink }}>{Trans.translate('check_in')}</Text>
 
                             }
                         </TouchableOpacity>

@@ -87,6 +87,9 @@ export default class ChooseCategory extends Component {
 
     onPressButtonChildren = (value, item) => {
         switch (value) {
+            case 'view':
+                this.props.navigation.navigate('CreateCategory', { "categorydata": item })
+                break
             case 'delete':
                 this.setState({ showalert: true, currentselected:item.id })
                 break

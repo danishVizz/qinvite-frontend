@@ -18,6 +18,7 @@ import Prefs from "../Prefs/Prefs";
 import { TouchableOpacity } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import TextInputComp from '../Components/TextInputComp';
+import { Platform } from 'react-native';
 
 
 export default class CategoryContactsSelection extends Component {
@@ -236,7 +237,7 @@ export default class CategoryContactsSelection extends Component {
 
                         contacts.map(function (obj) {
                             obj.isphoneallow = false;
-                            obj.name = obj.displayName
+                            obj.name = Platform.OS === 'android' ? obj.displayName : obj.givenName
                             obj.number = obj.phoneNumbers[0]?.number
 
                             // contactlist.push(obj)

@@ -2,6 +2,8 @@ import React from 'react'
 import { Component } from "react";
 import { StyleSheet, View, Image, Text, StatusBar, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import RNImageToPdf from 'react-native-image-to-pdf';
+import CameraRollExtended from 'react-native-store-photos-album'
 import ButtonComp from '../Components/ButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import mycolor from "../Constants/Colors";
@@ -23,7 +25,7 @@ export default class PreviewInvite extends Component {
                 <StatusBar
                     backgroundColor={mycolor.pink} />
                 <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CardPreview')} titlepos='center' ></HeaderComp2>
-                <ScrollView style={{flex:2.5}}>
+                <ScrollView style={{ flex: 2.5 }}>
                     <View style={{ flex: 2.5, marginTop: 28, marginLeft: 20, marginRight: 20, marginBottom: 20, borderRadius: 2, borderWidth: 5, borderColor: 'white', elevation: 2 }}>
                         <View style={styles.imagecontainer}>
                             <Image source={{ uri: Keys.invitealldata["ImageData"] }} style={{ height: 298, width: "100%" }} resizeMode="center"></Image>
@@ -55,12 +57,39 @@ export default class PreviewInvite extends Component {
 
                         </ButtonComp>
                         <ButtonComp style={{ marginTop: 15, backgroundColor: mycolor.white }}
+                            onPress={()=> this.myAsyncPDFFunction()}
                             textstyle={{ color: mycolor.pink, fontWeight: 'bold' }} text={Trans.translate('Savepdf')} ></ButtonComp>
 
                     </View>
                 </ScrollView>
             </SafeAreaView>
         );
+    }
+
+    async myAsyncPDFFunction() {
+        console.log("myAsyncPDFFunction()");
+        try {
+
+            var imagepath = Platform.OS === "android" ? Keys.invitealldata["ImageData"].replace("file:///", "") : Keys.invitealldata["ImageData"]
+            console.log("imagepath");
+            console.log(imagepath);
+            const options = {
+                imagePaths: [imagepath],
+                // filePath: "/storage/emulated/0/Pictures/",
+                name: 'PDFName.pdf',
+                maxSize: { // optional maximum image dimension - larger images will be resized
+                    width: 500,
+                    height: 900
+                },
+                quality: .7, // optional compression paramter
+            };
+            const pdf = await RNImageToPdf.createPDFbyImages(options);
+            CameraRollExtended.saveToCameraRoll({uri: pdf.filePath, album: 'QInvites'}, 'photo')
+            console.log("PdfFile" + pdf.filePath);
+            console.log(pdf);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     logCallback = (log, callback) => {
@@ -77,11 +106,11 @@ export default class PreviewInvite extends Component {
         var alleventdata = Keys.invitealldata
         var formadata = new FormData()
         var photo = {
-            uri:Platform.OS === "android" ? alleventdata["ImageData"] : alleventdata["ImageData"].replace("file://", ""),
+            uri: Platform.OS === "android" ? alleventdata["ImageData"] : alleventdata["ImageData"].replace("file://", ""),
             type: 'image/jpeg',
             name: 'photo.jpg',
-          };
-          
+        };
+
         formadata.append("event_card", alleventdata["ImageData"])
         formadata.append("event_name", alleventdata["Eventdata"].event_name)
         formadata.append("event_date", alleventdata["Eventdata"].event_date)

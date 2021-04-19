@@ -20,13 +20,15 @@ class Trans {
     (key, config) => (config ? key + JSON.stringify(config) : key)
   );
   
- setI18nConfig = () => {
+ setI18nConfig = (langCode) => {
     // fallback if no available language fits
-    const fallback = { languageTag: "ara", isRTL: false };
+    const fallback = { languageTag: langCode, isRTL: false };
   
-    const { languageTag, isRTL } =
-      RNLocalize.findBestAvailableLanguage(Object.keys(this.translationGetters)) ||
-      fallback;
+    // const { languageTag, isRTL } =
+    //   RNLocalize.findBestAvailableLanguage(Object.keys(this.translationGetters)) ||
+    //   fallback;
+
+    const { languageTag, isRTL } = fallback;
   
     // clear translation cache
     this.translate.cache.clear();
