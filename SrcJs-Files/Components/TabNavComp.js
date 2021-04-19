@@ -5,6 +5,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Events from '../Screens/Events'
 import HeaderComp from '../Components/HeaderComp'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 export default class TabNavComp extends Component {
 
@@ -27,6 +28,9 @@ export default class TabNavComp extends Component {
     console.log(this.props.navigation);
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
+         <StatusBar
+                    backgroundColor='#F54260'
+                />
         <HeaderComp style={{}} title='Events' textsize={20} textfonts='bold' rightBtn={require('../../assets/icon_search.png')} tintColor='white'rightBtnClicked={()=>this.props.navigation.navigate('SearchScreen')} />
         <this.Tab.Navigator
           tabBarOptions={this.tabBarOptions}>

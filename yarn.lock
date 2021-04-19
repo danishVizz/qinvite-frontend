@@ -9693,6 +9693,11 @@
   dependencies:
     "prop-types" "^15.5.10"
 
+"react-native-date-picker@^3.2.10":
+  "integrity" "sha512-/fA+htnZcr3rBw3eaOR/DvMwGLDTg59MCiiluin5YcHBxNZQYs/uYp/l6Hf719qZXndPGcixS46YIgso4Jf4gg=="
+  "resolved" "https://registry.npmjs.org/react-native-date-picker/-/react-native-date-picker-3.2.10.tgz"
+  "version" "3.2.10"
+
 "react-native-datepicker@^1.7.2":
   "integrity" "sha1-WNCCJZGgrJsyq6CCZQIioO4pZp0="
   "resolved" "https://registry.npmjs.org/react-native-datepicker/-/react-native-datepicker-1.7.2.tgz"
@@ -9764,11 +9769,6 @@
   "integrity" "sha512-7z902J7a7j2rUM6zzyLSGpBSDfXy/V9ssSDKV0QyoQpr7COZs3zsJye2PU1Z4TRqmuNtREIeG5m1NdwtpcXBkg=="
   "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-3.3.2.tgz"
   "version" "3.3.2"
-
-"react-native-image-to-pdf@^1.2.0":
-  "integrity" "sha512-EgrdcrHHBrL6gwDFwL9S7Ztd211RZuC1csLnXNpz2pBN385OR33fODzmNwlrpZwwviLVEIURO0vCjxCXyyjdcQ=="
-  "resolved" "https://registry.npmjs.org/react-native-image-to-pdf/-/react-native-image-to-pdf-1.2.0.tgz"
-  "version" "1.2.0"
 
 "react-native-input-spinner@^1.7.7":
   "integrity" "sha512-6zYFU2uhChJ+JC/5yujlZu+r5PYQSYIXluUqTNR3jOCKai0dlCkWiz7d3K2rM7Q2SAIiw4bSBR6mWZIuhL+DEg=="
@@ -10035,7 +10035,7 @@
     "whatwg-fetch" "^3.0.0"
     "ws" "^6.1.4"
 
-"react-native@*", "react-native@^0.41.2", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@^0.63.2", "react-native@^0.64.0-rc.1", "react-native@>= 0.60.0", "react-native@>=0.20.0", "react-native@>=0.42.0", "react-native@>=0.50.0", "react-native@>=0.59", "react-native@>=0.60", "react-native@>=0.60.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>=0.63.4", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.63.2":
+"react-native@*", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@^0.63.2", "react-native@^0.64.0-rc.1", "react-native@>= 0.60.0", "react-native@>=0.20.0", "react-native@>=0.42.0", "react-native@>=0.50.0", "react-native@>=0.59", "react-native@>=0.60", "react-native@>=0.60.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>=0.63.4", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.63.2":
   "integrity" "sha512-I4kM8kYO2mWEYUFITMcpRulcy4/jd+j9T6PbIzR0FuMcz/xwd+JwHoLPa1HmCesvR1RDOw9o4D+OFLwuXXfmGw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.63.4.tgz"
   "version" "0.63.4"

@@ -18,20 +18,21 @@ export default class ChooseCategory extends Component {
         categoriesdata: [],
         isChecked: [],
         selectedLists: [],
-        currentselected:'',
+        currentselected: '',
         showalert: false
     }
     render() {
         let Deletealert = (
             this.state.showalert ?
                 <AlertComp
+                    alertbody={Trans.translate('Delethint')}
+                    alerttitle={Trans.translate('DeleteCategory')}
                     onCancelPress={() => this.setState({ showalert: false })}
-                    onDeletePress={() => this.DeleteEvent(this.state.currentselected)}></AlertComp> : null
+                    onDeletePress={() => this.DeleteCategory(this.state.currentselected)}></AlertComp> : null
         );
 
         return (
             <SafeAreaView style={styles.container}>
-
                 <View style={{ height: "65%", marginTop: 20 }}>
 
                     <FlatList
@@ -40,7 +41,6 @@ export default class ChooseCategory extends Component {
                         keyExtractor={(item) => item.id}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
-
 
                     <View style={{ flex: 1, alignSelf: 'center', alignItems: "center", }}>
                         {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
@@ -60,9 +60,6 @@ export default class ChooseCategory extends Component {
                     style={{ backgroundColor: mycolor.pink, marginBottom: 10, marginLeft: 22, marginRight: 22 }}
                     textcolor={mycolor.white}
                     textstyle={{ color: mycolor.white }} />
-
-          
-
             </SafeAreaView>
         );
 
@@ -88,7 +85,7 @@ export default class ChooseCategory extends Component {
     onPressButtonChildren = (value, item) => {
         switch (value) {
             case 'delete':
-                this.setState({ showalert: true, currentselected:item.id })
+                this.setState({ showalert: true, currentselected: item.id })
                 break
             case 'edit':
                 this.props.navigation.navigate('CreateCategory', { "categorydata": item })
@@ -147,14 +144,14 @@ export default class ChooseCategory extends Component {
         )
     }
 
-    async DeleteEvent(id) {
-        this.setState({showalert:false })
+    async DeleteCategory(id) {
+        this.setState({ showalert: false })
         this.logCallback("DeleteEvent :", this.state.contentLoading = true);
         ApiCalls.deletapicall("delete_category", id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
                 const newList = this.state.categoriesdata.filter((item) => item.id !== id);
-                this.setState({ categoriesdata: newList})
+                this.setState({ categoriesdata: newList })
             } else {
                 Alert.alert('Failed', data.message);
             }

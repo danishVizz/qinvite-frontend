@@ -32,7 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
-import com.anyline.RNImageToPDF.RNImageToPdfPackage;
+
 
 public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
@@ -49,7 +49,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
-      packages.add(new RNImageToPdfPackage());
       // packages.add( new ReactNativeContacts());
       return packages;
     }

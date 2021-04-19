@@ -33,7 +33,9 @@
     "Profile":"Profile",
     "DeleteAcc":"Delete Account",
     "DeleteCategory":"Delete Category",
-    "DeletCategoryhint":"Are you sure that you want to delete Kid Allowed",
+    "DeleteEvent":"Delete Event",
+    "Delethint":"Are you sure that you want to delete?",
+    
     "Delete":"Delete",
     "Nothanks":"No, Thanks",
     "Recepionist":"Number of Receptionist",
@@ -104,5 +106,7 @@
     "wedding": "Wedding",
     "check_in": "Check in",
     "cancel": "Cancel",
+    "Preview": "Preview",
+    "Ok": "Ok",
     "requests": "Requests"
 }

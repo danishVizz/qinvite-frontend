@@ -10,7 +10,7 @@ import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
 import ApiCalls from "../Services/ApiCalls";
 import { ScrollView } from 'react-native-gesture-handler';
-import RNImageToPdf from 'react-native-image-to-pdf'
+
 
 export default class PreviewInvite extends Component {
     state = {
@@ -58,7 +58,7 @@ export default class PreviewInvite extends Component {
 
                         </ButtonComp>
                         <ButtonComp style={{ marginTop: 15, backgroundColor: mycolor.white }}
-                            onPress={() => this.myAsyncPDFFunction()}
+                            
                             textstyle={{ color: mycolor.pink, fontWeight: 'bold' }} text={Trans.translate('Savepdf')} ></ButtonComp>
 
                     </View>
@@ -74,29 +74,6 @@ export default class PreviewInvite extends Component {
         });
     }
 
-    async myAsyncPDFFunction() {
-        try {
-       
-         var imagepath=  Platform.OS === "android" ? Keys.invitealldata["ImageData"].replace("file:///", "") : Keys.invitealldata["ImageData"]
-
-            const options = {
-                imagePaths: [imagepath],
-                filePath:"/storage/emulated/0/Pictures/",
-                name: 'PDFName.pdf',
-                maxSize: { // optional maximum image dimension - larger images will be resized
-                    width: 500,
-                    height: 900
-                },
-                quality: .7, // optional compression paramter
-            };
-            const pdf = await RNImageToPdf.createPDFbyImages(options);
-
-            console.log("PdfFile" + pdf.filePath);
-            console.log(pdf);
-        } catch (e) {
-            console.log(e);
-        }
-    }
     async CreateEvent() {
         this.logCallback("Creating Event :", this.state.contentLoading = true);
         var userdata = await Prefs.get(Keys.userData);

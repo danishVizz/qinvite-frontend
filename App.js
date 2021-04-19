@@ -35,7 +35,7 @@ import Trans from './SrcJs-Files/Translation/translation';
 import * as RNLocalize from "react-native-localize";
 import mycolor from './SrcJs-Files/Constants/Colors';
 import SearchScreen from './SrcJs-Files/Screens/SearchScreen';
-import DumyEditor from './SrcJs-Files/Screens/DumyEditor';
+import ImageEditor from './SrcJs-Files/Screens/ImageEditor';
 import { render } from 'react-dom';
 import UploadDesign from './SrcJs-Files/Screens/DesignerScreens/UploadDesign';
 import RequestDetails from './SrcJs-Files/Screens/DesignerScreens/RequestDetails';
@@ -60,15 +60,11 @@ export default class App extends Component {
 
     return (
       <NavigationContainer>
-<<<<<<< HEAD
-        <RootStack.Navigator initialRouteName="Events">
-=======
-        <RootStack.Navigator initialRouteName="DesignerRequests">
->>>>>>> 00fc1d1d2849290bab898d929eb60e24d65c91d0
+        <RootStack.Navigator initialRouteName="CombineComp">
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
           <RootStack.Screen name="LandingScreen"  component={LandingScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="RequestDetails"  component={RequestDetails} options={{ headerShown: false }} />
-          <RootStack.Screen name="DumyEditor" component={DumyEditor} options={{ headerShown: false }} />
+          <RootStack.Screen name="ImageEditor" component={ImageEditor} options={{ headerShown: false }} />
           <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="Event_items" component={Event_items} options={{ headerShown: false }} />

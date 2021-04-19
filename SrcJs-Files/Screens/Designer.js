@@ -13,6 +13,7 @@ import ApiCalls from '../Services/ApiCalls';
 import Keys from '../Constants/keys';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator } from 'react-native';
 
 export default class Designer extends Component {
 
@@ -20,35 +21,39 @@ export default class Designer extends Component {
         designerdata: [],
         modalVisible: false,
         checked: false,
+        contentLoading: false
     }
     render() {
+        let designerdialog =
+            <Modal
+                animationType="fade"
+                transparent={true}
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    this.setState({ modalVisible: true })
+                }}>
+                <View style={{ marginTop: 100, marginBottom: 50, marginLeft: 30, marginRight: 30, width: '80%', borderRadius: 0, borderWidth: 0, alignSelf: 'center', justifyContent: 'center', alignSelf: 'center', backgroundColor: mycolor.white }}>
+                    <View style={styles.modalView}>
+                        <Text style={{ fontSize: 24, fontWeight: 'bold', padding: 10, alignSelf: 'center', color: "black" }}>Choose Designer</Text>
+                        <FlatList
+                            data={this.state.designerdata}
+                            renderItem={this.renderItem2}
+                            keyExtractor={(item) => item.id}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false} />
+                    </View>
+                </View>
+            </Modal>
+
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-                <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('ChooseDesigner')} titlepos='center' leftBtnClicked={()=>this.props.navigation.goBack()}></HeaderComp2>
+                <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('ChooseDesigner')} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp2>
                 <StatusBar
                     backgroundColor={mycolor.pink}
                 />
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    transparent={true}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                        this.setState({ modalVisible: true })
-                    }}>
-                    <View style={{ marginTop: 100, marginBottom: 50, marginLeft: 30, marginRight: 30, width: '80%', borderRadius: 0, borderWidth: 0, alignSelf: 'center', justifyContent: 'center', alignSelf: 'center', backgroundColor: mycolor.white }}>
-                        <View style={styles.modalView}>
-                            <Text style={{ fontSize: 24, fontWeight: 'bold', padding: 10, alignSelf: 'center', color: "black" }}>Choose Designer</Text>
-                            <FlatList
-                                data={this.state.designerdata}
-                                renderItem={this.renderItem2}
-                                keyExtractor={(item) => item._id}
-                                showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false} />
-                        </View>
-                    </View>
-                </Modal>
+
 
                 <View style={{ marginTop: 10, marginRight: 20, marginLeft: 20 }}>
                     <TextInputComp
@@ -62,10 +67,15 @@ export default class Designer extends Component {
                     style={{ marginBottom: 30 }}
                     data={this.state.designerdata}
                     renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item) => item._id}
+                    keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
+                    
+                    {designerdialog}
 
+                <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
+                    {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
+                </View>
 
                 <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 0 }}>
 
@@ -115,7 +125,7 @@ export default class Designer extends Component {
                 <DesignerComp
                     // toggle={() => this.onToggle(index)}
                     // propsfromparents={onPressButtonChildren.bind()}
-                    imagepath={item.image_url}
+                    imagesrc={item.user_image}
                     designername={item.first_name}
                     designercontact={item.phone}
                 />
@@ -231,6 +241,8 @@ const styles = StyleSheet.create({
         backgroundColor: mycolor.lightwhite,
         borderRadius: 5,
         margin: 5,
+   
+        justifyContent:'center',
         borderWidth: 5,
         borderColor: 'white',
         shadowColor: "red",

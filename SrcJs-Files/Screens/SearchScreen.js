@@ -9,8 +9,6 @@ import { SearchBar } from 'react-native-elements';
 import keys from "../Constants/keys";
 import Event_items from "../ListCustomviews/Event_items";
 
-
-
 export default class SearchScreen extends Component {
   state = {
     search: '',
@@ -33,7 +31,7 @@ export default class SearchScreen extends Component {
 
     let searchView =
       (
-        <SafeAreaView style={{marginTop:30}}>
+        <SafeAreaView>
           {/* <HeaderComp></HeaderComp> */}
           <SearchBar
             searchIcon={{ name: "west", onPress: () => this.Onbackpress() }}
@@ -85,6 +83,27 @@ export default class SearchScreen extends Component {
     )
   }
 
+  async DeleteEvent(id) {
+    this.setState({ showalert: false })
+    this.logCallback("DeleteEvent :", this.state.contentLoading = true);
+    // var userdata = await Prefs.get(Keys.userData);
+    // var parsedata = JSON.parse(userdata)
+    console.log("Event-Idddd" + id)
+    ApiCalls.deletapicall("delete_event", id).then(data => {
+      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+      if (data.status == true) {
+        const newList = this.state.EventAllData.filter((item) => item.id !== id);
+        this.setState({ EventAllData: newList })
+      } else {
+        Alert.alert('Failed', data.message);
+      }
+    }, error => {
+      this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+      Alert.alert('Error', JSON.stringify(error));
+    }
+    )
+  }
+
   searchitem = ({ item, index }) => {
     return (
       //   <Event_items
@@ -105,6 +124,13 @@ export default class SearchScreen extends Component {
         />
       </TouchableOpacity>
     )
+  }
+  actionOnRow(itemdata, props) {
+    console.log('Selected Item :' + itemdata.event_name);
+    this.props.navigation.navigate('EventDetails', {
+      "eventdata": itemdata
+
+    })
   }
 
   onPressButtonChildren = (value, item) => {
@@ -131,32 +157,6 @@ export default class SearchScreen extends Component {
     //press button chilldren 
   }
 
-  // googlePlacesInput = () => {
-  //   return (
-  //     <View>
-  //       <HeaderComp
-  //         title={Trans.translate("Address")}
-  //         leftBtn={require('../../../assets/backBtn.png')}
-  //         leftBtnClicked={() => this.props.navigation.goBack()}
-  //         rightBtnClicked={() => this.props.navigation.navigate('SearchScreen')}
-  //       />
-  //       <Divider></Divider>
-
-  //       <GooglePlacesAutocomplete
-  //         placeholder={Trans.translate('search')}
-  //         onPress={(data, details = null) => {
-  //           console.log(data, details);
-  //         }}
-  //         query={{
-  //           key: keys.apiKey,
-  //           language: 'en',
-  //         }}
-  //         onFail={(error) => this.onError(error)}
-  //       />
-
-  //     </View>
-  //   );
-  // };
 
   onPress(item) {
     var productData = {

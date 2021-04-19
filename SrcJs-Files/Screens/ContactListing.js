@@ -22,7 +22,8 @@ export default class ContactListing extends Component {
                 />
                 <HeaderComp2 textfonts={'bold'}
                     righttitle={Trans.translate('Resend')}
-                    titlepos={'center'}
+                    titlepos='center'
+                 
                     leftBtnClicked={() => this.props.navigation.goBack()}
                     title={Trans.translate('InvitedPeoples')}
                     leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
