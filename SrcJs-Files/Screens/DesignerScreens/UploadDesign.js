@@ -38,36 +38,34 @@ export default class UploadDesign extends Component {
                     <View style={{ flex: 2, alignSelf: 'center', justifyContent: 'flex-start', alignSelf: 'center' }}>
                         <Text style={{ color: 'black', fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>{Trans.translate('UploadDesign')}</Text>
                         <View style={{ borderRadius: 2, borderWidth: 0.5, borderColor: 'black', padding: 10, margin: 10 }}>
-
                             <Text style={{ fontSize: 14, textAlign: 'center' }}>{Trans.translate('PointtoPonder')}</Text>
-
                             <CheckBox
                                 checked={this.state.langenglish}
-                                // textStyle={{ fontSize: 10, color: "#474645" }}
+                                textStyle={{ fontSize: 12, fontWeight: 'normal', color: "#474645" }}
                                 onPress={() => this.SelectLanguage(this.state.langarabic, this.state.langenglish)}
-                                checked={this.state.spaceadjustcheck}
+                                checked={ this.state.spaceadjustcheck }
                                 onPress={() => this.setState({ spaceadjustcheck: !(this.state.spaceadjustcheck) })}
-                                containerStyle={{ backgroundColor: 'transparent', height: 10 }}
+                                containerStyle={{ backgroundColor: 'transparent', borderWidth: 0, paddingTop: 0, paddingBottom: 0 }}
                                 checkedIcon={<Image source={require('../../../assets/icon_check.png')} style={{ height: 20, width: 20 }} />}
                                 uncheckedIcon={<Image source={require('../../../assets/icon_oval.png')} style={{ height: 20, width: 20 }} />}
-                                title="sdf df"//{Trans.translate('SpaceAdjusted')}
+                                title={ Trans.translate('SpaceAdjusted') }
                             ></CheckBox>
                             <CheckBox
-                                checked={this.state.langenglish}
-                                textStyle={{ fontSize: 10, color: "#474645" }}
+                                checked={ this.state.langenglish }
+                                textStyle={{ fontSize: 12, fontWeight: 'normal', color: "#474645" }}
                                 onPress={() => this.setState({ qualitycheck: !(this.state.qualitycheck) })}
-                                checked={this.state.qualitycheck}
-                                containerStyle={{ backgroundColor: 'transparent', height: 10 }}
+                                checked={ this.state.qualitycheck }
+                                containerStyle={{ backgroundColor: 'transparent', borderWidth: 0, paddingTop: 0, paddingBottom: 0 }}
                                 checkedIcon={<Image source={require('../../../assets/icon_check.png')} style={{ height: 20, width: 20 }} />}
                                 uncheckedIcon={<Image source={require('../../../assets/icon_oval.png')} style={{ height: 20, width: 20 }} />}
-                                title={Trans.translate('DesignQuality')}
+                                title={ Trans.translate('DesignQuality') }
                             ></CheckBox>
                         </View>
                         <CheckBox
                             checked={this.state.langenglish}
-                            textStyle={{ fontSize: 10, color: "#474645" }}
+                            textStyle={{ fontSize: 14, fontWeight: 'normal', color: "#474645", textAlign: 'center' }}
                             checked={true}
-                            containerStyle={{ backgroundColor: 'transparent', height: 10 }}
+                            containerStyle={{ backgroundColor: 'transparent', borderWidth: 0, width: '70%', alignSelf: 'center', paddingTop: 0, paddingBottom: 0}}
                             checkedIcon={<Image source={require('../../../assets/icon_check.png')} style={{ height: 20, width: 20 }} />}
                             uncheckedIcon={<Image source={require('../../../assets/icon_oval.png')} style={{ height: 20, width: 20 }} />}
                             title={Trans.translate('Filesizehint')}

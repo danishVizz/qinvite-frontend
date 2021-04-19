@@ -24,7 +24,7 @@ import Profile from './SrcJs-Files/Screens/Profile'
 import ViewPort from './SrcJs-Files/Screens/ViewPort'
 import CategoryContactsSelection from './SrcJs-Files/Screens/CategoryContactsSelection'
 import GuestList from './SrcJs-Files/Screens/GuestList'
-import WeddingDetails from './SrcJs-Files/Screens/WeddingDetails' 
+import WeddingDetails from './SrcJs-Files/Screens/WeddingDetails'
 import ScannerScreen from './SrcJs-Files/Screens/WeddingDetails'
 import Reception from './SrcJs-Files/Screens/Reception'
 import Packages from './SrcJs-Files/Screens/Packages'
@@ -40,6 +40,7 @@ import { render } from 'react-dom';
 import UploadDesign from './SrcJs-Files/Screens/DesignerScreens/UploadDesign';
 import RequestDetails from './SrcJs-Files/Screens/DesignerScreens/RequestDetails';
 import DesignerRequests from './SrcJs-Files/Screens/DesignerScreens/DesignerRequests';
+import mykeys from './SrcJs-Files/Constants/keys';
 
 const RootStack = createStackNavigator();
 function handleLocalizationChange() {
@@ -51,20 +52,21 @@ function handleLocalizationChange() {
 export default class App extends Component {
   constructor(props) {
     super(props)
-    Trans.setI18nConfig();
-    RNLocalize.addEventListener("change", handleLocalizationChange());
-    RNLocalize.removeEventListener("change", handleLocalizationChange());
+    Trans.setI18nConfig("ar");
+    // RNLocalize.addEventListener("change", handleLocalizationChange());
+    // RNLocalize.removeEventListener("change", handleLocalizationChange());
   }
+
   render() {
 
 
     return (
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName="CombineComp">
+        <RootStack.Navigator initialRouteName="SplashScreen">
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
-          <RootStack.Screen name="LandingScreen"  component={LandingScreen} options={{ headerShown: false }} />
-          <RootStack.Screen name="RequestDetails"  component={RequestDetails} options={{ headerShown: false }} />
-          <RootStack.Screen name="ImageEditor" component={ImageEditor} options={{ headerShown: false }} />
+          <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
+          <RootStack.Screen name="RequestDetails" component={RequestDetails} options={{ headerShown: false }} />
+          <RootStack.Screen name="DumyEditor" component={DumyEditor} options={{ headerShown: false }} />
           <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="Event_items" component={Event_items} options={{ headerShown: false }} />
@@ -93,16 +95,32 @@ export default class App extends Component {
           <RootStack.Screen name="CreateCategory" component={CreateCategory} options={{ headerShown: true, title: Trans.translate('CreateCategory'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
           <RootStack.Screen name="GuestList" component={GuestList} options={{ headerShown: false }} />
           <RootStack.Screen name="Reception" component={Reception} options={{ headerShown: false }} />
-          <RootStack.Screen name="WeddingDetails" component={WeddingDetails} options={{ headerShown: false }} /> 
-          <RootStack.Screen name="ScannerScreen" component={ScannerScreen} options={{ headerShown: false }} /> 
+          <RootStack.Screen name="WeddingDetails" component={WeddingDetails} options={{ headerShown: false }} />
+          <RootStack.Screen name="ScannerScreen" component={ScannerScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="DesignerRequests" component={DesignerRequests} options={{ headerShown: false }} />
           {/* <RootStack.Screen name="Home" component={Home} options={{headerShown:false}} /> */}
-
-
-
         </RootStack.Navigator>
       </NavigationContainer>
     );
+  }
+
+  async redirectComp() {
+    var key = await Prefs.get(mykeys.accessToken);
+    var lang = await Prefs.get(mykeys.language) || "enr"
+    Trans.setI18nConfig(lang);
+    this.forceUpdate();
+    console.log("key : " + key)
+    if (key == null) {
+      this.setState({
+        isSignedin: false,
+        // isLoading: false
+      })
+    } else {
+      this.setState({
+        isSignedin: true,
+        // isLoading: false
+      })
+    }
   }
 }
 

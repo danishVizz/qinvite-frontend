@@ -18,6 +18,7 @@ import Prefs from "../Prefs/Prefs";
 import { TouchableOpacity } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import TextInputComp from '../Components/TextInputComp';
+import { Platform } from 'react-native';
 
 var contactlist = []
 export default class CategoryContactsSelection extends Component {

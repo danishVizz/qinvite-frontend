@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
 import moment from 'moment';
+import Trans from '../Translation/translation';
 
 class Request_items extends Component {
 
@@ -33,7 +34,7 @@ class Request_items extends Component {
                         button={require('../../assets/icon_option.png')}
                         buttonStyle={{ width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'flex-end' }}
                         destructiveIndex={1}
-                        options={["Accept", "Reject"]}
+                        options={[Trans.translate('accept'), Trans.translate('reject')]}
                         actions={[() => this.onPressButtonChildren("accept", this.props.item), () => this.onPressButtonChildren("reject", this.props.item)]} />
 
                 </View>

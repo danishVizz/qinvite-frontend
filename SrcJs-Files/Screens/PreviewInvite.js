@@ -2,6 +2,8 @@ import React from 'react'
 import { Component } from "react";
 import { StyleSheet, View, Image, Text, StatusBar, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import RNImageToPdf from 'react-native-image-to-pdf';
+import CameraRollExtended from 'react-native-store-photos-album'
 import ButtonComp from '../Components/ButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import mycolor from "../Constants/Colors";
@@ -11,14 +13,11 @@ import Prefs from "../Prefs/Prefs";
 import ApiCalls from "../Services/ApiCalls";
 import { ScrollView } from 'react-native-gesture-handler';
 
-
 export default class PreviewInvite extends Component {
     state = {
         contentLoading: false
     }
-
-
-
+    
     render() {
         console.log(Keys.invitealldata["ImageData"])
         return (
@@ -58,13 +57,39 @@ export default class PreviewInvite extends Component {
 
                         </ButtonComp>
                         <ButtonComp style={{ marginTop: 15, backgroundColor: mycolor.white }}
-                            
+                            onPress={()=> this.myAsyncPDFFunction()}
                             textstyle={{ color: mycolor.pink, fontWeight: 'bold' }} text={Trans.translate('Savepdf')} ></ButtonComp>
 
                     </View>
                 </ScrollView>
             </SafeAreaView>
         );
+    }
+
+    async myAsyncPDFFunction() {
+        console.log("myAsyncPDFFunction()");
+        try {
+
+            var imagepath = Platform.OS === "android" ? Keys.invitealldata["ImageData"].replace("file:///", "") : Keys.invitealldata["ImageData"]
+            console.log("imagepath");
+            console.log(imagepath);
+            const options = {
+                imagePaths: [imagepath],
+                // filePath: "/storage/emulated/0/Pictures/",
+                name: 'PDFName.pdf',
+                maxSize: { // optional maximum image dimension - larger images will be resized
+                    width: 500,
+                    height: 900
+                },
+                quality: .7, // optional compression paramter
+            };
+            const pdf = await RNImageToPdf.createPDFbyImages(options);
+            CameraRollExtended.saveToCameraRoll({uri: pdf.filePath, album: 'QInvites'}, 'photo')
+            console.log("PdfFile" + pdf.filePath);
+            console.log(pdf);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     logCallback = (log, callback) => {

@@ -5,12 +5,15 @@ import ButtonComp from "../Components/ButtonComp";
 import { CheckBox } from "react-native-elements";
 import Trans from "../Translation/translation";
 import mycolor from "../Constants/Colors";
+import Keys from '../Constants/keys';
+import Prefs from '../Prefs/Prefs';
 
 export default class SplashScreen extends Component {
     state = {
         isLoading: true,
         langarabic: true,
-        langenglish: false
+        langenglish: false,
+        isSignedIn: false
     }
     render() {
         if (this.state.isLoading) {
@@ -39,7 +42,7 @@ export default class SplashScreen extends Component {
                     </View>
                     <View style={{ width: '80%', position: 'absolute', bottom: 40, }}>
                         <ButtonComp
-                            onPress={() => this.props.navigation.navigate('LandingScreen')}
+                            onPress={() => this.redirectScreen()}
                             text={Trans.translate("Next")}
                             style={{ backgroundColor: mycolor.pink, marginTop: 20, }}
                             textcolor={mycolor.white}
@@ -49,22 +52,33 @@ export default class SplashScreen extends Component {
             );
         }
     }
-    SelectLanguage(langarabic, langenglish) {
-        if (langarabic)
-            this.setState({ langarabic: !(langarabic), langenglish: true })
-        else if (langenglish)
-            this.setState({ langenglish: !(langenglish), langarabic: true })
 
-
+    redirectScreen() {
+        if (this.state.isSignedIn) {
+            this.props.navigation.navigate('CombineComp')
+        } else {
+            this.props.navigation.navigate('LandingScreen')
+        }
     }
-    async componentDidMount() {
-        // Preload data from an external API
-        // Preload data using AsyncStorage
-        // const data = await this.performTimeConsumingTask();
 
-        // if (data !== null) {
-        //     this.props.navigation.navigate('LandingScreen');
-        // }
+    SelectLanguage(langarabic, langenglish) {
+        if (langarabic) {
+            Trans.setI18nConfig("en");
+            this.setState({ langarabic: !(langarabic), langenglish: true })
+        } else if (langenglish) {
+            Trans.setI18nConfig("ar");
+            this.setState({ langenglish: !(langenglish), langarabic: true })
+        }
+            
+    }
+
+    async componentDidMount() {
+        var userData = await Prefs.get(Keys.userData);
+        console.log('userData');
+        console.log(userData);
+        if ( userData != undefined || userData != null) {
+            this.setState({ isSignedIn: true} );
+        }
     }
 
     performTimeConsumingTask = async () => {
@@ -75,8 +89,8 @@ export default class SplashScreen extends Component {
             )
         );
     }
-
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -53,8 +53,8 @@ export default class RequestDetails extends Component {
 
                             }} />
 
-                        <Text style={{ alignSelf: 'center', margin: 5, textAlign: 'center' ,fontWeight:'bold'}}>Point to Ponder</Text>
-                        <Text style={{ alignSelf: 'center', marginTop:20, margin: 50, textAlign: 'center' }}>Adjusted space for QR code in design Design is in High Quality</Text>
+                        <Text style={{ alignSelf: 'center', margin: 5, textAlign: 'center' ,fontWeight:'bold'}}>{Trans.translate('PointtoPonder')}</Text>
+                        <Text style={{ alignSelf: 'center', marginTop:20, margin: 50, textAlign: 'center' }}>{Trans.translate('SpaceAdjusted')}</Text>
 
                         <View style={{ marginTop: 30, marginBottom: 30,margin:20 }}>
                             <ButtonComp text={Trans.translate('SubmitDesign')}

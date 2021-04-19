@@ -12,9 +12,8 @@ import ApiCalls from '../Services/ApiCalls'
 import Keys from '../Constants/keys'
 import Prefs from '../Prefs/Prefs'
 
-
-
 const WINDOW = Dimensions.get('window');
+
 export default class SendEditor extends Component {
 
   state = {
@@ -145,8 +144,6 @@ export default class SendEditor extends Component {
   }
 
   async CreateEvent() {
-
-
     var invitedata = Keys.invitealldata
     invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": Keys.invitealldata["ImageData"], "CategoriesMessages": this.state.selectedvaluesarr }
     Keys.invitealldata = invitedata

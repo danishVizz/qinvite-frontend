@@ -145,7 +145,7 @@ export default class CreateEvent extends Component {
                 disabled={(this.state.iseditevent)}
                 // multipleText={"%d items have been selected."}
                 placeholderStyle={{ color: mycolor.lightgray }}
-                placeholder="Select Receptionists"
+                placeholder={Trans.translate('select_receptionists')}
                 dropDownStyle={{ backgroundColor: '#fafafa' }}
                 removeItem={(value => this.removeItem(value))}
                 onChangeItemMultiple={item => this.setState({

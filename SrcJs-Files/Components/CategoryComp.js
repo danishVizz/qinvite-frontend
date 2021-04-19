@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Image,TouchableOpacity } from 'react-native';
 import mycolor from '../Constants/Colors';
 import OptionsMenu from "react-native-options-menu";
+import Trans from '../Translation/translation';
+
 class CategoryComp extends Component {
 
     onPressButtonChildren(value, item) {
@@ -25,9 +26,9 @@ class CategoryComp extends Component {
                         <OptionsMenu
                             button={require('../../assets/icon_option.png')}
                             buttonStyle={{ width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'center', alignSelf: 'center' }}
-                            destructiveIndex={1}
-                            options={["Edit", "Delete"]}
-                            actions={[() => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item)]} />
+                            destructiveIndex={2}
+                            options={[Trans.translate('view'), Trans.translate('Edit'), Trans.translate('Delete')]}
+                            actions={[() => this.onPressButtonChildren("view", this.props.item), () => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item)]} />
 
                     </View>
                 </TouchableOpacity>

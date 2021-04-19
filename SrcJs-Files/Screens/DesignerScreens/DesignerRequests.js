@@ -30,18 +30,18 @@ export default class DesignerRequests extends Component {
         <HeaderComp style={{}} title={Trans.translate('requests')} titlepos='center' textsize={20} textfonts='bold' />
         <this.Tab.Navigator
           tabBarOptions={this.tabBarOptions}>
-          <this.Tab.Screen name="All"
+          <this.Tab.Screen name={Trans.translate('all')}
             //  component={Events}
             children={() => <AllRequests type="All" navigation={this.props.navigation}/>}
             >
           </this.Tab.Screen>
 
-          <this.Tab.Screen name="Accepted"
+          <this.Tab.Screen name={Trans.translate('accepted')}
               // component={Events}
             children={() => <AllRequests type="Accepted"  navigation={this.props.navigation}/>}
             >
           </this.Tab.Screen>
-          <this.Tab.Screen name="Rejected"
+          <this.Tab.Screen name={Trans.translate('rejected')}
               // component={Events}
             children={() => <AllRequests type="Rejected" navigation={this.props.navigation} />}
             >

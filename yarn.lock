@@ -9908,6 +9908,10 @@
   "resolved" "https://registry.npmjs.org/react-native-snackbar/-/react-native-snackbar-2.4.0.tgz"
   "version" "2.4.0"
 
+"react-native-store-photos-album@github:francisco-sanchez-molina/react-native-store-photos-album":
+  "resolved" "git+ssh://git@github.com/francisco-sanchez-molina/react-native-store-photos-album.git#26e9f1327c44d639e8f17e66788d484c03256cc3"
+  "version" "0.1.2"
+
 "react-native-svg@^12.1.0", "react-native-svg@^6.2.0", "react-native-svg@^6.5.3":
   "integrity" "sha512-bKyKHrSvOK09MqsFkQiD4NZp7nM4uf+MoEtWKPfOste8g/3ilc+ZXQDc95iur7xgi0GURHHCXZbz2i8g0cX8sg=="
   "resolved" "https://registry.npmjs.org/react-native-svg/-/react-native-svg-6.5.3.tgz"

@@ -61,6 +61,7 @@
     "react-native-screens": "~2.15.0",
     "react-native-select-multiple": "^2.1.0",
     "react-native-snackbar": "^2.4.0",
+    "react-native-store-photos-album": "github:francisco-sanchez-molina/react-native-store-photos-album",
     "react-native-svg": "^6.5.3",
     "react-native-tab-view": "^3.0.0",
     "react-native-unimodules": "~0.12.0",

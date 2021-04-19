@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Image, TextInput } from 'react-native'
 import AllEvents from '../Screens/AllEvents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Trans from '../Translation/translation';
 
 export default class ReceptionTabComp extends Component {
 
@@ -38,7 +39,7 @@ export default class ReceptionTabComp extends Component {
         <View style={{ backgroundColor: mycolor.pink, padding: 20, paddingBottom: 0 }}>
           <View style={{ flexDirection: 'row', backgroundColor: '#fff', height: 40, alignItems: 'center', borderRadius: 4 }}>
             <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/icon_search.png')}></Image>
-            <TextInput style={{ flex: 4 }} placeholder="Search" onChangeText={(text) => this.setState({ query: text })}></TextInput>
+            <TextInput style={{ flex: 4 }} placeholder={Trans.translate('search')} onChangeText={(text) => this.setState({ query: text })}></TextInput>
             <TouchableOpacity onPress={() => this.setState({ showFilter: true })}>
               <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/filter.png')}></Image>
             </TouchableOpacity>
@@ -48,18 +49,18 @@ export default class ReceptionTabComp extends Component {
         </View>
         <this.Tab.Navigator
           tabBarOptions={this.tabBarOptions}>
-          <this.Tab.Screen name="All"
+          <this.Tab.Screen name={Trans.translate('all')}
             //  component={Events}
             children={() => <AllEvents query ={this.state.query} type="All" navigation={this.props.navigation} showFilter={this.state.showFilter}/>}
           >
           </this.Tab.Screen>
 
-          <this.Tab.Screen name="Active"
+          <this.Tab.Screen name={Trans.translate('active')}
             // component={Events}
             children={() => <AllEvents query ={this.state.query} type="Active" navigation={this.props.navigation} showFilter={this.state.showFilter} />}
           >
           </this.Tab.Screen>
-          <this.Tab.Screen name="Closed"
+          <this.Tab.Screen name={Trans.translate('closed')}
             // component={Events}
             children={() => <AllEvents query ={this.state.query} type="Closed" navigation={this.props.navigation} showFilter={this.state.showFilter} />}
           >

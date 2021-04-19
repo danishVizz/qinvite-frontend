@@ -5,7 +5,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Events from '../Screens/Events'
 import HeaderComp from '../Components/HeaderComp'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'react-native';
+import Trans from '../Translation/translation';
 
 export default class TabNavComp extends Component {
 
@@ -28,13 +28,10 @@ export default class TabNavComp extends Component {
     console.log(this.props.navigation);
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
-         <StatusBar
-                    backgroundColor='#F54260'
-                />
-        <HeaderComp style={{}} title='Events' textsize={20} textfonts='bold' rightBtn={require('../../assets/icon_search.png')} tintColor='white'rightBtnClicked={()=>this.props.navigation.navigate('SearchScreen')} />
+        <HeaderComp style={{}} title={Trans.translate('events')} textsize={20} textfonts='bold' rightBtn={require('../../assets/icon_search.png')} tintColor='white'rightBtnClicked={()=>this.props.navigation.navigate('SearchScreen')} />
         <this.Tab.Navigator
           tabBarOptions={this.tabBarOptions}>
-          <this.Tab.Screen name="All"
+          <this.Tab.Screen name={Trans.translate('all')}
             //  component={Events}
             children={() => <Events type="All" navigation={this.props.navigation}/>}
             >
@@ -43,13 +40,13 @@ export default class TabNavComp extends Component {
           <this.Tab.Screen
           
          
-          name="Active"
+          name={Trans.translate('active')}
               // component={Events}
         
             children={() => <Events type="Active"  navigation={this.props.navigation}/>}
             >
           </this.Tab.Screen>
-          <this.Tab.Screen name="Closed"
+          <this.Tab.Screen name={Trans.translate('closed')}
               // component={Events}
             children={() => <Events type="Closed" navigation={this.props.navigation} />}
             >
