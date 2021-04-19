@@ -10,12 +10,13 @@
     "Eventdatetime":"Event Datetime",
     "Eventaddress":"Event Address",
     "CreateEvents":"Create Events",
-    "EventDetails":"Event Details",
+    "todos":"Todos",
     "Forgotpass":"Forgot Password?",
     "Forgotpasshint":"Please Enter your Email Address To Receive a Verification Code",
     "Participants":"Participants",
     "Next":"Next",
     "Packages":"Choose Package",
+    "EventDetails": "Event Details",
     "Proceed":"Proceed",
     "ChooseCategory":"Choose Category",
     "CreateCategory":"Create Category",
@@ -121,5 +122,8 @@
     "person": "Person",
     "kids": "Kids",
     "allowed": "Allowed",
-    "search": "Search"
+    "search": "Search",
+    "not_auth_msg": "You are not authorize to use this app.",
+    "received_design":"Received Design",
+    "received_date": "Received Date"
 }

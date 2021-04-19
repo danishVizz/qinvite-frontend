@@ -11,6 +11,7 @@ import Trans from '../Translation/translation'
 import ApiCalls from '../Services/ApiCalls'
 import Keys from '../Constants/keys'
 import Prefs from '../Prefs/Prefs'
+import HeaderComp2 from '../Components/HeaderComp2';
 
 const WINDOW = Dimensions.get('window');
 
@@ -45,7 +46,7 @@ export default class SendEditor extends Component {
         <StatusBar
           backgroundColor='#F54260'
         />
-
+        <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')}  textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
         <ScrollView>
           <View style={styles.subContainer}>
             <View style={styles.innercontainer}>

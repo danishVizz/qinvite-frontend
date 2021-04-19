@@ -16,7 +16,8 @@ import ContactListing from './SrcJs-Files/Screens/ContactListing'
 import PreviewInvite from './SrcJs-Files/Screens/PreviewInvite'
 import CreatePackage from './SrcJs-Files/Screens/CreatePackage'
 import UploadMedia from './SrcJs-Files/Screens/UploadMedia'
-import Designer from './SrcJs-Files/Screens/Designer'
+import Designer from './SrcJs-Files/Screens/Designer' 
+import ReceivedDesign from './SrcJs-Files/Screens/ReceivedDesign'
 import DesignerDetails from './SrcJs-Files/Screens/DesignerDetails'
 import ForgotPass from './SrcJs-Files/Screens/ForgotPass'
 import SplashScreen from './SrcJs-Files/Screens/SplashScreen'
@@ -62,7 +63,7 @@ export default class App extends Component {
 
     return (
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName="SplashScreen">
+        <RootStack.Navigator initialRouteName="DesignerRequests">
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
           <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="RequestDetails" component={RequestDetails} options={{ headerShown: false }} />
@@ -86,10 +87,10 @@ export default class App extends Component {
           <RootStack.Screen name="UploadDesign" component={UploadDesign} options={{ headerShown: false }} />
           <RootStack.Screen name="CategoryContactsSelection" component={CategoryContactsSelection} options={{ headerShown: false }} />
           <RootStack.Screen name="DatetimePickerComp" component={DatetimePickerComp} options={{ headerShown: false }} />
-          <RootStack.Screen name="CreateEvent" component={CreateEvent} options={{ headerShown: true, title: Trans.translate('CreateEvents'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
-          <RootStack.Screen name="SendEditor" component={SendEditor} options={{ headerShown: true, title: Trans.translate('editor'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
-          <RootStack.Screen name="EventDetails" component={EventDetails} options={{ headerShown: true, title: Trans.translate('EventDetails'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
-          <RootStack.Screen name="Todos" component={Todos} options={{ headerShown: true, title: Trans.translate('EventDetails'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
+          <RootStack.Screen name="CreateEvent" component={CreateEvent} options={{ headerShown: false, title: Trans.translate('CreateEvents'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
+          <RootStack.Screen name="SendEditor" component={SendEditor} options={{ headerShown: false, title: Trans.translate('editor'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
+          <RootStack.Screen name="EventDetails" component={EventDetails} options={{ headerShown: false, title: Trans.translate('EventDetails'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
+          <RootStack.Screen name="Todos" component={Todos} options={{ headerShown: false, title: Trans.translate('todos'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
           <RootStack.Screen name="Packages" component={Packages} options={{ headerShown: false }} />
           <RootStack.Screen name="ChooseCategory" component={ChooseCategory} options={{ headerShown: true, title: Trans.translate('ChooseCategory'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
           <RootStack.Screen name="CreateCategory" component={CreateCategory} options={{ headerShown: true, title: Trans.translate('CreateCategory'), headerTitleAlign: 'center', headerTintColor: mycolor.white, headerStyle: { backgroundColor: mycolor.pink }, headerTitleStyle: { fontWeight: 'normal' } }} />
@@ -97,7 +98,8 @@ export default class App extends Component {
           <RootStack.Screen name="Reception" component={Reception} options={{ headerShown: false }} />
           <RootStack.Screen name="WeddingDetails" component={WeddingDetails} options={{ headerShown: false }} />
           <RootStack.Screen name="ScannerScreen" component={ScannerScreen} options={{ headerShown: false }} />
-          <RootStack.Screen name="DesignerRequests" component={DesignerRequests} options={{ headerShown: false }} />
+          <RootStack.Screen name="DesignerRequests" component={DesignerRequests} options={{ headerShown: false }} /> 
+          <RootStack.Screen name="ReceivedDesign" component={ReceivedDesign} options={{ headerShown: false }} />
           {/* <RootStack.Screen name="Home" component={Home} options={{headerShown:false}} /> */}
         </RootStack.Navigator>
       </NavigationContainer>

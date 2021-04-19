@@ -19,7 +19,6 @@ export default class AllRequests extends Component {
         this.props.onPressButtonChildren(this.props.item); //Change: passing prop onPressItem and calling _onPressItem
     }
 
-
     render() {
 
         return (
@@ -32,6 +31,9 @@ export default class AllRequests extends Component {
                     showsHorizontalScrollIndicator={false} />
                 <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
                     {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
+                </View>
+                <View style={{ display:'flex', width: '100%', height: 400, backgroundColor: 'red', position: 'absolute', bottom: 0, borderTopLeftRadius: 30, borderTopRightRadius: 30 }}>
+                    <Text>Coming Soon!</Text>
                 </View>
             </View>);
     }
@@ -76,7 +78,6 @@ export default class AllRequests extends Component {
             callback
         });
     }
-
 
     async getAllEvents() {
         var userdata = await Prefs.get(Keys.userData);

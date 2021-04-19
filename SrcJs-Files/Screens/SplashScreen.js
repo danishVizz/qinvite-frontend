@@ -1,6 +1,6 @@
 import { Component } from "react";
 import React from 'react'
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, AsyncStorage } from "react-native";
 import ButtonComp from "../Components/ButtonComp";
 import { CheckBox } from "react-native-elements";
 import Trans from "../Translation/translation";
@@ -69,16 +69,25 @@ export default class SplashScreen extends Component {
             Trans.setI18nConfig("ar");
             this.setState({ langenglish: !(langenglish), langarabic: true })
         }
-            
+
     }
 
     async componentDidMount() {
+        // this.clearAllData();
         var userData = await Prefs.get(Keys.userData);
         console.log('userData');
         console.log(userData);
-        if ( userData != undefined || userData != null) {
-            this.setState({ isSignedIn: true} );
+        if (userData != undefined || userData != null) {
+            this.setState({ isSignedIn: true });
         }
+
+        
+    }
+
+    clearAllData() {
+        AsyncStorage.getAllKeys()
+            .then(keys => AsyncStorage.multiRemove(keys))
+            .then(() => alert('success'));
     }
 
     performTimeConsumingTask = async () => {

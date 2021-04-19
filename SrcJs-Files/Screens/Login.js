@@ -116,7 +116,22 @@ export default class Login extends Component {
       this.logCallback("Response came", this.state.setLoginLoading = false);
       if (data.status == true) {
         Prefs.save(Keys.userData, JSON.stringify(data.data))
-        this.props.navigation.navigate('CombineComp')
+        console.log(data.data);
+        switch (data.data.role) {
+          case "0":
+          case "2":
+            this.props.navigation.navigate('CombineComp');
+            break;
+          case "4":
+            this.props.navigation.navigate('Reception');
+            break;
+          case "5":
+            this.props.navigation.navigate('DesignerRequests');
+            break;
+            default:
+              Alert.alert("", Trans.translate('not_auth_msg'));
+        }
+
         // this.props.navigation.navigate('ChooseCategory')
 
       } else {

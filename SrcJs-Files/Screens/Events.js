@@ -121,7 +121,6 @@ export default class Events extends Component {
     )
   }
 
-
   renderItem({ item, index }) {
     return (
       <TouchableOpacity onPress={() => this.actionOnRow(item)}>

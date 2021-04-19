@@ -16,6 +16,7 @@ import moment from "moment";
 import mykeys from '../Constants/keys';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MultiSelect from "react-multi-select-component";
+import HeaderComp2 from "../Components/HeaderComp2";
 // import Snackbar from 'react-native-snackbar';
 
 export default class CreateEvent extends Component {
@@ -42,7 +43,7 @@ export default class CreateEvent extends Component {
     picker: false,
     isLoading: false,
     date: new Date(),
-    mode: 'date',
+    mode: 'datetime',
     show: false,
     time: new Date(),
     loadDropDown: false
@@ -58,7 +59,7 @@ export default class CreateEvent extends Component {
         <StatusBar
           backgroundColor='#F54260'
         />
-        {/* <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')}  textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white'  /> */}
+        <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')}  textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
 
         <ScrollView>
           <View style={styles.innercontainer}>
@@ -79,7 +80,7 @@ export default class CreateEvent extends Component {
                 placeholder={Trans.translate("Eventdatetime")}
                 placeholderTextColor={mycolor.lightgray}
                 textinstyle={{ paddingLeft: 0 }}
-                value={this.state.date}
+                value={String(this.state.date)}
                 keyboardType={'numeric'}
                 isEnable={false}
                 rightImgStyle={{ tintColor: mycolor.darkgray, marginRight: 40 }}
@@ -390,38 +391,45 @@ export default class CreateEvent extends Component {
   }
 
   onChange = (event, selectedValue) => {
+    console.log("Selected value: "+selectedValue);
     this.setState({ show: (Platform.OS === 'ios') })
-    if (this.state.mode == 'date') {
-      const currentDate = selectedValue || new Date();
-      this.setState({ date: moment(currentDate).format("YYYY-MM-D") })
-      // setDate(currentDate);
-      this.setState({ mode: 'time' })
-      // setMode('time');
-      this.setState({ show: (Platform.OS !== 'ios') })
-      // setShow(Platform.OS !== 'ios'); // to show the picker again in time mode
-      console.log("" + this.state.date)
-      this.setState({ eventDateError: false })
-      this.setState({ eventdate: currentDate })
-
+    if (event.type === 'neutralButtonPressed') {
+      this.setState({date: new Date(0)});
     } else {
-      const selectedTime = selectedValue || new Date();
-      var selecteddatetime = new Date(selectedTime)
-      this.setState({ time: selecteddatetime.getHours() + ":" + selecteddatetime.getMinutes() })
-      this.setState({ date: this.state.date + ":" + this.state.time })
-      // setTime(selectedTime);
-      this.setState({ show: (Platform.OS === 'ios') })
-      // setShow(Platform.OS === 'ios');
-      // setMode('date');
-      this.setState({ mode: 'date' })
-      console.log("Time " + this.state.time)
-      this.setState({ eventdate: selecteddatetime })
-      this.setState({ eventDateError: false })
+      this.setState({date: selectedValue,show:false});
     }
+
+    // if (this.state.mode == 'date') {
+    //   const currentDate = selectedValue || new Date();
+    //   this.setState({ date: moment(currentDate).format("YYYY-MM-D") })
+    //   // setDate(currentDate);
+    //   this.setState({ mode: 'time' })
+    //   // setMode('time');
+    //   this.setState({ show: (Platform.OS !== 'ios') })
+    //   // setShow(Platform.OS !== 'ios'); // to show the picker again in time mode
+    //   console.log("" + this.state.date)
+    //   this.setState({ eventDateError: false })
+    //   this.setState({ eventdate: currentDate })
+
+    // } else {
+    //   const selectedTime = selectedValue || new Date();
+    //   var selecteddatetime = new Date(selectedTime)
+    //   this.setState({ time: selecteddatetime.getHours() + ":" + selecteddatetime.getMinutes() })
+    //   this.setState({ date: this.state.date + ":" + this.state.time })
+    //   // setTime(selectedTime);
+    //   this.setState({ show: (Platform.OS === 'ios') })
+    //   // setShow(Platform.OS === 'ios');
+    //   // setMode('date');
+    //   this.setState({ mode: 'date' })
+    //   console.log("Time " + this.state.time)
+    //   this.setState({ eventdate: selecteddatetime })
+    //   this.setState({ eventDateError: false })
+    // }
   };
   renderPicker() {
     // if (this.state.picker) {
     return (
-      <DateTimePicker
+     this.state.show&&( <DateTimePicker
       style={{
         shadowColor: mycolor.darkgray,
         shadowRadius: 10,
@@ -431,12 +439,12 @@ export default class CreateEvent extends Component {
       }}
         testID="dateTimePicker"
         timeZoneOffsetInMinutes={-5}
-        value={new Date()}
+        value={this.state.date}
         mode={this.state.mode}
         is24Hour={false}
         display="default"
         onChange={this.onChange}
-      />
+      />)
     );
   }
 
