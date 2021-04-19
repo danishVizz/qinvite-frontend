@@ -140,7 +140,7 @@ export default class CreateEvent extends Component {
                 // disabled={this.state.disabledropdown}
                 multiple={true}
               
-                multipleText={"%d items have been selected."}
+                // multipleText={"%d items have been selected."}
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder={Trans.translate('select_receptionists')}
                 dropDownStyle={{ backgroundColor: '#fafafa' }}
@@ -434,7 +434,7 @@ export default class CreateEvent extends Component {
         value={new Date()}
         mode={this.state.mode}
         is24Hour={false}
-        display="calendar"
+        display="default"
         onChange={this.onChange}
       />
     );

@@ -36,4 +36,6 @@ target 'QInvites' do
 
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
 
+  pod 'RNImageToPdf', :path => '../node_modules/react-native-image-to-pdf'
+
 end

@@ -17,7 +17,7 @@ export default class PreviewInvite extends Component {
     state = {
         contentLoading: false
     }
-
+    
     render() {
         console.log(Keys.invitealldata["ImageData"])
         return (
@@ -28,7 +28,7 @@ export default class PreviewInvite extends Component {
                 <ScrollView style={{ flex: 2.5 }}>
                     <View style={{ flex: 2.5, marginTop: 28, marginLeft: 20, marginRight: 20, marginBottom: 20, borderRadius: 2, borderWidth: 5, borderColor: 'white', elevation: 2 }}>
                         <View style={styles.imagecontainer}>
-                            <Image source={{ uri: Keys.invitealldata["ImageData"] }} style={{ height: 298, width: "100%" }} resizeMode="center"></Image>
+                            <Image source={{ uri: Keys.invitealldata["ImageData"] }} style={{ height: 298, width: "100%",  backgroundColor: 'white' }} resizeMode="center"></Image>
                         </View>
                         <Text style={{ marginLeft: 20, marginRight: 20, fontSize: 24, fontWeight: 'normal', color: mycolor.darkgray }}>{Keys.invitealldata["Eventdata"].event_name}</Text>
 
@@ -99,6 +99,29 @@ export default class PreviewInvite extends Component {
         });
     }
 
+    async myAsyncPDFFunction() {
+        try {
+       
+         var imagepath=  Platform.OS === "android" ? Keys.invitealldata["ImageData"].replace("file:///", "") : Keys.invitealldata["ImageData"]
+
+            const options = {
+                imagePaths: [imagepath],
+                filePath:"/storage/emulated/0/Pictures/",
+                name: 'PDFName.pdf',
+                maxSize: { // optional maximum image dimension - larger images will be resized
+                    width: 500,
+                    height: 900
+                },
+                quality: .7, // optional compression paramter
+            };
+            const pdf = await RNImageToPdf.createPDFbyImages(options);
+
+            console.log("PdfFile" + pdf.filePath);
+            console.log(pdf);
+        } catch (e) {
+            console.log(e);
+        }
+    }
     async CreateEvent() {
         this.logCallback("Creating Event :", this.state.contentLoading = true);
         var userdata = await Prefs.get(Keys.userData);

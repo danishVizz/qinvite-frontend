@@ -8,7 +8,6 @@ import HeaderComp from '../../Components/HeaderComp'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Trans from '../../Translation/translation';
 
-
 export default class DesignerRequests extends Component {
 
 

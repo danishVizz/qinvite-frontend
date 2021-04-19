@@ -50,7 +50,7 @@ export default class SendEditor extends Component {
           <View style={styles.subContainer}>
             <View style={styles.innercontainer}>
               {/* <Image style={{ backgroundColor: 'gray', width: '100%', height: 203, borderRadius: 6 }} source={require('../../assets/logo.png')}></Image> */}
-              <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6 }} source={{ uri: Keys.invitealldata["ImageData"] }}></Image>
+              <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6, backgroundColor: 'white' }} source={{ uri: Keys.invitealldata["ImageData"] }}></Image>
               <Text style={{ fontSize: 14, marginTop: 15, color: mycolor.txtGray }}>{Trans.translate("ReceptionistName")}</Text>
 
               <TextInputComp

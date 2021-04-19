@@ -139,6 +139,7 @@ android {
         versionName "1.0"
         multiDexEnabled true
         manifestPlaceholders = [appPackageName: "${applicationId}"]
+        missingDimensionStrategy 'react-native-camera', 'general'
     }
     splits {
         abi {
@@ -195,6 +196,8 @@ dependencies {
     //noinspection GradleDynamicVersion
 
      implementation project(':react-native-contacts')
+
+    implementation project(':react-native-image-to-pdf')
 
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
