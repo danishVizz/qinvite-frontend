@@ -236,6 +236,8 @@ PODS:
     - React-Core
   - react-native-contacts (6.0.5):
     - React-Core
+  - react-native-date-picker (3.2.10):
+    - React-Core
   - react-native-image-picker (3.3.2):
     - React-Core
   - react-native-safe-area-context (3.1.9):
@@ -384,6 +386,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
+  - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
@@ -495,6 +498,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
+  react-native-date-picker:
+    :path: "../node_modules/react-native-date-picker"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-safe-area-context:
@@ -612,6 +617,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
   react-native-camera: 04a9a85b63d169094db5fd13a0c786101238e925
   react-native-contacts: 931baebf460125c5a7bbce1c4521a96c69795123
+  react-native-date-picker: 242eec7af56cea5fb2706d5db5d3837060b3884b
   react-native-image-picker: b42940647478bf106ad3c491d6f5d9d40916d865
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
@@ -654,6 +660,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 4c60b43eaf3cb05a164bc9113258a171c18b7bf7
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
-PODFILE CHECKSUM: 644762c30ba7d9a02a5c23dcc78bd7e5dfa36210
+PODFILE CHECKSUM: 1b2e575f08ee8381fa5b177d1a3b67999275e928
 
 COCOAPODS: 1.9.3

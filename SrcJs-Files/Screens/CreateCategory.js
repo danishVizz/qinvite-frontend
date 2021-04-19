@@ -41,8 +41,8 @@ export default class CreateCategory extends Component {
                             <Text style={{ flex: 1, fontSize: 14, fontWeight: 'bold', color: 'black', flexDirection: 'row' }}>{Trans.translate('PhoneAllowed')}</Text>
                             <Switch
                                 trackColor={{ false: mycolor.lightgray, true: mycolor.lightPink }}
-                                thumbColor={this.state.isEnabled ? mycolor.pink : mycolor.darkgray}
-                                ios_backgroundColor="#3e3e3e"
+                                thumbColor={this.state.isEnabled ? mycolor.pink : mycolor.white}
+                                ios_backgroundColor={mycolor.white}
                                 onValueChange={() => this.ontogglechange()}
                                 value={this.state.isEnabled}
                             />

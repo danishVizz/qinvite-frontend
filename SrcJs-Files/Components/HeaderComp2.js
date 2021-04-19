@@ -12,7 +12,7 @@ export default class HeaderComp2 extends Component {
         </TouchableOpacity>
        
         <View style={{flex: 6}}>
-          <View style={{justifyContent: 'center' ,alignSelf:this.props.selfalign}}>
+          <View style={{justifyContent: 'center' ,alignSelf:this.props.selfalign,paddingLeft:10}}>
           <TouchableOpacity  onPress={this.props.titleclick}>
             <Text style={{ fontSize: this.props.textsize, fontWeight: this.props.textfonts, color: this.props.titleColor || mycolor.white, textAlign: this.props.titlepos }}>{this.props.title}</Text>
           </TouchableOpacity>
@@ -21,7 +21,7 @@ export default class HeaderComp2 extends Component {
         </View >
         <View style={{flex: 1}}>
       
-        <TouchableOpacity style={{justifyContent: 'center', paddingRight: 10 }} onPress={this.props.rightBtnClicked}>
+        <TouchableOpacity style={{justifyContent: 'center', paddingRight: 10}} onPress={this.props.rightBtnClicked}>
         <Text style={{ fontSize: this.props.textsize, fontWeight: this.props.righttextfonts, color: this.props.titleColor || mycolor.white, textAlign: 'right' }}>{this.props.righttitle}</Text>
           </TouchableOpacity>
           </View>

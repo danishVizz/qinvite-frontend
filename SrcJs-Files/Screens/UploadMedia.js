@@ -56,7 +56,7 @@ export default class UploadMedia extends Component {
 
     createDesign() {
         if (this.state.imageuri != '') {
-            this.props.navigation.navigate('DumyEditor', { "imagedata": this.state.imageuri })
+            this.props.navigation.navigate('ImageEditor', { "imagedata": this.state.imageuri })
         }
         else {
             // Snackbar.show({

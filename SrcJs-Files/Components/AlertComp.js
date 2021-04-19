@@ -32,9 +32,9 @@ export default class AlertComp extends Component {
                             borderRadius: 4,
                             borderColor: 'rgba(0, 0, 0, 0.1)',
                         }}>
-                        <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>{Trans.translate('DeleteCategory')}</Text>
+                        <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>{this.props.alerttitle}</Text>
 
-                        <Text style={{ fontSize: 15, color: 'black', marginTop: 20 }}>{Trans.translate('DeletCategoryhint')}</Text>
+                        <Text style={{ fontSize: 15, color: 'black', marginTop: 20,textAlign:'center' }}>{this.props.alertbody}</Text>
 
                         <View style={{ width: '100%', marginTop: 30 }}>
                             <ButtonComp

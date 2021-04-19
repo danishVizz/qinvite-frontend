@@ -1,7 +1,7 @@
 
 
 
-import { Button, ImageBackground, TextInput, Alert } from "react-native";
+import { ImageBackground, TextInput, Alert } from "react-native";
 
 import ViewShot from "react-native-view-shot";
 import Trans from "../Translation/translation";
@@ -35,12 +35,13 @@ const COLORS = [
   "#002131",
   "#00486c",
   "#006d95",
-  "#0087aa",
-  "#00a1be",
   "#0ec0af",
   "#69d8cc",
   "#e9cec3",
   "#c3c3c3",
+  "#FCFCFC",
+  "#F54260",
+  "#373232"
 ];
 const LEFT = "left";
 const RIGHT = "right";
@@ -58,7 +59,7 @@ const PROCESSBUTTON = [
   { icon: require('../../assets/align-center.png'), name: "Change Align", id: 4 },
   { icon: require('../../assets/add-color.png'), name: "Add Color", id: 5 },
 ];
-export default class DumyEditor extends Component {
+export default class ImageEditor extends Component {
   constructor(props) {
     super(props);
   };
@@ -301,14 +302,14 @@ export default class DumyEditor extends Component {
                   resizeMode='contain'
                   source={{ uri: this.state.imagedata }}
                   // style={{ height: WINDOW.height/2, width: WINDOW.width, borderRadius: 5, borderWidth: 1}}
-                  style={{ width: WINDOW.width - 20, height: WINDOW.height / 2,backgroundColor: '#fff'}}>
+                  style={{ width: WINDOW.width - 20, height: WINDOW.height / 2, backgroundColor: '#fff' }}>
 
 
                   <Draggable x={WINDOW.width / 2.5} y={WINDOW.height / 4} renderColor='green'>
                     <QRCode
                       style={{ alignSelf: 'flex-end' }}
                       size={40}
-                      value="http://awesome.link.qr"
+                      value="QInvites"
                     />
                   </Draggable>
 

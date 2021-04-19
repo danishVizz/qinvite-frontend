@@ -16,8 +16,9 @@ import moment from "moment";
 import mykeys from '../Constants/keys';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MultiSelect from "react-multi-select-component";
-import HeaderComp2 from "../Components/HeaderComp2";
+import DatePicker from 'react-native-date-picker'
 // import Snackbar from 'react-native-snackbar';
+import HeaderComp2 from '../Components/HeaderComp2';
 
 export default class CreateEvent extends Component {
 
@@ -89,7 +90,7 @@ export default class CreateEvent extends Component {
               />
               {this.state.eventDateError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.eventDateErrortxt}</Text> : <View></View>}
               {this.state.show ? this.renderPicker() : <View></View>}
-            
+
             </View>
 
             <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("Eventaddress")}</Text>
@@ -108,6 +109,7 @@ export default class CreateEvent extends Component {
               inputtype={'numeric'}
               placeholderTextColor={mycolor.lightgray}
               textinstyle={{ width: "100%" }}
+              isEnable={!(this.state.iseditevent)}
               value={String(this.state.recpntistcount)}
               onChangeText={(count) => this.setState({ recpntistcount: count, selectedvaluesarr: [] })}
             />
@@ -140,7 +142,8 @@ export default class CreateEvent extends Component {
                 defaultValue={""}
                 // disabled={this.state.disabledropdown}
                 multiple={true}
-              
+                disabledropdown={(this.state.iseditevent)}
+                disabled={(this.state.iseditevent)}
                 // multipleText={"%d items have been selected."}
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder={Trans.translate('select_receptionists')}
@@ -148,7 +151,7 @@ export default class CreateEvent extends Component {
                 removeItem={(value => this.removeItem(value))}
                 onChangeItemMultiple={item => this.setState({
                 }, console.log("Multi......" + this.state.selectedCountries))}
-                onChangeItem={(item, index) => this.updateUser(item, index)}/>
+                onChangeItem={(item, index) => this.updateUser(item, index)} />
               :
               null
             }
@@ -363,9 +366,9 @@ export default class CreateEvent extends Component {
   }
 
   updateUser = (selectedvalue, index) => {
-    
+
     if (this.state.recpntistcount < selectedvalue.length) {
-      // Alert.alert("You can select only " + this.state.recpntistcount + " receptionist")
+      Alert.alert("You can select only " + this.state.recpntistcount + " receptionist")
       // Snackbar.show({
       //   text: Trans.translate(`ReceptionistLimit`)+" "+this.state.recpntistcount,
       //   duration: Snackbar.LENGTH_SHORT,
@@ -390,13 +393,15 @@ export default class CreateEvent extends Component {
     console.log(values + "Hereeeee")
   }
 
-  onChange = (event, selectedValue) => {
-    console.log("Selected value: "+selectedValue);
-    this.setState({ show: (Platform.OS === 'ios') })
+  onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.date;
+
+    this.setState({ show: Platform.OS === 'ios' });
     if (event.type === 'neutralButtonPressed') {
-      this.setState({date: new Date(0)});
+      this.setState({ date: new Date(0) });
     } else {
-      this.setState({date: selectedValue,show:false});
+      this.setState({ date: currentDate, eventdate: currentDate });
+
     }
 
     // if (this.state.mode == 'date') {
@@ -426,25 +431,74 @@ export default class CreateEvent extends Component {
     //   this.setState({ eventDateError: false })
     // }
   };
+
+  // onChange = (event, selectedValue) => {
+
+  //   this.setState({ show: (Platform.OS === 'ios') })
+  //   const currentDate = selectedValue || new Date();
+
+  //   if (this.state.mode == 'date') {
+  //     const currentDate = selectedValue || new Date();
+  //     this.setState({ date: moment(currentDate).format("YYYY-MM-D") })
+  //     // setDate(currentDate);
+  //     // this.setState({ mode: 'time' })
+  //     // setMode('time');
+  //     this.setState({ show: (Platform.OS !== 'ios') })
+  //     // setShow(Platform.OS !== 'ios'); // to show the picker again in time mode
+  //     console.log("" + this.state.date)
+  //     this.setState({ eventDateError: false })
+  //     this.setState({ eventdate: currentDate })
+
+  //   } else {
+  //     const selectedTime = selectedValue || new Date();
+  //     var selecteddatetime = new Date(selectedTime)
+  //     this.setState({ time: selecteddatetime.getHours() + ":" + selecteddatetime.getMinutes() })
+  //     this.setState({ date: this.state.date + ":" + this.state.time })
+  //     // setTime(selectedTime);
+  //     this.setState({ show: (Platform.OS === 'ios') })
+  //     // setShow(Platform.OS === 'ios');
+  //     // setMode('date');
+  //     this.setState({ mode: 'date' })
+  //     console.log("Time " + this.state.time)
+  //     this.setState({ eventdate: selecteddatetime })
+  //     this.setState({ eventDateError: false })
+  //   }
+  // }
+
   renderPicker() {
     // if (this.state.picker) {
     return (
-     this.state.show&&( <DateTimePicker
-      style={{
-        shadowColor: mycolor.darkgray,
-        shadowRadius: 10,
-        shadowOpacity: 1,
-        shadowOffset: { height: 0, width: 0 },
-        color: 'red'
-      }}
-        testID="dateTimePicker"
-        timeZoneOffsetInMinutes={-5}
-        value={this.state.date}
-        mode={this.state.mode}
-        is24Hour={false}
-        display="default"
-        onChange={this.onChange}
-      />)
+      this.state.show && (<View style={{marginTop:20}}>
+        <DatePicker
+          date={this.state.date}
+          mode="datetime"
+          onDateChange={(date) => this.setState({ date: date , eventdate: date})}
+        />
+        <View style={{margin:20}}>
+        <ButtonComp
+          onPress={() => this.setState({ show: false })}
+          textstyle={{ color: 'white' }}
+          text={Trans.translate("Ok")}></ButtonComp>
+      </View>
+      </View>
+      )
+
+      // <DateTimePicker
+      // style={{
+      //   shadowColor: mycolor.darkgray,
+      //   shadowRadius: 10,
+      //   shadowOpacity: 1,
+      //   shadowOffset: { height: 0, width: 0 },
+      //   color: 'red'
+      // }}
+      //   testID="dateTimePicker"
+      //   timeZoneOffsetInMinutes={-5}
+      //   value={this.state.date}
+
+      //   is24Hour={false}
+      //   display="default"
+      //   onChange={this.onChange}
+      // />
     );
   }
 

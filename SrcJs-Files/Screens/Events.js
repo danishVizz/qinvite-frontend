@@ -6,14 +6,18 @@ import FloatingButtonComp from '../Components/FloatingButtonComp';
 import ApiCalls from '../Services/ApiCalls';
 import Prefs from '../Prefs/Prefs';
 import Keys from '../Constants/keys';
+import Trans from '../Translation/translation';
 import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native';
+import AlertComp from '../Components/AlertComp';
 
 export default class Events extends Component {
 
   state = {
     EventAllData: [],
-    contentLoading: false
+    contentLoading: false,
+    showalert: false,
+    currentselected:false
   }
 
   _onPress() {
@@ -21,15 +25,23 @@ export default class Events extends Component {
   }
 
   render() {
-    console.log(this.props.navigation);
+
+    let Deletealert = (
+      this.state.showalert ?
+        <AlertComp
+          alertbody={Trans.translate('Delethint')}
+          alerttitle={Trans.translate('DeleteEvent')}
+          onCancelPress={() => this.setState({ showalert: false })}
+          onDeletePress={() => this.DeleteEvent(this.state.currentselected)}></AlertComp> : null
+    );
     return (
+
       <View style={{ flex: 1, backgroundColor: mycolor.white }}>
 
         <FlatList
           data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item) => item.id}
-          
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false} />
 
@@ -40,7 +52,12 @@ export default class Events extends Component {
         <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
           {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
         </View>
-      </View>);
+
+        {Deletealert}
+
+      </View>
+
+    )
   }
 
   getallData() {
@@ -102,6 +119,7 @@ export default class Events extends Component {
   }
 
   async DeleteEvent(id) {
+    this.setState({ showalert: false })
     this.logCallback("DeleteEvent :", this.state.contentLoading = true);
     // var userdata = await Prefs.get(Keys.userData);
     // var parsedata = JSON.parse(userdata)
@@ -138,7 +156,7 @@ export default class Events extends Component {
   onPressButtonChildren = (value, item) => {
     switch (value) {
       case 'delete':
-        this.DeleteEvent(item.id)
+        this.setState({ showalert: true, currentselected: item.id })
         break
       case 'edit':
         var newitem = {

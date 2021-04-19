@@ -13,7 +13,7 @@ class CategoryComp extends Component {
     render() {
         return (
             <View>
-                <TouchableOpacity onPress={this.props.Onpress} style={[styles.container, this.props.containerstyle || {}]} >
+                <View onPress={this.props.Onpress} style={[styles.container, this.props.containerstyle || {}]} >
                     <Image source={this.props.lefticon} style={[styles.photo, this.props.imagestyle || {}]} />
                     <View style={[styles.container_text, this.props.containerStyle || {}]}>
                         <Text style={[styles.title, this.props.titlestyle || {}]}>
@@ -31,7 +31,7 @@ class CategoryComp extends Component {
                             actions={[() => this.onPressButtonChildren("view", this.props.item), () => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item)]} />
 
                     </View>
-                </TouchableOpacity>
+                </View>
             </View>
         );
     }

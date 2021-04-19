@@ -36,6 +36,7 @@
     "react-native-contacts": "^6.0.5",
     "react-native-countdown-component": "^2.7.1",
     "react-native-custom-qr-codes": "^2.0.0",
+    "react-native-date-picker": "^3.2.10",
     "react-native-datepicker": "^1.7.2",
     "react-native-drag-text-editor": "^0.0.7",
     "react-native-draggable": "^3.3.0",

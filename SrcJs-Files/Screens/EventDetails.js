@@ -21,7 +21,9 @@ export default class EventDetails extends Component {
 
         return (
             <SafeAreaView style={styles.container}>
-                <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')} textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
+                 <StatusBar
+                    backgroundColor='#F54260'
+                />
                 <ScrollView>
                     <View style={styles.imagecontainer}>
                         <Image source={eventdata.event_card == "" ? require('../../assets/logo.png') : eventdata.event_card} resizeMode='center'></Image>
@@ -30,9 +32,11 @@ export default class EventDetails extends Component {
                     <Text style={{ marginLeft: 20, marginRight: 20, fontSize: 24, fontWeight: 'normal', color: mycolor.darkgray }}>{eventdata.event_name}</Text>
 
                     <View style={styles.innercontainer}>
+
                         <EventDetailsComp lefticon={require('../../assets/icon_eventday.png')} title={eventdata.event_date} description=""></EventDetailsComp>
                         <EventDetailsComp lefticon={require('../../assets/icon_location.png')} title={eventdata.event_address} description=""></EventDetailsComp>
-                        <EventDetailsComp lefticon={require('../../assets/icon_pricetag.png')} title={eventdata.package_details.package_name} description={`Contains ${eventdata.package_details.package_people} Invitation Cards and it costs ${eventdata.package_details.package_price} QR`}></EventDetailsComp>
+                        <EventDetailsComp lefticon={require('../../assets/icon_pricetag.png')} title={eventdata.package_details.package_name==='undefined' ? " ":eventdata.package_details.package_name}description={`Contains ${eventdata.package_details.package_people} Invitation Cards and it costs ${eventdata.package_details.package_price} QR`}></EventDetailsComp>
+                  
                     </View>
 
                     <TouchableOpacity onPress={() => this.Participantsdetail(eventdata)}>
@@ -68,8 +72,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     imagecontainer: {
-        flex: 0,
-        marginTop: 20,
+        
+        marginTop: 10,
         marginLeft: 20, marginRight: 20, marginBottom: 20,
         borderWidth: 1,
         borderColor: mycolor.lightgray,

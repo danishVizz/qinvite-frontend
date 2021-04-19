@@ -34,7 +34,9 @@
     "Profile":"Profile",
     "DeleteAcc":"Delete Account",
     "DeleteCategory":"Delete Category",
-    "DeletCategoryhint":"Are you sure that you want to delete Kid Allowed",
+    "DeleteEvent":"Delete Event",
+    "Delethint":"Are you sure that you want to delete?",
+    
     "Delete":"Delete",
     "Nothanks":"No, Thanks",
     "Recepionist":"Number of Receptionist",
@@ -125,5 +127,7 @@
     "search": "Search",
     "not_auth_msg": "You are not authorize to use this app.",
     "received_design":"Received Design",
-    "received_date": "Received Date"
+    "received_date": "Received Date",
+    "Preview": "Preview",
+    "Ok": "Ok"
 }

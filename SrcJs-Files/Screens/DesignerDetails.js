@@ -7,46 +7,47 @@ import Trans from '../Translation/translation';
 import ApiCalls from '../Services/ApiCalls';
 import Keys from '../Constants/keys';
 import Prefs from '../Prefs/Prefs';
-import { ScrollView } from 'react-native-gesture-handler';
 
 export default class DesignerDetails extends Component {
     state = {
-        contentLoading: false
+        contentLoading: false,
+        isresponded: false
     }
 
     render() {
         const desingertdata = this.props.route.params.DesingerData || 'none'
         return (
-            <ScrollView>
-                <View style={styles.container}>
+            <View style={styles.container}>
 
-                    <StatusBar
-                        backgroundColor='white' />
-                    <View style={{ width: '100%', flex: 1, marginTop: 22, marginLeft: 20, marginRight: 20, marginBottom: 10, justifyContent: "center", alignContent: 'center', alignSelf: 'center' }}>
-                        <View style={styles.imagecontainer}>
-                            <Image source={desingertdata.user_image == "" ? require('../../assets/icon_dumy.png') : desingertdata.user_image} resizeMode="contain" style={{ width: '100%', height: 250, alignSelf: 'center' }}></Image>
-                        </View>
+                <StatusBar
+                    backgroundColor='white' />
 
-                        <Text style={[styles.textstyle, { color: '#474645', fontWeight: 'bold', fontSize: 24, alignSelf: 'center' } || {}]}> {desingertdata.first_name + " " + desingertdata.last_name}</Text>
+                <View style={{ width: '100%', flex: 1, marginTop: 22, marginLeft: 20, marginRight: 20, marginBottom: 10, justifyContent: "center", alignContent: 'center', alignSelf: 'center' }}>
+                    <View style={styles.imagecontainer}>
+                        <Image source={desingertdata.user_image == "" ? require('../../assets/icon_dumy.png') : desingertdata.user_image} resizeMode="contain" style={{ width: '100%', height: 250, alignSelf: 'center' }}></Image>
+                    </View>
 
-                        <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 5 }}>
-                            <Image
-                                imagestyle={{ height: 15, width: 9 }} style={{ height: 15, width: 9, borderColor: mycolor.pink }} source={require('../../assets/icon_phone.png')} ></Image>
-                            <Text style={[styles.textstyle, { color: '#474645', fontWeight: 'bold', fontSize: 14, alignSelf: 'center', marginLeft: 5 } || {}]}>{desingertdata.phone}</Text>
+                    <Text style={[styles.textstyle, { color: '#474645', fontWeight: 'bold', fontSize: 24, textAlign: 'center' } || {}]}> {desingertdata.first_name + " " + desingertdata.last_name}</Text>
 
-                        </View>
+                    <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 5 }}>
+                        <Image
+                            imagestyle={{ height: 15, width: 9 }} style={{ height: 15, width: 9, borderColor: mycolor.pink }} source={require('../../assets/icon_phone.png')} ></Image>
+                        <Text style={[styles.textstyle, { color: '#474645', fontWeight: 'bold', fontSize: 14, textAlign: 'center', marginLeft: 5 } || {}]}>{desingertdata.phone}</Text>
 
-                        <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 10, alignSelf: 'center' }}>
-                            <Image style={{ height: 300, width: 250 }} resizeMode='contain' source={require('../../assets/icon_designprocedure.png')} />
-                            <ButtonComp textstyle={{ color: 'white' }} style={{ marginTop: 20 }} text={Trans.translate('RequestDesign')} onPress={() => this.SendRequestDesigners(desingertdata.id)}> </ButtonComp>
+                    </View>
 
-                        </View>
+                    {!(this.state.isresponded)
+                        ? <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 10, alignSelf: 'center' }}>
+                            <Image style={{ height: 300, width: 200 }} resizeMode='contain' source={require('../../assets/icon_designprocedure.png')} />
+                            <ButtonComp textstyle={{ color: 'white' }} style={{ marginTop: 10 }} text={Trans.translate('RequestDesign')} onPress={() => this.SendRequestDesigners(desingertdata.id)}> </ButtonComp>
 
+                        </View> : null}
+                        {/* after Acceptview */}
+                    {this.state.isresponded ? <View > 
                         <View style={{ marginLeft: 10, marginTop: 10 }}>
-
                             <Text style={[styles.textstyle, { marginTop: 10, color: '#474645', fontWeight: 'bold', fontSize: 24, alignSelf: 'center', marginLeft: 5 } || {}]}>{Trans.translate("pleasewait")}</Text>
                             <Text style={[styles.textstyle, { marginTop: 15, color: '#474645', fontWeight: 'bold', fontSize: 14, alignSelf: 'center', marginLeft: 5 } || {}]}>{Trans.translate("progresswait")}</Text>
-                            <Text style={[styles.textstyle, { marginTop: 20, color: mycolor.lightgray, textAlign: 'center', fontSize: 14, alignSelf: 'center', marginLeft: 5 } || {}]}>{Trans.translate("pleasewaitdesigner")}</Text>
+                            <Text style={[styles.textstyle, { marginTop: 20, color: mycolor.lightgray, textAlign: 'center', fontSize: 14, alignSelf: 'center', margin: 15 } || {}]}>{Trans.translate("pleasewaitdesigner")}</Text>
 
                         </View>
 
@@ -73,9 +74,10 @@ export default class DesignerDetails extends Component {
 
                             </View>
                         </View>
-                    </View>
+                    </View> : null}
+                      {/* after Acceptview */}
                 </View>
-            </ScrollView>
+            </View>
         );
     }
 

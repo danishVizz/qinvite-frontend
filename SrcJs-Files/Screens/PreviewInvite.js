@@ -35,11 +35,11 @@ export default class PreviewInvite extends Component {
                         <View style={{ flexDirection: 'row', marginTop: 20 }}>
                             <View style={{ flex: 1, flexDirection: 'column' }}>
                                 <Text style={styles.textstyle}>{Trans.translate('Date')}</Text>
-                                <Text style={[styles.textstyle, { color: 'black' } || {}]}> {Keys.invitealldata["Eventdata"].event_date}</Text>
+                                {/* <Text style={[styles.textstyle, { color: 'black' } || {}]}> {Keys.invitealldata["Eventdata"].event_date}</Text> */}
                             </View>
                             <View style={{ flex: 1, flexDirection: 'column' }}>
                                 <Text style={styles.textstyle}>{Trans.translate('Time')}</Text>
-                                <Text style={[styles.textstyle, { color: 'black' } || {}]}> {Keys.invitealldata["Eventdata"].event_date}</Text>
+                                {/* <Text style={[styles.textstyle, { color: 'black' } || {}]}> {Keys.invitealldata["Eventdata"].event_date}</Text> */}
                             </View>
 
                         </View>
@@ -99,29 +99,6 @@ export default class PreviewInvite extends Component {
         });
     }
 
-    async myAsyncPDFFunction() {
-        try {
-       
-         var imagepath=  Platform.OS === "android" ? Keys.invitealldata["ImageData"].replace("file:///", "") : Keys.invitealldata["ImageData"]
-
-            const options = {
-                imagePaths: [imagepath],
-                filePath:"/storage/emulated/0/Pictures/",
-                name: 'PDFName.pdf',
-                maxSize: { // optional maximum image dimension - larger images will be resized
-                    width: 500,
-                    height: 900
-                },
-                quality: .7, // optional compression paramter
-            };
-            const pdf = await RNImageToPdf.createPDFbyImages(options);
-
-            console.log("PdfFile" + pdf.filePath);
-            console.log(pdf);
-        } catch (e) {
-            console.log(e);
-        }
-    }
     async CreateEvent() {
         this.logCallback("Creating Event :", this.state.contentLoading = true);
         var userdata = await Prefs.get(Keys.userData);
