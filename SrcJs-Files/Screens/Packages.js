@@ -8,7 +8,6 @@ import Trans from '../Translation/translation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PackagesComp from '../Components/PackagesComp';
 import ApiCalls from '../Services/ApiCalls';
-import HeaderComp2 from '../Components/HeaderComp2';
 import HeaderComp from '../Components/HeaderComp';
 import Prefs from '../Prefs/Prefs';
 import Keys from '../Constants/keys';

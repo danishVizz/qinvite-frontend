@@ -17,7 +17,8 @@ export default class Events extends Component {
     EventAllData: [],
     contentLoading: false,
     showalert: false,
-    currentselected:false
+    isFetching: false,
+    currentselected: false
   }
 
   _onPress() {
@@ -38,20 +39,34 @@ export default class Events extends Component {
 
       <View style={{ flex: 1, backgroundColor: mycolor.white }}>
 
+
         <FlatList
           data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item) => item.id}
+          onRefresh={() => this.onRefresh()}
+          refreshing={this.state.isFetching}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false} />
+
+        <View style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
+        </View>
+
 
         <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 0 }}>
           <FloatingButtonComp imagesrc={require('../../assets/icon_event.png')} floatingclick={() => this.props.navigation.navigate("CreateEvent", { "eventdata": [] })}></FloatingButtonComp>
         </View>
 
-        <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
-          {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
-        </View>
+
 
         {Deletealert}
 
@@ -99,20 +114,22 @@ export default class Events extends Component {
     });
   }
 
-
+  onRefresh() {
+    this.setState({ isFetching: true, }, () => { this.getAllEvents()});
+  }
   async getAllEvents() {
-    this.logCallback("Getting Events....:", this.state.contentLoading = true);
+    this.logCallback("Getting Events....:",  this.state.contentLoading = true);
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
     ApiCalls.getapicall("get_events", "?user_id=" + parsedata.id).then(data => {
-      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
       if (data.status == true) {
         this.setState({ EventAllData: data.data })
       } else {
         Alert.alert('Failed', data.message);
       }
     }, error => {
-      this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+      this.logCallback("Something Went Wrong", this.state.contentLoading = false, this.state.isFetching = false);
       Alert.alert('Error', JSON.stringify(error));
     }
     )
@@ -139,6 +156,9 @@ export default class Events extends Component {
     )
   }
 
+
+
+
   renderItem({ item, index }) {
     return (
       <TouchableOpacity onPress={() => this.actionOnRow(item)}>
@@ -159,18 +179,20 @@ export default class Events extends Component {
         this.setState({ showalert: true, currentselected: item.id })
         break
       case 'edit':
-        var newitem = {
-          "eventid": item.id,
-          "eventname": item.event_name,
-          "eventaddress": item.event_address,
-          "eventdate": item.event_date,
-          "no_of_receptionists": item.no_of_receptionists,
-          "receptionists": item.receptionists
-        }
+        // var newitem = {
+        //   "eventid": item.id,
+        //   "eventname": item.event_name,
+        //   "eventaddress": item.event_address,
+        //   "eventdate": item.event_date,
+        //   "no_of_receptionists": item.no_of_receptionists,
+        //   "receptionists": item.receptionists,
+        //   "receptionists": item.receptionists,
+        //   "participants": item.participants
+        // }
 
         this.props.navigation.navigate('CreateEvent',
           {
-            "eventdata": newitem
+            "eventdata": item
           })
 
         this

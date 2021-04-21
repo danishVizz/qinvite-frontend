@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import mycolor from '../Constants/Colors';
 import ApiCalls from '../Services/ApiCalls';
 import CategoryComp from '../Components/CategoryComp'
-
 import Trans from '../Translation/translation'
 import { Alert } from 'react-native';
 import { ActivityIndicator } from 'react-native';
@@ -19,7 +18,8 @@ export default class ChooseCategory extends Component {
         isChecked: [],
         selectedLists: [],
         currentselected: '',
-        showalert: false
+        showalert: false,
+        isFetching:false
     }
     render() {
         let Deletealert = (
@@ -39,19 +39,32 @@ export default class ChooseCategory extends Component {
                         data={this.state.categoriesdata}
                         renderItem={this.renderItem.bind(this)}
                         keyExtractor={(item) => item.id}
+                        onRefresh={() => this.onRefresh()}
+                        refreshing={this.state.isFetching}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
 
-                    <View style={{ flex: 1, alignSelf: 'center', alignItems: "center", }}>
-                        {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
+
+                    <View style={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                     </View>
+
+
                 </View>
                 {Deletealert}
 
                 <View style={{ height: "20%" }}>
-                    <View style={{ position: 'absolute', width: '100%', marginBottom: 5, bottom: 0 }}>
-                        <CategoryComp Onpress={() => this.props.navigation.navigate('CreateCategory', { "categorydata": [] })} innerright={null} lefticon={require('../../assets/icon_add.png')} title={Trans.translate('NewCategory')}></CategoryComp>
-                    </View>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateCategory', { "categorydata": [] })} style={{ position: 'absolute', width: '100%', marginBottom: 5, bottom: 0 }}>
+                        <CategoryComp innerright={null} lefticon={require('../../assets/icon_add.png')} title={Trans.translate('NewCategory')}></CategoryComp>
+                    </TouchableOpacity>
                 </View>
                 <ButtonComp
                     onPress={() => this.onNextScreen()}
@@ -65,6 +78,9 @@ export default class ChooseCategory extends Component {
 
 
     }
+
+
+    
     renderItem({ item, index }) {
         return (
 
@@ -80,7 +96,9 @@ export default class ChooseCategory extends Component {
         );
     }
 
-
+    onRefresh() {
+        this.setState({ isFetching: true, }, () => { this.getAllCategories()});
+      }
 
     onPressButtonChildren = (value, item) => {
         switch (value) {

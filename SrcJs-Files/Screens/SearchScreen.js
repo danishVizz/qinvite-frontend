@@ -13,13 +13,12 @@ export default class SearchScreen extends Component {
   state = {
     search: '',
     loading: false,
-    Data: []
+    EventAllData: []
   };
 
   updateSearch = (s) => {
     this.setState({ search: s });
-    console.log(s + s.length)
-    if (s.length >= 3) {
+    if (s.length >= 2) {
       this.setState({ loading: true });
       this.onSearch(s);
     }
@@ -45,7 +44,7 @@ export default class SearchScreen extends Component {
             value={search}
           />
           <FlatList
-            data={this.state.Data}
+            data={this.state.EventAllData}
             renderItem={this.searchitem}
             keyExtractor={(item) => item.product_code}
             showsVerticalScrollIndicator={false}
@@ -64,12 +63,11 @@ export default class SearchScreen extends Component {
 
   onSearch(s) {
     ApiCalls.searchapicall("search", s).then(data => {
-      console.log("Response came");
       if (data.status == true) {
         console.log(data);
         this.setState({
           loading: false,
-          Data: data.data
+          EventAllData: data.data
         })
       } else {
         this.setState({
@@ -117,7 +115,7 @@ export default class SearchScreen extends Component {
       <TouchableOpacity onPress={() => this.actionOnRow(item)}>
         <Event_items
           fromchildprops={this.onPressButtonChildren}
-          item={this.state.Data}
+          item={item}
           image={item.image_url}
           title={item.event_name}
           description={item.event_address}
@@ -139,22 +137,21 @@ export default class SearchScreen extends Component {
         this.DeleteEvent(item.id)
         break
       case 'edit':
-        var newitem = {
-          "eventid": item.id,
-          "eventname": item.event_name,
-          "eventaddress": item.event_address,
-          "eventdate": item.event_date,
-          "no_of_receptionists": item.no_of_receptionists,
-          "receptionists": item.receptionists
-        }
-        this.props.navigation.navigate('CreateEvent', {"eventdata": newitem})
+        // var newitem = {
+        //   "eventid": item.id,
+        //   "eventname": item.event_name,
+        //   "eventaddress": item.event_address,
+        //   "eventdate": item.event_date,
+        //   "no_of_receptionists": item.no_of_receptionists,
+        //   "receptionists": item.receptionists
+        // }
+        console.log("---iTem--------"+item)
+        this.props.navigation.navigate('CreateEvent', {"eventdata": item})
         break
       default:
-      // this.props.navigation.navigate('EventDetails')
+    
     }
 
-    // console.log("working" + value+" "+ item.id)
-    //press button chilldren 
   }
 
 

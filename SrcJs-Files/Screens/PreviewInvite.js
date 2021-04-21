@@ -12,7 +12,7 @@ import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
 import ApiCalls from "../Services/ApiCalls";
 import { ScrollView } from 'react-native-gesture-handler';
-
+import moment from "moment";
 export default class PreviewInvite extends Component {
     state = {
         contentLoading: false
@@ -35,11 +35,11 @@ export default class PreviewInvite extends Component {
                         <View style={{ flexDirection: 'row', marginTop: 20 }}>
                             <View style={{ flex: 1, flexDirection: 'column' }}>
                                 <Text style={styles.textstyle}>{Trans.translate('Date')}</Text>
-                                {/* <Text style={[styles.textstyle, { color: 'black' } || {}]}> {Keys.invitealldata["Eventdata"].event_date}</Text> */}
+                                <Text style={[styles.textstyle, { color: 'black' } || {}]}> {String(moment(Keys.invitealldata["Eventdata"].event_date).format("YYYY-MM-D"))}</Text>
                             </View>
                             <View style={{ flex: 1, flexDirection: 'column' }}>
                                 <Text style={styles.textstyle}>{Trans.translate('Time')}</Text>
-                                {/* <Text style={[styles.textstyle, { color: 'black' } || {}]}> {Keys.invitealldata["Eventdata"].event_date}</Text> */}
+                                <Text style={[styles.textstyle, { color: 'black' } || {}]}> {String(moment(Keys.invitealldata["Eventdata"].event_date).format("HH:MM A"))}</Text>
                             </View>
 
                         </View>
@@ -111,12 +111,14 @@ export default class PreviewInvite extends Component {
             name: 'photo.jpg',
         };
 
-        formadata.append("event_card", alleventdata["ImageData"])
+        // formadata.append("event_card", alleventdata["ImageData"])
+        formadata.append("event_card",photo)
         formadata.append("event_name", alleventdata["Eventdata"].event_name)
-        formadata.append("event_date", alleventdata["Eventdata"].event_date)
+        formadata.append("event_date", String(moment(alleventdata["Eventdata"].event_date).format("YYYY-MM-D")))
         formadata.append("event_address", alleventdata["Eventdata"].event_address)
         formadata.append("user_id", parsedata.id)
         formadata.append("package_id", alleventdata["PackageData"])
+        formadata.append("no_of_receptionists", alleventdata["Eventdata"].no_of_receptionists)
 
         var receptionists = alleventdata["Eventdata"].receptionists
 
@@ -126,7 +128,7 @@ export default class PreviewInvite extends Component {
             formadata.append("receptionists[" + index + "]", item.id)
         })
         categories.map((item, index) => {
-            formadata.append("Categories[" + index + "]", item.id)
+            formadata.append("categories[" + index + "]", item.id)
         })
         console.log("Formdataaaaa?????" + JSON.stringify(formadata))
 
@@ -140,7 +142,7 @@ export default class PreviewInvite extends Component {
         }, error => {
             this.logCallback("Something Went Wrong", this.state.contentLoading = false);
             Alert.alert('Error', JSON.stringify(error));
-            this.props.navigation.navigate('CombineComp')
+            // this.props.navigation.navigate('CombineComp')
         }
         )
     }

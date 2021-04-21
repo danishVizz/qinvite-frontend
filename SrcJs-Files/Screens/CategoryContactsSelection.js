@@ -62,7 +62,7 @@ export default class CategoryContactsSelection extends Component {
                     <FlatList
                         data={this.state.ContactsList}
                         renderItem={this.renderItem.bind(this)}
-                        keyExtractor={(item) => item._id}
+                        keyExtractor={(item) => item.number}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
                 </View>
@@ -179,7 +179,7 @@ export default class CategoryContactsSelection extends Component {
         } else {
             this.state.selectedLists.pop(contactdata)
         }
-        console.log("SelectedIndextoChange" + index)
+        console.log("SelectedIndextoChange" + this.state.selectedLists)
 
     }
 

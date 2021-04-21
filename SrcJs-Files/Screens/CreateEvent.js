@@ -176,20 +176,21 @@ export default class CreateEvent extends Component {
 
   componentDidMount() {
     this.state.eventdata = this.props.route.params.eventdata ?? []
+    console.log("-----------------"+this.props.route.params.eventdata)
 
     if (this.state.eventdata.length != 0) {
       this.setState({
-        eventid: this.state.eventdata.eventid,
-        eventname: this.state.eventdata.eventname,
-        eventaddress: this.state.eventdata.eventaddress,
-        eventaddress: this.state.eventdata.eventaddress,
-        eventdate: this.state.eventdata.eventdate,
-        date: this.state.eventdata.eventdate,
+        eventid: this.state.eventdata.id,
+        eventname: this.state.eventdata.event_name,
+        eventaddress: this.state.eventdata.event_address,
+    
+        eventdate: this.state.eventdata.event_date,
+        date: this.state.eventdata.event_date,
         recpntistcount: this.state.eventdata.no_of_receptionists,
         iseditevent: true,
         buttontxt: Trans.translate('Edit')
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
-
+    
 
     }
     this.getAllReceptionists()
@@ -221,7 +222,8 @@ export default class CreateEvent extends Component {
       return;
     }
     else {
-      console.log(":asdsa")
+      if(!(this.state.iseditevent))
+      {
       var usersdata = await Prefs.get(Keys.userData);
       var parsedata = JSON.parse(usersdata)
       var data = {
@@ -235,10 +237,12 @@ export default class CreateEvent extends Component {
       mykeys.invitealldata = { "Eventdata": data }
       this.props.navigation.navigate('Packages')
       // this.CreateEvent()
-
-
+    }
+    else{
+      this.CreateEvent()
     }
   }
+}
 
   checkforError() {
     var anycheckfalse = false;
@@ -400,37 +404,10 @@ export default class CreateEvent extends Component {
     if (event.type === 'neutralButtonPressed') {
       this.setState({ date: new Date(0) });
     } else {
-      this.setState({ date: currentDate, eventdate: currentDate });
+      this.setState({ date: currentDate });
 
     }
-
-    // if (this.state.mode == 'date') {
-    //   const currentDate = selectedValue || new Date();
-    //   this.setState({ date: moment(currentDate).format("YYYY-MM-D") })
-    //   // setDate(currentDate);
-    //   this.setState({ mode: 'time' })
-    //   // setMode('time');
-    //   this.setState({ show: (Platform.OS !== 'ios') })
-    //   // setShow(Platform.OS !== 'ios'); // to show the picker again in time mode
-    //   console.log("" + this.state.date)
-    //   this.setState({ eventDateError: false })
-    //   this.setState({ eventdate: currentDate })
-
-    // } else {
-    //   const selectedTime = selectedValue || new Date();
-    //   var selecteddatetime = new Date(selectedTime)
-    //   this.setState({ time: selecteddatetime.getHours() + ":" + selecteddatetime.getMinutes() })
-    //   this.setState({ date: this.state.date + ":" + this.state.time })
-    //   // setTime(selectedTime);
-    //   this.setState({ show: (Platform.OS === 'ios') })
-    //   // setShow(Platform.OS === 'ios');
-    //   // setMode('date');
-    //   this.setState({ mode: 'date' })
-    //   console.log("Time " + this.state.time)
-    //   this.setState({ eventdate: selecteddatetime })
-    //   this.setState({ eventDateError: false })
-    // }
-  };
+  }
 
   // onChange = (event, selectedValue) => {
 
@@ -501,7 +478,6 @@ export default class CreateEvent extends Component {
       // />
     );
   }
-
 }
 
 const styles = StyleSheet.create({

@@ -52,7 +52,7 @@ export default class SendEditor extends Component {
             <View style={styles.innercontainer}>
               {/* <Image style={{ backgroundColor: 'gray', width: '100%', height: 203, borderRadius: 6 }} source={require('../../assets/logo.png')}></Image> */}
               <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6, backgroundColor: 'white' }} source={{ uri: Keys.invitealldata["ImageData"] }}></Image>
-              <Text style={{ fontSize: 14, marginTop: 15, color: mycolor.txtGray }}>{Trans.translate("ReceptionistName")}</Text>
+              <Text style={{ fontSize: 14, marginTop: 15, color: mycolor.txtGray }}>{Trans.translate("message")}</Text>
 
               <TextInputComp
                 style={{ height: 112 }}
@@ -76,7 +76,7 @@ export default class SendEditor extends Component {
                 }}
                 multiple={false}
                 placeholderStyle={{ color: mycolor.lightgray }}
-                placeholder={Trans.translate('Receptionists')}
+                placeholder={Trans.translate('ChooseCategory')}
                 dropDownStyle={{ backgroundColor: '#fafafa' }}
                 onChangeItem={(item => this.updateUser(item))} />
 
@@ -124,11 +124,11 @@ export default class SendEditor extends Component {
 
   componentDidMount() {
     var receptionistsarr = []
-    var receptionistdata = Keys.invitealldata["Eventdata"].receptionists
+    var receptionistdata = Keys.invitealldata["CategoriesData"].SelectedCategories
     console.log("reececefce" + receptionistdata)
     receptionistdata.map((item, key) => {
       var receptionists = {
-        label: item.first_name,
+        label: item.name,
         value: item.id,
         selected: true
       }

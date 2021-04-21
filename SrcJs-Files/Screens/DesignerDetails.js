@@ -7,6 +7,7 @@ import Trans from '../Translation/translation';
 import ApiCalls from '../Services/ApiCalls';
 import Keys from '../Constants/keys';
 import Prefs from '../Prefs/Prefs';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class DesignerDetails extends Component {
     state = {
@@ -17,8 +18,8 @@ export default class DesignerDetails extends Component {
     render() {
         const desingertdata = this.props.route.params.DesingerData || 'none'
         return (
+            <ScrollView>
             <View style={styles.container}>
-
                 <StatusBar
                     backgroundColor='white' />
 
@@ -78,6 +79,7 @@ export default class DesignerDetails extends Component {
                       {/* after Acceptview */}
                 </View>
             </View>
+            </ScrollView>
         );
     }
 

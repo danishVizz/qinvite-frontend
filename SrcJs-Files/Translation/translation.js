@@ -18,7 +18,7 @@ class Trans {
   translate = memoize(
     (key, config) => i18n.t(key, config),
     (key, config) => (config ? key + JSON.stringify(config) : key)
-  );
+ );
   
  setI18nConfig = (langCode) => {
     // fallback if no available language fits

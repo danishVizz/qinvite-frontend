@@ -285,7 +285,7 @@ export default class ImageEditor extends Component {
 
     return (
       <View style={styles.parent}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        {/* <ScrollView contentContainerStyle={{ flexGrow: 1 }}> */}
           <View style={{ flexGrow: 1 }}>
             <Image style={styles.background} source={{ uri: BACKGROUND }}>
             </Image>
@@ -325,7 +325,7 @@ export default class ImageEditor extends Component {
 
             </View>
           </View>
-        </ScrollView>
+        {/* </ScrollView> */}
 
       </View>
     );

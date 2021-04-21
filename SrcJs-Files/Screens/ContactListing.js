@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import HeaderComp2 from '../Components/HeaderComp2';
 import { StatusBar } from 'expo-status-bar';
+import moment from 'moment';
 
 
 
@@ -23,7 +24,6 @@ export default class ContactListing extends Component {
                 <HeaderComp2 textfonts={'bold'}
                     righttitle={Trans.translate('Resend')}
                     titlepos='center'
-                 
                     leftBtnClicked={() => this.props.navigation.goBack()}
                     title={Trans.translate('InvitedPeoples')}
                     leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
@@ -31,7 +31,7 @@ export default class ContactListing extends Component {
                 <FlatList
                     data={participants}
                     renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item) => item._id}
+                    keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
 
@@ -51,9 +51,9 @@ export default class ContactListing extends Component {
                 // toggle={() => this.onToggle(index)}
                 // propsfromparents={onPressButtonChildren.bind()}
                 imagepath={require('../../assets/icon_lady.png')}
-                contactname={item.first_name}
-                status={item.email}
-                time={'10:52 Pm'}
+                contactname={item.name}
+                status={item.number}
+                time={String(moment(item.invitation_date).format("HH:MM A"))}
             />
             // </TouchableWithoutFeedback>
         );
