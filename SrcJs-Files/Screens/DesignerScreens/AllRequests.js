@@ -1,18 +1,27 @@
 import React, { Component, useState } from 'react';
 import mycolor from '../../Constants/Colors';
-import { FlatList, Image, View, StyleSheet, Alert, Text } from 'react-native'
+import { FlatList, Image, View, StyleSheet, Alert, Text } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 import Request_items from '../../ListCustomviews/Request_items'
+// import ButtonComp from '../../ListCustomviews/ButtonComp'
 import FloatingButtonComp from '../../Components/FloatingButtonComp';
 import ApiCalls from '../../Services/ApiCalls';
 import Prefs from '../../Prefs/Prefs';
 import Keys from '../../Constants/keys';
 import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native';
+import ButtonComp from '../../Components/ButtonComp';
+import Trans from '../../Translation/translation';
+import moment from "moment";
 
 export default class AllRequests extends Component {
     state = {
         EventAllData: [],
-        contentLoading: true
+        contentLoading: true,
+        showDatePicker: false,
+        date: new Date(),
+        status: '',
+        id:''
     }
 
     _onPress() {
@@ -32,8 +41,30 @@ export default class AllRequests extends Component {
                 <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
                     {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                 </View>
-                <View style={{ display:'flex', width: '100%', height: 400, backgroundColor: 'red', position: 'absolute', bottom: 0, borderTopLeftRadius: 30, borderTopRightRadius: 30 }}>
-                    <Text>Coming Soon!</Text>
+
+                <View style={{
+                    display: this.state.showDatePicker == true ? 'flex' : 'none', width: '100%', backgroundColor: '#FFF', position: 'absolute', bottom: 0, borderTopLeftRadius: 30, borderTopRightRadius: 30, justifyContent: 'center', alignItems: 'center', shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 8,
+                    },
+                    shadowOpacity: 0.46,
+                    shadowRadius: 11.14,
+
+                    elevation: 17,
+                }}>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', marginTop: 30, marginBottom: 20 }}>{Trans.translate('set_deadline')}</Text>
+                    <DatePicker
+                        date={this.state.date}
+                        mode="datetime"
+                        onDateChange={(date) => this.setState({ date: date, eventdate: date })}
+                    />
+                    <View style={{ margin: 20, width: '70%' }}>
+                        <ButtonComp
+                            onPress={() => this.changeDesignerStatus('2', '72')}
+                            textstyle={{ color: 'white' }}
+                            text={Trans.translate("set_as_deadline")}></ButtonComp>
+                    </View>
                 </View>
             </View>);
     }
@@ -132,15 +163,24 @@ export default class AllRequests extends Component {
     onPressButtonChildren = (value, item) => {
         console.log("value : " + value);
         console.log(item);
-        this.changeDesignerStatus(value, item.event_id);
+        if (value == 'accept') {
+            this.setState({ 
+                showDatePicker: true,
+                status: value,
+                id: item.event_id 
+            }, console.log("status : "+this.state.status+", id : "+this.state.id));
+        }
+        // this.changeDesignerStatus(value, item.event_id);
     }
 
     async changeDesignerStatus(status, id) {
+        this.setState({ showDatePicker: false });
         this.logCallback("getAllDesigner :", this.state.contentLoading = true);
 
         var formadata = new FormData()
-        formadata.append("design_status", status);
-        formadata.append("event_id", id);
+        formadata.append("design_status", this.state.status);
+        formadata.append("event_id", this.state.id);
+        formadata.append("deadline", moment(this.state.date).format("YYYY-MM-DD HH:mm:ss"));
 
         ApiCalls.postApicall(formadata, "accept_design").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
