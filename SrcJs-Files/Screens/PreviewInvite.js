@@ -13,6 +13,7 @@ import Prefs from "../Prefs/Prefs";
 import ApiCalls from "../Services/ApiCalls";
 import { ScrollView } from 'react-native-gesture-handler';
 import moment from "moment";
+
 export default class PreviewInvite extends Component {
     state = {
         contentLoading: false
@@ -66,6 +67,15 @@ export default class PreviewInvite extends Component {
         );
     }
 
+    componentDidMount() {
+        // console.log("Event Data KEYS");
+        // console.log(Keys.invitealldata["Eventdata"]);
+        // console.log(Keys.invitealldata["Eventdata"].event_date);
+        
+    }
+
+    async
+
     async myAsyncPDFFunction() {
         console.log("myAsyncPDFFunction()");
         try {
@@ -84,7 +94,7 @@ export default class PreviewInvite extends Component {
                 quality: .7, // optional compression paramter
             };
             const pdf = await RNImageToPdf.createPDFbyImages(options);
-            CameraRollExtended.saveToCameraRoll({uri: pdf.filePath, album: 'QInvites'}, 'photo')
+            // CameraRollExtended.saveToCameraRoll({uri: pdf.filePath, album: 'QInvites'}, 'photo')
             console.log("PdfFile" + pdf.filePath);
             console.log(pdf);
         } catch (e) {

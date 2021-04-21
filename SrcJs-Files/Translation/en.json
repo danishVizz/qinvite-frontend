@@ -129,5 +129,7 @@
     "received_design":"Received Design",
     "received_date": "Received Date",
     "Preview": "Preview",
-    "Ok": "Ok"
+    "Ok": "Ok",
+    "set_deadline": "Set Deadline",
+    "set_as_deadline": "Set as Deadline"
 }
