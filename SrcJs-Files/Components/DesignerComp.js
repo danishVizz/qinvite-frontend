@@ -10,7 +10,7 @@ export default class DesignerComp extends Component {
         return (
             <View style={styles.container}>
 
-                <View style={{ flex: 1, marginTop: 22, marginLeft: 20, marginRight: 20, marginBottom: 10, borderRadius: 2, borderWidth: 5, borderColor: 'white', elevation: 2 }}>
+                <View style={{ flex: 1, marginTop: 22, marginLeft: 20, marginRight: 20, marginBottom: 10, borderRadius: 2, borderWidth: 5, borderColor: 'white' }}>
                     <View style={styles.imagecontainer}>
                         <Image source={require('../../assets/icon_dumy.png')} resizeMode="contain" style={{ width: '95%', alignSelf: 'center', height: 200 }}></Image>
                     </View>

@@ -15,7 +15,7 @@ export default class EditTextComp extends Component {
       <Text style={styles.label}>{this.props.text}</Text>
 
       <TextInput
-          underlineColorAndroid={mycolor.lightgray}
+          // underlineColorAndroid={mycolor.lightgray}
           placeholder={this.props.placeholder}
           placeholderTextColor={this.props.empty ? "grey" : mycolor.pink}
           autoCapitalize="none"
@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     backgroundColor:'#fff',
     includeFontPadding: false,
+    borderBottomWidth: 0.5,
+    borderBottomColor: mycolor.lightgray
   },
 
   TextInputView: {

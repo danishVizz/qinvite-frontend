@@ -68,7 +68,7 @@ export default class SignUp extends Component {
             <Image style={styles.image} source={require('../../assets/icon_logo.png')}></Image>
           </View>
           <View style={styles.innerview}>
-            <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}> Do you want to Sign up with</Text>
+            <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>{Trans.translate("Signuphint")}</Text>
 
             <View style={styles.radioview}>
               <RadioButtonComp

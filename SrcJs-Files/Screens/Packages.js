@@ -41,9 +41,11 @@ export class Packages extends Component {
         <View style={{ flex: 8 }}>
 
           <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')} textfonts={'bold'} textsize={18} titlepos="center" />
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+
+          {/* <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
-          </View>
+          </View> */}
+
           <FlatList
             data={this.state.packagesdata}
             renderItem={this.renderItem.bind(this)}
@@ -52,6 +54,19 @@ export class Packages extends Component {
             // onRefresh={this.getAllPackages()}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false} />
+
+
+          <View style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
+          </View>
         </View>
         <View style={{ flex: 1.5 }}>
           <ButtonComp style={styles.button} textstyle={{ color: 'white', fontSize: 16, fontWeight: 'bold' }} text={Trans.translate('CreatOwnPackage')}
@@ -93,9 +108,9 @@ export class Packages extends Component {
     console.log('Selected Item :' + itemdata.package_name);
     // alert(itemdata.package_name)
     this.setState({ selectedItem: itemdata.id });
-    var invitedata=mykeys.invitealldata
-    invitedata={"Eventdata":invitedata["Eventdata"], "PackageData": itemdata.id }
-    mykeys.invitealldata=invitedata
+    var invitedata = mykeys.invitealldata
+    invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": itemdata.id }
+    mykeys.invitealldata = invitedata
     this.props.navigation.navigate('Todos')
   }
   logCallback = (log, callback) => {
@@ -111,7 +126,7 @@ export class Packages extends Component {
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
 
-    ApiCalls.getapicall("get_packages", "?user_id="+parsedata.id).then(data => {
+    ApiCalls.getapicall("get_packages", "?user_id=" + parsedata.id).then(data => {
       this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
       if (data.status == true) {
         this.setState({ packagesdata: data.data })

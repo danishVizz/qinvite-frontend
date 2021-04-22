@@ -195,7 +195,6 @@ export default class CreateEvent extends Component {
     }
     this.getAllReceptionists()
   }
-
   updateSelectedVal(receptionistdata) {
 
     console.log("this.state.user")

@@ -4,6 +4,7 @@ import { FlatList, StyleSheet, StatusBar, Text, TouchableOpacity, View, Alert, I
 import Trans from '../Translation/translation'
 import FloatingButtonComp from '../Components/FloatingButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
+import StatusBarComp from '../Components/StatusBarComp';
 import DesignerComp from '../Components/DesignerComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextInputComp from '../Components/TextInputComp';
@@ -32,7 +33,7 @@ export default class ReceivedDesign extends Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: "white" }}>
-                <MyStatusBar backgroundColor={mycolor.pink} />
+                <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('received_design')} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp2>
                 {/* <StatusBar
                     backgroundColor={mycolor.pink}
