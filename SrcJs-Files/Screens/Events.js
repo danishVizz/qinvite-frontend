@@ -43,6 +43,7 @@ export default class Events extends Component {
         <FlatList
           data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
           renderItem={this.renderItem.bind(this)}
+          horizontal={false}
           keyExtractor={(item) => item.id}
           onRefresh={() => this.onRefresh()}
           refreshing={this.state.isFetching}
@@ -50,6 +51,7 @@ export default class Events extends Component {
           showsHorizontalScrollIndicator={false} />
 
         <View style={{
+          zIndex: -100,
           position: 'absolute',
           left: 0,
           right: 0,

@@ -46,6 +46,7 @@ export default class ChooseCategory extends Component {
 
 
                     <View style={{
+                        zIndex: -100,
                         position: 'absolute',
                         left: 0,
                         right: 0,
