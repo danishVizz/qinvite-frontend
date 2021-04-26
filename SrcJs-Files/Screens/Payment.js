@@ -66,7 +66,7 @@ export class Payment extends Component {
     }
     handleMessage(message) {
         if (message.toLowerCase() == "transaction successful")
-            this.props.navigation.navigate('Todos')
+            this.props.navigation.replace('Todos')
         else {
             Alert("Payment Failed Please Try again")
         }
