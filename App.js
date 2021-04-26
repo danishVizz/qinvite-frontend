@@ -43,6 +43,7 @@ import RequestDetails from './SrcJs-Files/Screens/DesignerScreens/RequestDetails
 import DesignerRequests from './SrcJs-Files/Screens/DesignerScreens/DesignerRequests';
 import mykeys from './SrcJs-Files/Constants/keys';
 import Prefs from './SrcJs-Files/Prefs/Prefs';
+import Payment from './SrcJs-Files/Screens/Payment';
 
 const RootStack = createStackNavigator();
 function handleLocalizationChange() {
@@ -77,6 +78,7 @@ export default class App extends Component {
           <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="Event_items" component={Event_items} options={{ headerShown: false }} />
+          <RootStack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
           <RootStack.Screen name="Events" component={Events} options={{ headerShown: false }} />
           <RootStack.Screen name="TabNavComp" component={TabNavComp} options={{ headerShown: false }} />
           <RootStack.Screen name="CombineComp" component={CombineComp} options={{ headerShown: false }} />

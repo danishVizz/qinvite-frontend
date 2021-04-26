@@ -122,7 +122,8 @@ export default class CreatePackage extends Component {
         ApiCalls.postApicall(formadata, "add_package").then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
-                this.props.navigation.replace('Packages')
+                // this.props.navigation.replace('Packages')
+                this.props.navigation.push('Packages')
 
             } else {
                 Alert.alert('Failed', data.message);

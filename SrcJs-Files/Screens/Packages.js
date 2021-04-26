@@ -14,7 +14,7 @@ import Prefs from '../Prefs/Prefs';
 import Keys from '../Constants/keys';
 import mykeys from '../Constants/keys';
 import { TouchableOpacity } from 'react-native';
-
+import moment from "moment";
 
 export class Packages extends Component {
   state = {
@@ -98,7 +98,10 @@ export class Packages extends Component {
         />
       </TouchableOpacity>
     );
-  };
+  }
+
+
+  
 
   componentDidMount() {
     console.log('Mounted');
@@ -111,11 +114,9 @@ export class Packages extends Component {
     console.log('Selected Item :' + itemdata.package_name);
     // alert(itemdata.package_name)
     this.setState({ selectedItem: itemdata.id });
-    var invitedata = mykeys.invitealldata
-    invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": itemdata.id }
-    mykeys.invitealldata = invitedata
-    this.props.navigation.navigate('Todos')
+    this.CreateEvent()
   }
+
   logCallback = (log, callback) => {
     console.log(log);
     this.setState({
@@ -138,6 +139,52 @@ export class Packages extends Component {
         console.log('productDataaaaaaaaaaaaaa');
         // this.logCallback(this.state.productData, this.state.contentLoading = false);
         //   Alert.alert('Success', data.message);
+      } else {
+        Alert.alert('Failed', data.message);
+      }
+    }, error => {
+      this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+      Alert.alert('Error', JSON.stringify(error));
+    }
+    )
+  }
+
+  async CreateEvent() {
+    
+
+    var invitedata = mykeys.invitealldata
+    var apiname = 'add_event'
+    var usersdata = await Prefs.get(Keys.userData);
+    var parsedata = JSON.parse(usersdata)
+    var formadata = new FormData()
+    formadata.append("event_name", invitedata["Eventdata"].event_name)
+    formadata.append("event_date", String(moment(invitedata["Eventdata"].event_date).format("YYYY-MM-D")))
+    formadata.append("event_address", invitedata["Eventdata"].event_address)
+    formadata.append("user_id", parsedata.id)
+    formadata.append("package_id", this.state.selectedItem)
+    // console.log("--------------RR"+invitedata["Eventdata"].receptionists[index].id)
+    
+    formadata.append("no_of_receptionists", invitedata["Eventdata"].no_of_receptionists)
+    invitedata["Eventdata"].receptionists.map((item, index) => {
+      formadata.append("receptionists[" + index + "]", invitedata["Eventdata"].receptionists[index].id)
+    });
+
+   console.log(formadata)
+
+    this.logCallback('Creating Event', this.state.contentLoading = true);
+    ApiCalls.postApicall(formadata, apiname).then(data => {
+
+      this.logCallback("Response came", this.state.contentLoading = false);
+      if (data.status == true) {
+
+        var invitedata = mykeys.invitealldata
+        var eventdata=invitedata["Eventdata"]
+        eventdata.event_id=data.data.event_id
+        console.log(eventdata)
+        invitedata = {"Eventdata": eventdata, "PackageData":this.state.selectedItem }
+        mykeys.invitealldata = invitedata
+        this.props.navigation.navigate('Payment',{"event_id":data.data.event_id})
+
       } else {
         Alert.alert('Failed', data.message);
       }

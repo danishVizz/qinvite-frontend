@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Trans from '../Translation/translation'
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image, TextInput, Text } from 'react-native';
 import mycolor from "../Constants/Colors";
 import EditTextComp from "../Components/EditTextComp";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -37,7 +37,6 @@ export default class Profile extends Component {
     }
 
     render() {
-        console.log('image URL : ', this.state.response);
         return (
             <SafeAreaView style={styles.conatiner}>
                 <HeaderComp selfalign={'flex-end'} titleclick={() => this.changeviews()} textfonts={'bold'} titlepos='right' titleColor={'black'} title={this.state.changetext == true ? Trans.translate('Edit') : Trans.translate('Save')} fromleft={7} lefttintColor={mycolor.darkgray} headerStyle={{ backgroundColor: mycolor.white }} leftBtn={require(iamgepath + '/icon_back.png')}></HeaderComp>
