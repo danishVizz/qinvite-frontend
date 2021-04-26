@@ -19,6 +19,7 @@ import MultiSelect from "react-multi-select-component";
 import DatePicker from 'react-native-date-picker'
 // import Snackbar from 'react-native-snackbar';
 import HeaderComp2 from '../Components/HeaderComp2';
+import StatusBarComp from '../Components/StatusBarComp';
 
 export default class CreateEvent extends Component {
 
@@ -33,7 +34,7 @@ export default class CreateEvent extends Component {
     selelectedvalue: '',
     eventdata: {},
     eventid: '',
-    paymentstatus:'',
+    paymentstatus: '',
     disabledropdown: false,
     buttontxt: Trans.translate('Next'),
     selectedvaluesarr: [],
@@ -49,18 +50,16 @@ export default class CreateEvent extends Component {
     show: false,
     time: new Date(),
     loadDropDown: false
-
-
-
   }
 
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar
+      <View style={styles.container}>
+        {/* <StatusBar
           backgroundColor='#F54260'
-        />
+        /> */}
+        <StatusBarComp backgroundColor={mycolor.pink} />
         <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')} textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
 
         <ScrollView>
@@ -170,7 +169,7 @@ export default class CreateEvent extends Component {
             </View>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
 
   }
@@ -196,15 +195,17 @@ export default class CreateEvent extends Component {
     }
     this.getAllReceptionists()
   }
-  updateSelectedVal(receptionistdata) {
 
+  updateSelectedVal(receptionistdata) {
     console.log("this.state.user")
     console.log(receptionistdata)
-    receptionistdata.map((item, index) => {
-      this.setState({ selectedvaluesarr: this.state.selectedvaluesarr.concat(item.id) })
-      // receptionistsarr.push(receptionists
-    })
-    this.setState({ editreceptionistarr: receptionistdata }, () => console.log("Editarratlenght" + this.state.editreceptionistarr[1].id))
+    if (receptionistdata != undefined) {
+      receptionistdata.map((item, index) => {
+        this.setState({ selectedvaluesarr: this.state.selectedvaluesarr.concat(item.id) })
+        // receptionistsarr.push(receptionists
+      })
+      this.setState({ editreceptionistarr: receptionistdata }, () => console.log("Editarratlenght" + this.state.editreceptionistarr[1].id))
+    }
 
   }
 
@@ -216,8 +217,9 @@ export default class CreateEvent extends Component {
   }
 
   async onSignupPress() {
-
+    console.log('createEvent 2');
     var check = this.checkforError()
+    console.log("check : "+check);
     if (check) {
       return;
     }
@@ -238,9 +240,11 @@ export default class CreateEvent extends Component {
         // this.CreateEvent()
       }
       else {
+        console.log('createEvent thsi');
         this.CreateEvent()
       }
     }
+    
   }
 
   checkforError() {
@@ -266,13 +270,13 @@ export default class CreateEvent extends Component {
       })
       anycheckfalse = true;
     }
-    if (this.state.selectedvaluesarr.length == 0) {
-      this.setState({
-        selectedvaluesErrortxt: Trans.translate("Receptionistisreq"),
-        selectedvaluesError: true
-      })
-      anycheckfalse = true;
-    }
+    // if (this.state.selectedvaluesarr.length == 0) {
+    //   this.setState({
+    //     selectedvaluesErrortxt: Trans.translate("Receptionistisreq"),
+    //     selectedvaluesError: true
+    //   })
+    //   anycheckfalse = true;
+    // }
     if (this.state.phoneTxt == "" && this.state.isSelectedRB1) {
       this.setState({
         phoneerrortxt: Trans.translate("phoneerror"),
@@ -321,10 +325,13 @@ export default class CreateEvent extends Component {
 
       this.logCallback("Response came", this.state.isLoading = false);
       if (data.status == true) {
-        if(this.state.paymentstatus==3)
-        this.props.navigation.replace('Todos')
-      else
-      this.props.navigation.navigate("Payment",{"event_id":this.state.eventid})
+        console.log('payment : '+this.state.paymentstatus);
+        if (this.state.paymentstatus == 3)
+          this.props.navigation.replace('Todos')
+        else {
+          this.props.navigation.navigate("Payment", { "event_id": this.state.eventid })
+        }
+          
 
       } else {
         Alert.alert('Failed', data.message);

@@ -7,6 +7,8 @@ import ViewShot from "react-native-view-shot";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import QRCode from 'react-native-qrcode-svg';
+import AsyncStorage from '@react-native-community/async-storage';
+import { StackActions } from '@react-navigation/native';
 import Trans from "../Translation/translation";
 import { SlidersColorPicker } from 'react-native-color'
 import { DragTextEditor } from 'react-native-drag-text-editor';
@@ -19,9 +21,10 @@ import { RNCamera } from 'react-native-camera';
 import mycolor from "../Constants/Colors";
 import HeaderComp2 from '../Components/HeaderComp2';
 import ButtonComp from '../Components/ButtonComp';
+import FloatingButtonComp from '../Components/FloatingButtonComp';
+import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from '../Services/ApiCalls';
 const WINDOW = Dimensions.get('window');
-
 
 export default class ScannerScreen extends Component {
     state = {
@@ -32,7 +35,8 @@ export default class ScannerScreen extends Component {
         person: 1,
         kids: 0,
         phoneAllowed: 1,
-        host: 'Mariam'
+        host: 'Mariam',
+        scanner: false
     }
 
     onSuccess = e => {
@@ -52,12 +56,13 @@ export default class ScannerScreen extends Component {
         // const imagedata=
 
         return (
-            <SafeAreaView style={{ backgroundColor: mycolor.pink, justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-                <StatusBar
+            <View style={{ flex: 1, backgroundColor: "white" }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                {/* <StatusBar
                     backgroundColor='#F54260'
-                />
+                /> */}
                 <View style={{ flexDirection: 'row', height: 60, width: '100%', alignItems: 'center', paddingLeft: 20, paddingRight: 20, backgroundColor: mycolor.pink }}>
-                    
+
                     <Text style={{ color: '#FFF', fontSize: 16 }}>{Trans.translate('event_ends_in')} </Text>
                     <CountDown
                         size={10}
@@ -68,9 +73,12 @@ export default class ScannerScreen extends Component {
                         timeToShow={['H', 'M', 'S']}
                         timeLabels={{ m: null, s: null }}
                         showSeparator
-                        separatorStyle ={{color: '#FFF', margin: -20}}
+                        separatorStyle={{ color: '#FFF', margin: -20 }}
                     />
-                    <Image style={{ width: 20, height: 20, marginLeft: 'auto' }} source={require('../../assets/power-off.png')}></Image>
+                    <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => this.logout()}>
+                        <Image style={{ width: 20, height: 20 }} source={require('../../assets/power-off.png')}></Image>
+                    </TouchableOpacity>
+
                 </View>
 
                 <AwesomeAlert
@@ -86,22 +94,28 @@ export default class ScannerScreen extends Component {
                 <QRCodeScanner
                     onRead={this.onSuccess}
                     // flashMode={RNCamera.Constants.FlashMode.torch}
-                    topContent={
-                        <Text style={styles.centerText}>
-                            Go to{' '}
-                            <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code.</Text>
-                    }
-                    bottomContent={
-                        <TouchableOpacity style={styles.buttonTouchable} onPress={() => this.setState({ showAlert: true })}>
-                            <Text style={styles.buttonText}>OK. Got it!</Text>
-                        </TouchableOpacity>
-                    }
-                    containerStyle={{ backgroundColor: '#fff' }}
+                    // topContent={
+                    //     <Text style={styles.centerText}>
+                    //         Go to{' '}
+                    //         <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code.</Text>
+                    // }
+                    // bottomContent={
+                    //     <TouchableOpacity style={styles.buttonTouchable} onPress={() => this.setState({ showAlert: true })}>
+                    //         <Text style={styles.buttonText}>OK. Got it!</Text>
+                    //     </TouchableOpacity>
+                    // }
+                    containerStyle={{ backgroundColor: '#fff', display: this.state.scanner == true ? 'flex' : 'none' }}
                 />
 
+                <View style={{ display: this.state.scanner == false ? 'flex' : 'none', flex: 1, justifyContent: 'center', alignItems: 'center', color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 20, marginRight: 20 }}>
+                    <ButtonComp
+                        onPress={() => this.setState({ scanner: true })}
+                        style={{ width: 200, height: 200, borderRadius: 100 }}
+                        textstyle={{ color: mycolor.white, fontWeight: 'bold' }}
+                        text={Trans.translate('scan')}></ButtonComp>
+                </View>
 
-
-            </SafeAreaView>
+            </View>
 
 
         );
@@ -112,15 +126,15 @@ export default class ScannerScreen extends Component {
             <View style={{ width: '100%' }}>
                 <Text style={{ fontSize: 28, marginTop: 45, fontWeight: 'bold', color: mycolor.darkgray }}>{this.state.name}</Text>
                 <Text style={{ fontSize: 16, marginTop: 23, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.phone}</Text>
-                <Text style={{ fontSize: 16, marginTop: 10, color: mycolor.darkgray, fontWeight: '500' }}>{Trans.translate('invited_by_host')+": "+this.state.host}</Text>
+                <Text style={{ fontSize: 16, marginTop: 10, color: mycolor.darkgray, fontWeight: '500' }}>{Trans.translate('invited_by_host') + ": " + this.state.host}</Text>
                 <View style={{ flexDirection: 'row', marginTop: 50, width: '100%' }}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={{ width: 50, height: 27 }} source={require('../../assets/union.png')}></Image>
-                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.person+' '+ Trans.translate('person')}</Text>
+                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.person + ' ' + Trans.translate('person')}</Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={{ width: 33, height: 32 }} source={require('../../assets/kids.png')}></Image>
-                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.kids+' '+ Trans.translate('kids')}</Text>
+                        <Text style={{ fontSize: 13, marginTop: 20, color: mycolor.darkgray, fontWeight: '500' }}>{this.state.kids + ' ' + Trans.translate('kids')}</Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={{ width: 18, height: 33 }} source={require('../../assets/phone.png')}></Image>
@@ -139,6 +153,24 @@ export default class ScannerScreen extends Component {
 
     componentDidMount() {
 
+    }
+
+    async logout() {
+        const asyncStorageKeys = await AsyncStorage.getAllKeys();
+        if (asyncStorageKeys.length > 0) {
+            if (Platform.OS === 'android') {
+                await AsyncStorage.clear();
+                this.props.navigation.dispatch(
+                    StackActions.pop(1)
+                )
+            }
+            if (Platform.OS === 'ios') {
+                await AsyncStorage.multiRemove(asyncStorageKeys);
+                this.props.navigation.dispatch(
+                    StackActions.pop(1)
+                )
+            }
+        }
     }
 
     async updateCheckInStatus(id) {

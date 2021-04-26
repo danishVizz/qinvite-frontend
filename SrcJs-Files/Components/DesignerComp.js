@@ -9,29 +9,23 @@ export default class DesignerComp extends Component {
     render() {
         return (
             <View style={styles.container}>
-
                 <View style={{ flex: 1, marginTop: 22, marginLeft: 20, marginRight: 20, marginBottom: 10, borderRadius: 2, borderWidth: 5, borderColor: 'white' }}>
                     <View style={styles.imagecontainer}>
                         <Image source={require('../../assets/icon_dumy.png')} resizeMode="contain" style={{ width: '95%', alignSelf: 'center', height: 200 }}></Image>
                     </View>
                     <View style={{ flexDirection: 'row', margin: 15 }}>
-
-                        <CircleImageComp imagestyle={{ height: 40, width: 40 }} style={{ height: 40, width: 40, borderColor: mycolor.pink }} imagesrc={this.props.imagepath} ></CircleImageComp>
-
+                        <CircleImageComp imagestyle={{ height: 20, width: 20 }} style={{ height: 40, width: 40, borderColor: mycolor.pink }} imagesrc={require('../../assets/paint-person.png')} ></CircleImageComp>
                         <View style={{ flex: 3, flexDirection: 'column', marginLeft: 10 }}>
                             <Text style={[styles.textstyle, { color: '#474645', fontWeight: 'bold', fontSize: 14 } || {}]}> {this.props.designername}</Text>
                             <Text style={[styles.textstyle]}> {this.props.designercontact}</Text>
                         </View>
-
                     </View>
-
                 </View>
-
             </View>
-
         );
     }
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

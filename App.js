@@ -1,5 +1,5 @@
 import React, { Component, useReducer } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingScreen from './SrcJs-Files/Screens/Login';
@@ -16,7 +16,7 @@ import ContactListing from './SrcJs-Files/Screens/ContactListing'
 import PreviewInvite from './SrcJs-Files/Screens/PreviewInvite'
 import CreatePackage from './SrcJs-Files/Screens/CreatePackage'
 import UploadMedia from './SrcJs-Files/Screens/UploadMedia'
-import Designer from './SrcJs-Files/Screens/Designer' 
+import Designer from './SrcJs-Files/Screens/Designer'
 import ReceivedDesign from './SrcJs-Files/Screens/ReceivedDesign'
 import DesignerDetails from './SrcJs-Files/Screens/DesignerDetails'
 import ForgotPass from './SrcJs-Files/Screens/ForgotPass'
@@ -26,7 +26,7 @@ import ViewPort from './SrcJs-Files/Screens/ViewPort'
 import CategoryContactsSelection from './SrcJs-Files/Screens/CategoryContactsSelection'
 import GuestList from './SrcJs-Files/Screens/GuestList'
 import WeddingDetails from './SrcJs-Files/Screens/WeddingDetails'
-import ScannerScreen from './SrcJs-Files/Screens/WeddingDetails'
+import ScannerScreen from './SrcJs-Files/Screens/ScannerScreen'
 import Reception from './SrcJs-Files/Screens/Reception'
 import Packages from './SrcJs-Files/Screens/Packages'
 import TabNavComp from './SrcJs-Files/Components/TabNavComp'
@@ -42,6 +42,7 @@ import UploadDesign from './SrcJs-Files/Screens/DesignerScreens/UploadDesign';
 import RequestDetails from './SrcJs-Files/Screens/DesignerScreens/RequestDetails';
 import DesignerRequests from './SrcJs-Files/Screens/DesignerScreens/DesignerRequests';
 import mykeys from './SrcJs-Files/Constants/keys';
+import Prefs from './SrcJs-Files/Prefs/Prefs';
 import Payment from './SrcJs-Files/Screens/Payment';
 
 const RootStack = createStackNavigator();
@@ -54,9 +55,14 @@ function handleLocalizationChange() {
 export default class App extends Component {
   constructor(props) {
     super(props)
-    Trans.setI18nConfig("ar");
+    Trans.setI18nConfig("en");
     // RNLocalize.addEventListener("change", handleLocalizationChange());
     // RNLocalize.removeEventListener("change", handleLocalizationChange());
+  }
+
+  state = {
+    userRole: '',
+    screen: ''
   }
 
   render() {
@@ -64,7 +70,7 @@ export default class App extends Component {
 
     return (
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName="SplashScreen">
+        <RootStack.Navigator initialRouteName={"CombineComp"}>
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
           <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="RequestDetails" component={RequestDetails} options={{ headerShown: false }} />
@@ -100,13 +106,54 @@ export default class App extends Component {
           <RootStack.Screen name="Reception" component={Reception} options={{ headerShown: false }} />
           <RootStack.Screen name="WeddingDetails" component={WeddingDetails} options={{ headerShown: false }} />
           <RootStack.Screen name="ScannerScreen" component={ScannerScreen} options={{ headerShown: false }} />
-          <RootStack.Screen name="DesignerRequests" component={DesignerRequests} options={{ headerShown: false }} /> 
+          <RootStack.Screen name="DesignerRequests" component={DesignerRequests} options={{ headerShown: false }} />
           <RootStack.Screen name="ReceivedDesign" component={ReceivedDesign} options={{ headerShown: false }} />
           {/* <RootStack.Screen name="Home" component={Home} options={{headerShown:false}} /> */}
         </RootStack.Navigator>
       </NavigationContainer>
     );
   }
+
+  // componentDidMount() {
+  //   this.getUserData();
+  // }
+
+  // async getUserData() {
+  //   var userData = await Prefs.get(mykeys.userData);
+  //   console.log("userData 1");
+  //   var parsedData = JSON.parse(userData);
+  //   console.log(parsedData);
+  //   this.setState({
+  //     userRole: parsedData.role,
+  //   }, () => this.redirectPage());
+  // }
+
+  // redirectPage() {
+  //   var screen = '';
+  //   switch (this.state.userRole) {
+  //     case "0":
+  //     case "2":
+  //       // this.props.navigation.navigate('CombineComp');
+  //       screen = 'CombineComp';
+  //       this.setState({screen: 'CombineComp'});
+  //       break;
+  //     case "4":
+  //       // this.props.navigation.navigate('Reception');
+  //       screen = 'Reception';
+  //       this.setState({screen: 'Reception'});
+  //       break;
+  //     case "5":
+  //       // this.props.navigation.navigate('DesignerRequests');
+  //       screen = 'DesignerRequests';
+  //       this.setState({screen: 'DesignerRequests'});
+  //       break;
+  //     default:
+  //       screen = 'SplashScreen';
+  //       this.setState({screen: 'SplashScreen'});
+  //       // Alert.alert("", Trans.translate('not_auth_msg'));
+  //   }
+  //   return screen;
+  // }
 
   async redirectComp() {
     var key = await Prefs.get(mykeys.accessToken);

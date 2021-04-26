@@ -6,6 +6,7 @@ import Trans from '../Translation/translation'
 import * as Progress from 'react-native-progress';
 import ButtonComp from '../Components/ButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
+import StatusBarComp from '../Components/StatusBarComp';
 import * as ImagePicker from 'react-native-image-picker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Alert, Dimensions } from 'react-native';
@@ -21,10 +22,11 @@ export default class UploadMedia extends Component {
 
     render() {
         return (
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar
+            <View style={{ flex: 1 }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                {/* <StatusBar
                     backgroundColor='#F54260'
-                />
+                /> */}
                 <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('UploadDesign')} titlepos='center'
                     leftBtnClicked={() => this.props.navigation.goBack()} ></HeaderComp2>
 
@@ -49,7 +51,7 @@ export default class UploadMedia extends Component {
                         </ButtonComp>
                     </View>
                 </View>
-            </SafeAreaView>
+            </View>
 
         );
     }

@@ -64,7 +64,7 @@ export default class Events extends Component {
         </View>
 
 
-        <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 0 }}>
+        <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 20, right: 20 }}>
           <FloatingButtonComp imagesrc={require('../../assets/icon_event.png')} floatingclick={() => this.props.navigation.navigate("CreateEvent", { "eventdata": [] })}></FloatingButtonComp>
         </View>
 
@@ -117,10 +117,10 @@ export default class Events extends Component {
   }
 
   onRefresh() {
-    this.setState({ isFetching: true, }, () => { this.getAllEvents()});
+    this.setState({ isFetching: true, }, () => { this.getAllEvents() });
   }
   async getAllEvents() {
-    this.logCallback("Getting Events....:",  this.state.contentLoading = true);
+    this.logCallback("Getting Events....:", this.state.contentLoading = true);
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
     ApiCalls.getapicall("get_events", "?user_id=" + parsedata.id).then(data => {

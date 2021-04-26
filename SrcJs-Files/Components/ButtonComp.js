@@ -5,7 +5,7 @@ export default class ButtonComp extends Component {
   render() {
     let view = this.props.isloading ? (
       <View style={{ alignSelf: "center", justifyContent: "center" }}>
-        <ActivityIndicator size="large" color={this.props.textcolor} />
+        <ActivityIndicator size="large" color='white' />
       </View>
     ) : (
         <Text style={[this.props.textstyle,{textAlign: "center",fontSize:16,fontWeight:'bold'}]}>{this.props.text}</Text>

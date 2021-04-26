@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import PackagesComp from '../Components/PackagesComp';
 import ApiCalls from '../Services/ApiCalls';
 import HeaderComp from '../Components/HeaderComp';
+import StatusBarComp from '../Components/StatusBarComp';
 import Prefs from '../Prefs/Prefs';
 import Keys from '../Constants/keys';
 import mykeys from '../Constants/keys';
@@ -34,10 +35,11 @@ export class Packages extends Component {
     }
 
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
-        <StatusBar
+      <View style={{ flex: 1, backgroundColor: mycolor.white }}>
+        <StatusBarComp backgroundColor={mycolor.pink} />
+        {/* <StatusBar
           backgroundColor={mycolor.pink}
-        />
+        /> */}
         <View style={{ flex: 8 }}>
 
           <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')} textfonts={'bold'} textsize={18} titlepos="center" />
@@ -57,6 +59,7 @@ export class Packages extends Component {
 
 
           <View style={{
+            zIndex: -100,
             position: 'absolute',
             left: 0,
             right: 0,
@@ -73,7 +76,7 @@ export class Packages extends Component {
             onPress={() => this.props.navigation.navigate('CreatePackage')}
           ></ButtonComp>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 

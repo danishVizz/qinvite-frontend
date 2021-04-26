@@ -10,7 +10,7 @@ import TextInputComp from '../Components/TextInputComp';
 import CircleImageComp from '../Components/CircleImageComp';
 import { CheckBox } from 'react-native-elements';
 import ApiCalls from '../Services/ApiCalls';
-import Keys from '../Constants/keys';
+import StatusBarComp from '../Components/StatusBarComp';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native';
@@ -48,11 +48,13 @@ export default class Designer extends Component {
             </Modal>
 
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+            <View style={{ flex: 1, backgroundColor: "white" }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('ChooseDesigner')} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp2>
-                <StatusBar
+
+                {/* <StatusBar
                     backgroundColor={mycolor.pink}
-                />
+                /> */}
 
 
                 <View style={{ marginTop: 10, marginRight: 20, marginLeft: 20 }}>
@@ -70,24 +72,21 @@ export default class Designer extends Component {
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
-                    
-                    {designerdialog}
+
+                {designerdialog}
 
                 <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
                     {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                 </View>
 
-                <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 0 }}>
-
-                    <FloatingButtonComp imagesrc={require('../../assets/icon_upload.png')} floatingclick={() => this.props.navigation.navigate("UploadMedia")}></FloatingButtonComp>
-
+                <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 20, right: 20 }}>
+                    <FloatingButtonComp containerStyle={{ marginRight: 10 }} imagesrc={require('../../assets/icon_upload.png')} floatingclick={() => this.props.navigation.navigate("UploadMedia")}></FloatingButtonComp>
                     <FloatingButtonComp imagesrc={require('../../assets/icon_selection.png')} ></FloatingButtonComp>
                 </View>
 
-            </SafeAreaView>
+            </View>
         );
     }
-
 
     searchItems = text => {
         var datatosearch = this.state.designerdata
@@ -126,7 +125,7 @@ export default class Designer extends Component {
                     // toggle={() => this.onToggle(index)}
                     // propsfromparents={onPressButtonChildren.bind()}
                     imagesrc={item.user_image}
-                    designername={item.first_name}
+                    designername={item.first_name+' '+item.last_name}
                     designercontact={item.phone}
                 />
             </TouchableOpacity>
@@ -165,10 +164,17 @@ export default class Designer extends Component {
         });
     }
 
-
     actionOnRow(itemdata, index) {
+        let requestStatus = itemdata.request_status;
+        let designStatus = itemdata.design_status;
 
-        this.props.navigation.navigate('DesignerDetails', { "DesingerData": itemdata })
+        if ((requestStatus == '0' && designStatus == '0') || (requestStatus == '1' && designStatus == '2') || (requestStatus == '0' && designStatus == '2')) {
+            this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
+        } else if ((requestStatus == '1' && designStatus == '0') || (requestStatus == '1' && designStatus == '1')) {
+            this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
+        } else {
+            this.props.navigation.navigate('ReceivedDesign', { "DesignerData": itemdata })
+        }
     }
 
     async getAllDesigners() {
@@ -241,8 +247,8 @@ const styles = StyleSheet.create({
         backgroundColor: mycolor.lightwhite,
         borderRadius: 5,
         margin: 5,
-   
-        justifyContent:'center',
+
+        justifyContent: 'center',
         borderWidth: 5,
         borderColor: 'white',
         shadowColor: "red",

@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
 import TextInputComp from '../Components/TextInputComp';
 import ButtonComp from '../Components/ButtonComp';
+import StatusBarComp from '../Components/StatusBarComp';
 import mycolor from '../Constants/Colors';
 import Trans from '../Translation/translation'
 import ApiCalls from '../Services/ApiCalls'
@@ -42,10 +43,11 @@ export default class SendEditor extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar
+      <View style={styles.container}>
+        <StatusBarComp backgroundColor={mycolor.pink} />
+        {/* <StatusBar
           backgroundColor='#F54260'
-        />
+        /> */}
         <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')}  textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
         <ScrollView>
           <View style={styles.subContainer}>
@@ -105,7 +107,7 @@ export default class SendEditor extends Component {
             </View>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
 
   }

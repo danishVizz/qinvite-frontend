@@ -80,35 +80,59 @@ export default class Reception extends Component {
             <Tab.Navigator
                 activeColor="#F54260"
                 inactiveColor="#D9D9D9"
-                barStyle={{ backgroundColor: mycolor.white, elevation: 10 }}>
+                style={{backgroundColor: 'white'}}
+                barStyle={{ backgroundColor: mycolor.white, elevation: 10, height: 70, justifyContent: 'center', marginBottom: 20, marginLeft: 50, marginRight: 50 }}>
+                
                 <Tab.Screen name="Home" component={ScannerScreen} options={{
-                    // tabBarLabel: Trans.translate('Home'),
-                    tabBarIcon: ({ color }) => (
-                        <Icon
-                            color={color}
-                            name="home"
-                        />)
+                    tabBarLabel: '',
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Image
+                            source={
+                                require('../../assets/qr-code.png')
+                            }
+                            style={{
+                                width: 30,
+                                height: 30,
+                                tintColor: focused ? mycolor.pink : 'gray'
+                            }}
+                        />
+                    )
+
+
                 }}
                     listeners={({ navigation }) => ({
                         blur: () => navigation.setParams({ screen: undefined }),
                     })}
                 />
                 <Tab.Screen name="Packages" component={GuestList} options={{
-                    // tabBarLabel: Trans.translate('TabPackages'),
-                    tabBarIcon: ({ color }) => (
-                        <Icon
-                            color={color}
-                            name="payment"
+                    tabBarLabel: '',
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Image
+                            resizeMode='contain'
+                            source={
+                                require('../../assets/guest-list.png')
+                            }
+                            style={{
+                                width: 50,
+                                height: 30,
+                                tintColor: focused ? mycolor.pink : 'gray'
+                            }}
                         />
                     )
                 }} />
 
                 <Tab.Screen name="Profile" component={BottomNavigator} options={{
-                    // tabBarLabel: Trans.translate('Profile'),
-                    tabBarIcon: ({ color }) => (
-                        <Icon
-                            color={color}
-                            name="person"
+                    tabBarLabel: '',
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Image
+                            source={
+                                require('../../assets/tab-calendar.png')
+                            }
+                            style={{
+                                width: 30,
+                                height: 30,
+                                tintColor: focused ? mycolor.pink : 'gray'
+                            }}
                         />
                     )
                 }} />
@@ -156,6 +180,7 @@ export default class Reception extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'white'
     },
     searchView: {
         flexDirection: 'row',
