@@ -123,26 +123,26 @@ export default class PreviewInvite extends Component {
 
         // formadata.append("event_card", alleventdata["ImageData"])
         formadata.append("event_card",photo)
-        formadata.append("event_name", alleventdata["Eventdata"].event_name)
-        formadata.append("event_date", String(moment(alleventdata["Eventdata"].event_date).format("YYYY-MM-D")))
-        formadata.append("event_address", alleventdata["Eventdata"].event_address)
-        formadata.append("user_id", parsedata.id)
-        formadata.append("package_id", alleventdata["PackageData"])
-        formadata.append("no_of_receptionists", alleventdata["Eventdata"].no_of_receptionists)
+        formadata.append("event_id",alleventdata["Eventdata"].event_id)
+        // formadata.append("event_name", alleventdata["Eventdata"].event_name)
+        // formadata.append("event_date", String(moment(alleventdata["Eventdata"].event_date).format("YYYY-MM-D")))
+        // formadata.append("event_address", alleventdata["Eventdata"].event_address)
+        // formadata.append("user_id", parsedata.id)
+        // formadata.append("package_id", alleventdata["PackageData"])
+        // formadata.append("no_of_receptionists", alleventdata["Eventdata"].no_of_receptionists)
 
-        var receptionists = alleventdata["Eventdata"].receptionists
+        //  var receptionists = alleventdata["Eventdata"].receptionists
+        // receptionists.map((item, index) => {
+        //     formadata.append("receptionists[" + index + "]", item.id)
+        // })
 
         var categories = alleventdata["CategoriesData"].SelectedCategories
-
-        receptionists.map((item, index) => {
-            formadata.append("receptionists[" + index + "]", item.id)
-        })
         categories.map((item, index) => {
             formadata.append("categories[" + index + "]", item.id)
         })
         console.log("Formdataaaaa?????" + JSON.stringify(formadata))
 
-        ApiCalls.postApicall(formadata, "add_event").then(data => {
+        ApiCalls.postApicall(formadata, "add_event_details").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
                 this.props.navigation.navigate('CombineComp')

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Trans from '../Translation/translation'
-import { StyleSheet, View, Image, AsyncStorage, Text } from 'react-native';
+import { StyleSheet, View, Image, TextInput, Text } from 'react-native';
 import mycolor from "../Constants/Colors";
 import EditTextComp from "../Components/EditTextComp";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,7 +13,6 @@ import Keys from '../Constants/keys'
 import ApiCalls from '../Services/ApiCalls'
 import { Alert } from "react-native";
 import { ActivityIndicator } from "react-native";
-// import asst from '../../assets/'
 
 const iamgepath = '../../assets'
 
@@ -34,14 +33,13 @@ export default class Profile extends Component {
     }
 
     render() {
-        console.log('image URL : ', this.state.response);
         return (
             <SafeAreaView style={styles.conatiner}>
                 <HeaderComp selfalign={'flex-end'} titleclick={() => this.changeviews()} textfonts={'bold'} titlepos='right' titleColor={'black'} title={this.state.changetext == true ? Trans.translate('Edit') : Trans.translate('Save')} fromleft={7} lefttintColor={mycolor.darkgray} headerStyle={{ backgroundColor: mycolor.white }} leftBtn={require(iamgepath + '/icon_back.png')}></HeaderComp>
                 <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
                     <View style={styles.innercontainer}>
                         <View style={{ justifyContent: 'center', alignSelf: 'center', height: 150 }}>
-                            <CircleImageComp imagesrc={ (this.state.response == null || this.state.response == '') ? require('../../assets/profile-icon.png') : { uri: this.state.response}} backgroundColor='orange' style={styles.circleimage} imagestyle={{ height: 110, width: 110, borderRadius: 55 }}></CircleImageComp>
+                            <CircleImageComp imagesrc={{ uri: this.state.response }} backgroundColor='orange' style={styles.circleimage} imagestyle={{ height: 110, width: 110, borderRadius: 55 }}></CircleImageComp>
                             <View style={{ position: 'absolute', alignSelf: 'center', bottom: 10, right: 10, borderColor: 'white' }}>
                                 <TouchableOpacity onPress={this.chooseImage}>
                                     <CircleImageComp style={{ borderColor: 'white', borderWidth: 3 }} imagesrc={require('../../assets/icon_camera.png')} ></CircleImageComp>
@@ -83,17 +81,17 @@ export default class Profile extends Component {
         this.setState({ idcardtxt: parsedata.username })
         this.setState({ citytxt: parsedata.city })
         this.setState({ countrytxt: parsedata.country })
-        this.setState({ user_id: parsedata.id})
-        this.setState({ response: parsedata.user_image})
+        this.setState({ user_id: parsedata.id })
+        this.setState({ response: parsedata.user_image })
     }
 
 
     onProfileUpdate() {
         var photo = {
-            uri:       Platform.OS === "android" ? this.state.response : this.state.response.replace("file://", ""),
+            uri: Platform.OS === "android" ? this.state.response : this.state.response.replace("file://", ""),
             type: 'image/jpeg',
             name: 'photo.jpg',
-          };
+        };
         var formadata = new FormData()
         formadata.append("firstname", this.state.firstnametxt)
         formadata.append("lastname", this.state.lastnametxt)
@@ -102,7 +100,7 @@ export default class Profile extends Component {
         formadata.append("email", this.state.emailtxt)
         formadata.append("city", this.state.citytxt)
         formadata.append("country", this.state.countrytxt)
-        formadata.append("user_image ",photo)
+        formadata.append("user_image ", photo)
 
         this.logCallback('Creating Package Start', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, "update_user").then(data => {
@@ -125,11 +123,6 @@ export default class Profile extends Component {
         ApiCalls.deletapicall("delete_user", this.state.user_id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                if (Platform.OS === 'ios') {
-                    AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove);
-                  } else {
-                    AsyncStorage.clear()
-                  }
                 this.props.navigation.navigate('LandingScreen')
             } else {
                 Alert.alert('Failed', data.message);
@@ -158,7 +151,7 @@ export default class Profile extends Component {
     chooseImage = () => {
         ImagePicker.launchImageLibrary(
             {
-                mediaType: 'photo'||'video',
+                mediaType: 'photo' || 'video',
                 includeBase64: false,
                 maxHeight: 500,
                 maxWidth: 500,

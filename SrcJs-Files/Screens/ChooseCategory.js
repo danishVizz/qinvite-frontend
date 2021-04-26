@@ -19,7 +19,7 @@ export default class ChooseCategory extends Component {
         selectedLists: [],
         currentselected: '',
         showalert: false,
-        isFetching:false
+        isFetching: false
     }
     render() {
         let Deletealert = (
@@ -35,17 +35,7 @@ export default class ChooseCategory extends Component {
             <SafeAreaView style={styles.container}>
                 <View style={{ height: "65%", marginTop: 20 }}>
 
-                    <FlatList
-                        data={this.state.categoriesdata}
-                        renderItem={this.renderItem.bind(this)}
-                        keyExtractor={(item) => item.id}
-                        onRefresh={() => this.onRefresh()}
-                        refreshing={this.state.isFetching}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false} />
-
-
-                    <View style={{
+                <View style={{
                         zIndex: -100,
                         position: 'absolute',
                         left: 0,
@@ -57,6 +47,15 @@ export default class ChooseCategory extends Component {
                     }}>
                         {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                     </View>
+
+                    <FlatList
+                        data={this.state.categoriesdata}
+                        renderItem={this.renderItem.bind(this)}
+                        keyExtractor={(item) => item.id}
+                        onRefresh={() => this.onRefresh()}
+                        refreshing={this.state.isFetching}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false} />
 
 
                 </View>
@@ -81,7 +80,7 @@ export default class ChooseCategory extends Component {
     }
 
 
-    
+
     renderItem({ item, index }) {
         return (
 
@@ -98,8 +97,8 @@ export default class ChooseCategory extends Component {
     }
 
     onRefresh() {
-        this.setState({ isFetching: true, }, () => { this.getAllCategories()});
-      }
+        this.setState({ isFetching: true, }, () => { this.getAllCategories() });
+    }
 
     onPressButtonChildren = (value, item) => {
         switch (value) {
@@ -153,14 +152,14 @@ export default class ChooseCategory extends Component {
         var parsedata = JSON.parse(userdata)
 
         ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id).then(data => {
-            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
                 this.setState({ categoriesdata: data.data })
             } else {
                 Alert.alert('Failed', data.message);
             }
         }, error => {
-            this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+            this.logCallback("Something Went Wrong", this.state.contentLoading = false, this.state.isFetching = false);
             Alert.alert('Error', JSON.stringify(error));
         }
         )

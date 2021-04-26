@@ -80,27 +80,6 @@ export default class CategoryContactsSelection extends Component {
             this.setState({ ContactsList: this.state.ContactListReplicae })
             var orignallist = this.state.ContactsList
             var selectedlist = this.state.selectedLists
-            console.log("Repliacaa")
-            console.log(this.state.ContactListReplicae)
-
-            // orignallist.map((item, key) => {
-            //       console.log("-------------nunm-------------"+item.number)
-            //     const index =selectedlist.findIndex((e) => e.number === item.number)
-
-            //     console.log("FindIndexxxxx"+item.name)
-            //     this.isIconCheckedOrNot(item,index)
-            // })
-            // var count = 0;
-            // for (let i of orignallist) {
-            //     for (let j of selectedlist) {
-            //         if (JSON.stringify(i) === JSON.stringify(j)) {
-            //             console.log("desired index : "+count);
-            //             break;
-            //         }
-            //     }
-            //     count = count + 1;
-            // }
-
             return
         }
 
@@ -126,6 +105,7 @@ export default class CategoryContactsSelection extends Component {
     }
 
     async CreateCategoryCall() {
+        var apiname = ''
         var usersdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(usersdata)
         console.log("MYDATA" + parsedata.id)
@@ -135,21 +115,32 @@ export default class CategoryContactsSelection extends Component {
         formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
         formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
         formadata.append("user_id", parsedata.id)
+        formadata.append("participants", JSON.stringify(this.state.selectedLists))
+        if (this.props.route.params.categorydata.iseditcategory) {
+            formadata.append("id", this.props.route.params.categorydata.categoryid)
+            apiname = "edit_category "
+        }
+        else {
+            apiname = "add_category"
+            
+        }
+  
+        console.log(formadata)
         // this.state.selectedLists.map((item, index) => {
         //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
         // });
-     
-            formadata.append("participants", JSON.stringify(this.state.selectedLists))
-      
+
+
 
         this.logCallback('Creating Package Start', this.state.isLoading = true);
-        ApiCalls.postApicall(formadata, "add_category").then(data => {
+        ApiCalls.postApicall(formadata, apiname).then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
-                this.props.navigation.navigate('ChooseCategory')
+                this.props.navigation.push('ChooseCategory')
 
             } else {
                 Alert.alert('Failed', data.message);
+                // this.props.navigation.push('ChooseCategory')
             }
         }, error => {
             this.logCallback("Something Went Wrong", this.state.isLoading = false);
@@ -168,7 +159,7 @@ export default class CategoryContactsSelection extends Component {
         arr[index].isSelected = !(arr[index].isSelected)
         this.setState({ ContactsList: arr });
 
-        var contactdata = JSON.stringify({ 
+        var contactdata = JSON.stringify({
             "name": item.name,
             "number": item.number,
             "isphoneallow": item.isphoneallow
@@ -232,27 +223,25 @@ export default class CategoryContactsSelection extends Component {
         var categorydataaa = this.props.route.params.categorydata.contactlist;
         var isphoneallow = this.props.route.params.categorydata.isphoneallowd
         console.log("dsfsadfsadfs" + JSON.stringify(categorydataaa))
-        // console.log("catdaaaaaa" + categorydataaa)
-        // var contactlist = []
-        // if (categorydataaa.length !== 0) {
-        //     categorydataaa.map((item, index) => {
-        //         var contactdata = {
-        //             "name": item.name,
-        //             "number": item.number,
-        //             "isSelected": true,
-        //             "isphoneallow": item.isphoneallow == "1" ? true : false
-        //         }
-        //         // let { isChecked } = this.state;
-        //         // isChecked[index] = true;
-        //         // this.setState({ isChecked: isChecked })
-        //         contactlist.push(contactdata)
-        //         this.state.selectedLists.push(contactdata)
-        //     })
+        console.log("catdaaaaaa" + categorydataaa)
+        var contactlist = []
+        if (categorydataaa.length !== 0) {
+            categorydataaa.map((item, index) => {
+                var contactdata = {
+                    "name": item.name,
+                    "number": item.number,
+                    "isSelected": true,
+                    "isphoneallow": item.isphoneallow == "1" ? true : false
+                }
+                // let { isChecked } = this.state;
+                // isChecked[index] = true;
+                // this.setState({ isChecked: isChecked })
+                contactlist.push(contactdata)
+                this.state.selectedLists.push(JSON.stringify(contactdata))
+            })
 
-        //     this.setState({ ContactsList: contactlist, ContactListReplicae: contactlist }, () => console.log("??ContactListUpdated????" + this.state.ContactsList))
-
-        // }
-        // else {
+            this.setState({ ContactsList: contactlist, ContactListReplicae: contactlist }, () => console.log("??ContactListUpdated????" + this.state.ContactsList))
+        }
 
         PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.READ_CONTACTS,

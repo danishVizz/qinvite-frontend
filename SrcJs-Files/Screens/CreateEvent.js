@@ -33,6 +33,7 @@ export default class CreateEvent extends Component {
     selelectedvalue: '',
     eventdata: {},
     eventid: '',
+    paymentstatus:'',
     disabledropdown: false,
     buttontxt: Trans.translate('Next'),
     selectedvaluesarr: [],
@@ -60,7 +61,7 @@ export default class CreateEvent extends Component {
         <StatusBar
           backgroundColor='#F54260'
         />
-        <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')}  textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
+        <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')} textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
 
         <ScrollView>
           <View style={styles.innercontainer}>
@@ -176,21 +177,21 @@ export default class CreateEvent extends Component {
 
   componentDidMount() {
     this.state.eventdata = this.props.route.params.eventdata ?? []
-    console.log("-----------------"+this.props.route.params.eventdata)
+    console.log("-----------------" + this.props.route.params.eventdata)
 
     if (this.state.eventdata.length != 0) {
       this.setState({
         eventid: this.state.eventdata.id,
         eventname: this.state.eventdata.event_name,
         eventaddress: this.state.eventdata.event_address,
-    
         eventdate: this.state.eventdata.event_date,
         date: this.state.eventdata.event_date,
         recpntistcount: this.state.eventdata.no_of_receptionists,
         iseditevent: true,
+        paymentstatus: this.state.eventdata.payment_status,
         buttontxt: Trans.translate('Edit')
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
-    
+
 
     }
     this.getAllReceptionists()
@@ -221,27 +222,26 @@ export default class CreateEvent extends Component {
       return;
     }
     else {
-      if(!(this.state.iseditevent))
-      {
-      var usersdata = await Prefs.get(Keys.userData);
-      var parsedata = JSON.parse(usersdata)
-      var data = {
-        "event_name": this.state.eventname,
-        "event_date": this.state.date,
-        "event_address": this.state.eventaddress,
-        "user_id": parsedata.id,
-        "no_of_receptionists": this.state.recpntistcount,
-        "receptionists": this.state.selectedvaluesarr
+      if (!(this.state.iseditevent)) {
+        var usersdata = await Prefs.get(Keys.userData);
+        var parsedata = JSON.parse(usersdata)
+        var data = {
+          "event_name": this.state.eventname,
+          "event_date": this.state.date,
+          "event_address": this.state.eventaddress,
+          "user_id": parsedata.id,
+          "no_of_receptionists": this.state.recpntistcount,
+          "receptionists": this.state.selectedvaluesarr
+        }
+        mykeys.invitealldata = { "Eventdata": data }
+        this.props.navigation.navigate('Packages')
+        // this.CreateEvent()
       }
-      mykeys.invitealldata = { "Eventdata": data }
-      this.props.navigation.navigate('Packages')
-      // this.CreateEvent()
-    }
-    else{
-      this.CreateEvent()
+      else {
+        this.CreateEvent()
+      }
     }
   }
-}
 
   checkforError() {
     var anycheckfalse = false;
@@ -321,7 +321,10 @@ export default class CreateEvent extends Component {
 
       this.logCallback("Response came", this.state.isLoading = false);
       if (data.status == true) {
-        this.props.navigation.replace('CombineComp')
+        if(this.state.paymentstatus==3)
+        this.props.navigation.replace('Todos')
+      else
+      this.props.navigation.navigate("Payment",{"event_id":this.state.eventid})
 
       } else {
         Alert.alert('Failed', data.message);
@@ -372,23 +375,9 @@ export default class CreateEvent extends Component {
 
     if (this.state.recpntistcount < selectedvalue.length) {
       Alert.alert("You can select only " + this.state.recpntistcount + " receptionist")
-      // Snackbar.show({
-      //   text: Trans.translate(`ReceptionistLimit`)+" "+this.state.recpntistcount,
-      //   duration: Snackbar.LENGTH_SHORT,
-      // });
     }
     else {
       this.setState({ selectedvaluesarr: selectedvalue }, () => console.log(this.state.selectedvaluesarr))
-      // var receptionistsarr = selectedvalue
-      // const index = receptionistsarr.findIndex((e) => e === selectedvalue);
-      // if (index == -1) {
-      //   receptionistsarr.push(selectedvalue)
-      //   console.log("Pushed")
-      // }
-      // else {
-      //   receptionistsarr.pop(selectedvalue)
-      //   console.log("Poped")
-      // }
     }
 
   }
@@ -444,37 +433,21 @@ export default class CreateEvent extends Component {
   renderPicker() {
     // if (this.state.picker) {
     return (
-      this.state.show && (<View style={{marginTop:20}}>
+      this.state.show && (<View style={{ marginTop: 20 }}>
         <DatePicker
           date={this.state.date}
           mode="datetime"
-          onDateChange={(date) => this.setState({ date: date , eventdate: date})}
+          onDateChange={(date) => this.setState({ date: date, eventdate: date })}
         />
-        <View style={{margin:20}}>
-        <ButtonComp
-          onPress={() => this.setState({ show: false })}
-          textstyle={{ color: 'white' }}
-          text={Trans.translate("Ok")}></ButtonComp>
-      </View>
+        <View style={{ margin: 20 }}>
+          <ButtonComp
+            onPress={() => this.setState({ show: false })}
+            textstyle={{ color: 'white' }}
+            text={Trans.translate("Ok")}></ButtonComp>
+        </View>
       </View>
       )
 
-      // <DateTimePicker
-      // style={{
-      //   shadowColor: mycolor.darkgray,
-      //   shadowRadius: 10,
-      //   shadowOpacity: 1,
-      //   shadowOffset: { height: 0, width: 0 },
-      //   color: 'red'
-      // }}
-      //   testID="dateTimePicker"
-      //   timeZoneOffsetInMinutes={-5}
-      //   value={this.state.date}
-
-      //   is24Hour={false}
-      //   display="default"
-      //   onChange={this.onChange}
-      // />
     );
   }
 }

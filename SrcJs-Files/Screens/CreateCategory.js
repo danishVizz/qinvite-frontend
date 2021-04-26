@@ -86,6 +86,7 @@ export default class CreateCategory extends Component {
                 categorynametxt: this.state.categorydata.name,
                 isEnabled:this.state.categorydata.phones=="1"?true:false,
                 invitationcount: this.state.categorydata.people_per_qr,
+                iseditcategory:true,
                 contactlist: this.state.categorydata.participants,
             })
         }
@@ -101,9 +102,11 @@ export default class CreateCategory extends Component {
             return;
         }
         var data = {
+            "categoryid": this.state.categoryid,
             "categoryename": this.state.categorynametxt,
             "invitaitoncount": this.state.invitationcount,
             "isphoneallowd": this.state.isEnabled,
+            "iseditcategory":this.state.iseditcategory,
             "contactlist": this.state.contactlist.length==0 ? [] : this.state.contactlist
         }
         this.props.navigation.navigate('CategoryContactsSelection', { "categorydata": data })

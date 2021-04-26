@@ -82,7 +82,7 @@ export default class Reception extends Component {
                 inactiveColor="#D9D9D9"
                 barStyle={{ backgroundColor: mycolor.white, elevation: 10 }}>
                 <Tab.Screen name="Home" component={ScannerScreen} options={{
-                    tabBarLabel: Trans.translate('Home'),
+                    // tabBarLabel: Trans.translate('Home'),
                     tabBarIcon: ({ color }) => (
                         <Icon
                             color={color}
@@ -94,7 +94,7 @@ export default class Reception extends Component {
                     })}
                 />
                 <Tab.Screen name="Packages" component={GuestList} options={{
-                    tabBarLabel: Trans.translate('TabPackages'),
+                    // tabBarLabel: Trans.translate('TabPackages'),
                     tabBarIcon: ({ color }) => (
                         <Icon
                             color={color}
@@ -104,7 +104,7 @@ export default class Reception extends Component {
                 }} />
 
                 <Tab.Screen name="Profile" component={BottomNavigator} options={{
-                    tabBarLabel: Trans.translate('Profile'),
+                    // tabBarLabel: Trans.translate('Profile'),
                     tabBarIcon: ({ color }) => (
                         <Icon
                             color={color}

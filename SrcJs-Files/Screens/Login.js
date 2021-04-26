@@ -105,6 +105,7 @@ export default class Login extends Component {
     }
 
 
+
     var formadata = new FormData()
     formadata.append("username", this.state.emailtxt)
     formadata.append("password", this.state.passwordtxt)
@@ -116,7 +117,6 @@ export default class Login extends Component {
       this.logCallback("Response came", this.state.setLoginLoading = false);
       if (data.status == true) {
         Prefs.save(Keys.userData, JSON.stringify(data.data))
-        console.log(data.data);
         switch (data.data.role) {
           case "0":
           case "2":
