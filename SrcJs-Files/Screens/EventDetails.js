@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import mycolor from '../Constants/Colors';
 import EventDetailsComp from '../Components/EventDetailsComp'
 import CircleImageComp from '../Components/CircleImageComp'
+import StatusBarComp from '../Components/StatusBarComp';
 import Translation from '../Translation/translation'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import HeaderComp2 from '../Components/HeaderComp2';
@@ -18,15 +19,16 @@ export default class EventDetails extends Component {
     render() {
 
         var eventdata = this.props.route.params.eventdata ?? []
-        console.log("--EData" + JSON.stringify(eventdata))
 
         return (
-            <SafeAreaView style={styles.container}>
-                <StatusBar
+            <View style={styles.container}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                <HeaderComp2 leftBtnClicked={() => this.props.navigation.goBack()} alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('EventDetails')} titlepos='center' ></HeaderComp2>
+                {/* <StatusBar
                     backgroundColor='#F54260'
-                />
+                /> */}
                 <ScrollView>
-                    <HeaderComp2 leftBtnClicked={() => this.props.navigation.goBack()} alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('EventDetails')} titlepos='center' ></HeaderComp2>
+                    
 
 
                     <View style={styles.imagecontainer}>
@@ -62,7 +64,7 @@ export default class EventDetails extends Component {
                         </View>
                     </TouchableOpacity>
                 </ScrollView>
-            </SafeAreaView>
+            </View>
         );
     }
     Participantsdetail(eventdata) {

@@ -8,7 +8,7 @@ import EventDetailsComp from '../Components/EventDetailsComp'
 import mycolor from '../Constants/Colors';
 import Trans from '../Translation/translation';
 import HeaderComp2 from '../Components/HeaderComp2';
-import { SafeAreaView } from 'react-native';
+import StatusBarComp from '../Components/StatusBarComp';
 
 export default class Todos extends Component {
     state = {
@@ -18,7 +18,8 @@ export default class Todos extends Component {
     render() {
 
         return (
-            <SafeAreaView>
+            <View>
+                <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('todos')} textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
 
                 <View style={styles.container}>
@@ -44,7 +45,7 @@ export default class Todos extends Component {
                     ></EventDetailsComp>
 
                 </View>
-            </SafeAreaView>
+            </View>
         );
 
 

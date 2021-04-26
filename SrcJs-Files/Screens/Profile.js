@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Trans from '../Translation/translation'
-import { StyleSheet, View, Image, AsyncStorage, Text } from 'react-native';
+import { StyleSheet, View, Image, Text } from 'react-native';
 import mycolor from "../Constants/Colors";
 import EditTextComp from "../Components/EditTextComp";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,9 +13,12 @@ import Keys from '../Constants/keys'
 import ApiCalls from '../Services/ApiCalls'
 import { Alert } from "react-native";
 import { ActivityIndicator } from "react-native";
+import { StackActions } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
 // import asst from '../../assets/'
 
-const iamgepath = '../../assets'
+const iamgepath = '../../assets';
+
 
 export default class Profile extends Component {
     state = {
@@ -41,7 +44,7 @@ export default class Profile extends Component {
                 <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
                     <View style={styles.innercontainer}>
                         <View style={{ justifyContent: 'center', alignSelf: 'center', height: 150 }}>
-                            <CircleImageComp imagesrc={ (this.state.response == null || this.state.response == '') ? require('../../assets/profile-icon.png') : { uri: this.state.response}} backgroundColor='orange' style={styles.circleimage} imagestyle={{ height: 110, width: 110, borderRadius: 55 }}></CircleImageComp>
+                            <CircleImageComp imagesrc={(this.state.response == null || this.state.response == '') ? require('../../assets/profile-icon.png') : { uri: this.state.response }} backgroundColor='orange' style={styles.circleimage} imagestyle={{ height: 110, width: 110, borderRadius: 55 }}></CircleImageComp>
                             <View style={{ position: 'absolute', alignSelf: 'center', bottom: 10, right: 10, borderColor: 'white' }}>
                                 <TouchableOpacity onPress={this.chooseImage}>
                                     <CircleImageComp style={{ borderColor: 'white', borderWidth: 3 }} imagesrc={require('../../assets/icon_camera.png')} ></CircleImageComp>
@@ -61,6 +64,10 @@ export default class Profile extends Component {
                         <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.DeleteProfile()}>
                             <Image style={{ height: 17, width: 15 }} resizeMode='contain' source={require('../../assets/icon_delete.png')}></Image>
                             <Text style={{ alignItems: 'center', marginLeft: 10, fontSize: 14, color: mycolor.pink }}>{Trans.translate('DeleteAcc')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.logout()}>
+                            <Image style={{ height: 17, width: 15 }} resizeMode='contain' source={require('../../assets/logout.png')}></Image>
+                            <Text style={{ alignItems: 'center', marginLeft: 10, fontSize: 14, color: mycolor.pink }}>{Trans.translate('logout')}</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -83,17 +90,17 @@ export default class Profile extends Component {
         this.setState({ idcardtxt: parsedata.username })
         this.setState({ citytxt: parsedata.city })
         this.setState({ countrytxt: parsedata.country })
-        this.setState({ user_id: parsedata.id})
-        this.setState({ response: parsedata.user_image})
+        this.setState({ user_id: parsedata.id })
+        this.setState({ response: parsedata.user_image })
     }
 
 
     onProfileUpdate() {
         var photo = {
-            uri:       Platform.OS === "android" ? this.state.response : this.state.response.replace("file://", ""),
+            uri: Platform.OS === "android" ? this.state.response : this.state.response.replace("file://", ""),
             type: 'image/jpeg',
             name: 'photo.jpg',
-          };
+        };
         var formadata = new FormData()
         formadata.append("firstname", this.state.firstnametxt)
         formadata.append("lastname", this.state.lastnametxt)
@@ -102,7 +109,7 @@ export default class Profile extends Component {
         formadata.append("email", this.state.emailtxt)
         formadata.append("city", this.state.citytxt)
         formadata.append("country", this.state.countrytxt)
-        formadata.append("user_image ",photo)
+        formadata.append("user_image ", photo)
 
         this.logCallback('Creating Package Start', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, "update_user").then(data => {
@@ -127,9 +134,9 @@ export default class Profile extends Component {
             if (data.status == true) {
                 if (Platform.OS === 'ios') {
                     AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove);
-                  } else {
+                } else {
                     AsyncStorage.clear()
-                  }
+                }
                 this.props.navigation.navigate('LandingScreen')
             } else {
                 Alert.alert('Failed', data.message);
@@ -139,6 +146,36 @@ export default class Profile extends Component {
             Alert.alert('Error', JSON.stringify(error));
         }
         )
+    }
+
+    async logout() {
+        // AsyncStorage.clear()
+        //     .then(() => this.props.navigation.dispatch(
+        //         StackActions.popToTop()
+        //     ));
+
+        const asyncStorageKeys = await AsyncStorage.getAllKeys();
+        if (asyncStorageKeys.length > 0) {
+            if (Platform.OS === 'android') {
+                await AsyncStorage.clear();
+                this.props.navigation.dispatch(
+                    StackActions.pop(1)
+                )
+                
+                // const pushAction = StackActions.push('LandingScreen');
+                // this.props.navigation.dispatch(pushAction);
+            }
+            if (Platform.OS === 'ios') {
+                await AsyncStorage.multiRemove(asyncStorageKeys);
+                this.props.navigation.dispatch(
+                    StackActions.pop(1)
+                )
+
+                // const pushAction = StackActions.push('LandingScreen');
+                // this.props.navigation.dispatch(pushAction);
+            }
+        }
+
     }
 
 
@@ -158,7 +195,7 @@ export default class Profile extends Component {
     chooseImage = () => {
         ImagePicker.launchImageLibrary(
             {
-                mediaType: 'photo'||'video',
+                mediaType: 'photo' || 'video',
                 includeBase64: false,
                 maxHeight: 500,
                 maxWidth: 500,

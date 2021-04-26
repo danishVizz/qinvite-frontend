@@ -11,7 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 import Contacts from 'react-native-contacts';
 import { PermissionsAndroid } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import ContactsComp from '../Components/ContactsComp';
+import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from "../Services/ApiCalls";
 import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
@@ -30,10 +30,11 @@ export default class WeddingDetails extends Component {
     render() {
 
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
-                <StatusBar
+            <View style={{ flex: 1, backgroundColor: mycolor.white }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                {/* <StatusBar
                     backgroundColor='#F54260'
-                />
+                /> */}
                 <HeaderComp2
                     titlepos={'center'}
                     leftBtnClicked={() => this.props.navigation.goBack()}
@@ -48,7 +49,7 @@ export default class WeddingDetails extends Component {
                     showsHorizontalScrollIndicator={false}
                     ListHeaderComponent={this.headerView()}
                 />
-            </SafeAreaView>
+            </View>
 
         );
     }
@@ -58,21 +59,21 @@ export default class WeddingDetails extends Component {
             <View style={{ marginLeft: 20, marginRight: 20 }}>
                 <Text style={{ fontSize: 24, marginTop: 30, fontWeight: '600', color: mycolor.darkgray }}>{this.props.route.params.item.event_name}</Text>
                 <View style={{ flexDirection: 'row', width: '100%', height: 60, marginTop: 34, alignItems: 'center' }}>
-                    <Image style={{ width: 36, height: 36 }} source={require('../../assets/icon_calendar.png')}></Image>
+                    <Image style={{ width: 36, height: 36 }} source={require('../../assets/gentleman.png')}></Image>
                     <View style={{ marginLeft: 17 }}>
                         <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.event_name}</Text>
                         <Text style={{ fontSize: 14, color: "#C9C9C9", marginTop: 3 }}>{"Host Name"}</Text>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', width: '100%', height: 60, marginTop: 0, alignItems: 'center' }}>
-                    <Image style={{ width: 36, height: 36 }} source={require('../../assets/icon_calendar.png')}></Image>
+                    <Image style={{ width: 36, height: 36 }} source={require('../../assets/pink-calendar.png')}></Image>
                     <View style={{ marginLeft: 17 }}>
                         <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.event_date}</Text>
                         <Text style={{ fontSize: 14, color: "#C9C9C9", marginTop: 3 }}>{"Event Date"}</Text>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', width: '100%', height: 60, marginTop: 0, alignItems: 'center' }}>
-                    <Image style={{ width: 36, height: 36 }} source={require('../../assets/icon_calendar.png')}></Image>
+                    <Image style={{ width: 36, height: 36 }} source={require('../../assets/pink-phone.png')}></Image>
                     <View style={{ marginLeft: 17 }}>
                         <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.event_status}</Text>
                         <Text style={{ fontSize: 14, color: "#C9C9C9", marginTop: 3 }}>{"Contact Number"}</Text>

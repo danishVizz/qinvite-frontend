@@ -13,7 +13,8 @@ export default class SplashScreen extends Component {
         isLoading: true,
         langarabic: true,
         langenglish: false,
-        isSignedIn: false
+        isSignedIn: false,
+        userRole: ''
     }
     render() {
         if (this.state.isLoading) {
@@ -72,7 +73,42 @@ export default class SplashScreen extends Component {
 
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        console.log('componentDidMount()');
+        // this.signinStatus();
+        this.getUserData();
+    }
+
+    async getUserData() {
+        var userData = await Prefs.get(Keys.userData);
+        if (userData != null) {
+            console.log("userData 1");
+            var parsedData = JSON.parse(userData);
+            console.log(parsedData);
+            this.setState({
+                userRole: parsedData.role,
+            }, () => this.redirectPage());
+        }
+    }
+
+    redirectPage() {
+        switch (this.state.userRole) {
+            case "0":
+            case "2":
+                this.props.navigation.navigate('CombineComp');
+                break;
+            case "4":
+                this.props.navigation.navigate('Reception');
+                break;
+            case "5":
+                this.props.navigation.navigate('DesignerRequests');
+                break;
+            default:
+            // screen = 'SplashScreen';
+        }
+    }
+
+    async signinStatus() {
         // this.clearAllData();
         var userData = await Prefs.get(Keys.userData);
         console.log('userData');
@@ -80,8 +116,6 @@ export default class SplashScreen extends Component {
         if (userData != undefined || userData != null) {
             this.setState({ isSignedIn: true });
         }
-
-        
     }
 
     clearAllData() {

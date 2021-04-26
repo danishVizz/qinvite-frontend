@@ -6,6 +6,7 @@ import RNImageToPdf from 'react-native-image-to-pdf';
 import CameraRollExtended from 'react-native-store-photos-album'
 import ButtonComp from '../Components/ButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
+import StatusBarComp from '../Components/StatusBarComp';
 import mycolor from "../Constants/Colors";
 import Trans from "../Translation/translation";
 import Keys from "../Constants/keys";
@@ -22,10 +23,11 @@ export default class PreviewInvite extends Component {
     render() {
         console.log(Keys.invitealldata["ImageData"])
         return (
-            <SafeAreaView style={styles.container}>
-                <StatusBar
-                    backgroundColor={mycolor.pink} />
-                <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CardPreview')} titlepos='center' ></HeaderComp2>
+            <View style={styles.container}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                {/* <StatusBar
+                    backgroundColor={mycolor.pink} /> */}
+                <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CardPreview')} titlepos='center' leftBtnClicked={()=>this.props.navigation.goBack()}></HeaderComp2>
                 <ScrollView style={{ flex: 2.5 }}>
                     <View style={{ flex: 2.5, marginTop: 28, marginLeft: 20, marginRight: 20, marginBottom: 20, borderRadius: 2, borderWidth: 5, borderColor: 'white', elevation: 2 }}>
                         <View style={styles.imagecontainer}>
@@ -63,7 +65,7 @@ export default class PreviewInvite extends Component {
 
                     </View>
                 </ScrollView>
-            </SafeAreaView>
+            </View>
         );
     }
 

@@ -7,6 +7,7 @@ import ConversationComp from '../Components/ConversationComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import HeaderComp2 from '../Components/HeaderComp2';
+import StatusBarComp from '../Components/StatusBarComp';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 
@@ -17,10 +18,11 @@ export default class ContactListing extends Component {
     render() {
         var participants = this.props.route.params.Participants ?? []
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
-                <StatusBar
+            <View style={{ flex: 1, backgroundColor: mycolor.white }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                {/* <StatusBar
                     backgroundColor='#F54260'
-                />
+                /> */}
                 <HeaderComp2 textfonts={'bold'}
                     righttitle={Trans.translate('Resend')}
                     titlepos='center'
@@ -36,7 +38,7 @@ export default class ContactListing extends Component {
                     showsHorizontalScrollIndicator={false} />
 
 
-            </SafeAreaView>
+            </View>
 
         );
     }

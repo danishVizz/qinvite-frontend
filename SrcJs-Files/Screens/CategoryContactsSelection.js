@@ -12,6 +12,7 @@ import Contacts from 'react-native-contacts';
 import { PermissionsAndroid } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import ContactsComp from '../Components/ContactsComp';
+import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from "../Services/ApiCalls";
 import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
@@ -33,10 +34,11 @@ export default class CategoryContactsSelection extends Component {
     render() {
 
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
-                <StatusBar
+            <View style={{ flex: 1, backgroundColor: mycolor.white }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                {/* <StatusBar
                     backgroundColor='#F54260'
-                />
+                /> */}
                 <HeaderComp2 textfonts={'bold'}
                     righttitle={Trans.translate('Resend')}
                     titlepos={'center'}
@@ -66,7 +68,7 @@ export default class CategoryContactsSelection extends Component {
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
                 </View>
-            </SafeAreaView>
+            </View>
 
         );
     }

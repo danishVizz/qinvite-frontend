@@ -133,5 +133,9 @@
     "Signuphint": "Do you want to Sign up with",
    
     "set_deadline": "Set Deadline",
-    "set_as_deadline": "Set as Deadline"
+    "set_as_deadline": "Set as Deadline",
+    "logout": "Logout",
+    "scan":"SCAN",
+    "check_all_required_conditions_msg": "Please check all required conditions for design",
+    "conditions": "Conditions"
 }

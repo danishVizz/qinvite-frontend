@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
-import { FlatList, Image, View, StyleSheet, Alert, Text, TouchableOpacity, Divider } from 'react-native'
+import { FlatList, Image, View, StyleSheet, Alert, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
 
 import Trans from '../Translation/translation'
 import ConversationComp from '../Components/ConversationComp';
@@ -21,6 +21,7 @@ var query = ""
 export default class AllEvents extends Component {
 
     state = {
+        isLoading: true,
         originalList: [],
         list: [],
         isChecked: [],
@@ -49,6 +50,8 @@ export default class AllEvents extends Component {
                     closeOnHardwareBackPress={false}
                     customView={this.alertView()}
                 />
+
+                { this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
                 <FlatList
                     data={this.state.list}
                     getparentdata={this.onparendata}
@@ -163,7 +166,7 @@ export default class AllEvents extends Component {
         let query = '?receptionist_id=38'
         ApiCalls.getGenericCall("get_rp_events", query).then(data => {
             if (data.status == true) {
-                this.setState({ list: data.data, originalList: data.data })
+                this.setState({ list: data.data, originalList: data.data, isLoading: false })
                 // console.log(data.data)
             } else {
                 Alert.alert('Failed', data.message);

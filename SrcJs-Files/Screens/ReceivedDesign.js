@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import mycolor from '../Constants/Colors'
-import { FlatList, StyleSheet, StatusBar, Text, TouchableOpacity, View, Alert, Image, Modal } from 'react-native'
+import { FlatList, StyleSheet, ActivityIndicator, Text, TouchableOpacity, View, Alert, Image, Modal } from 'react-native'
 import Trans from '../Translation/translation'
 import FloatingButtonComp from '../Components/FloatingButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
@@ -12,18 +12,20 @@ import CircleImageComp from '../Components/CircleImageComp';
 import { CheckBox } from 'react-native-elements';
 import ApiCalls from '../Services/ApiCalls';
 import Keys from '../Constants/keys';
+import moment from 'moment';
 
-const MyStatusBar = ({ backgroundColor, ...props }) => (
-    <View style={[styles.statusBar, { backgroundColor }]}>
-        <SafeAreaView>
-            <StatusBar translucent backgroundColor={backgroundColor} {...props} />
-        </SafeAreaView>
-    </View>
-);
+// const MyStatusBar = ({ backgroundColor, ...props }) => (
+//     <View style={[styles.statusBar, { backgroundColor }]}>
+//         <SafeAreaView>
+//             <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+//         </SafeAreaView>
+//     </View>
+// );
 
 export default class ReceivedDesign extends Component {
 
     state = {
+        isLoading: true,
         designerdata: [],
         modalVisible: false,
         checked: false,
@@ -38,44 +40,18 @@ export default class ReceivedDesign extends Component {
                 {/* <StatusBar
                     backgroundColor={mycolor.pink}
                 /> */}
-                
-                {/* <Modal
-                    animationType="fade"
-                    transparent={true}
-                    transparent={true}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                        this.setState({ modalVisible: true })
-                    }}>
-                    <View style={{ marginTop: 100, marginBottom: 50, marginLeft: 30, marginRight: 30, width: '80%', borderRadius: 0, borderWidth: 0, alignSelf: 'center', justifyContent: 'center', alignSelf: 'center', backgroundColor: mycolor.white }}>
-                        <View style={styles.modalView}>
-                            <Text style={{ fontSize: 24, fontWeight: 'bold', padding: 10, alignSelf: 'center', color: "black" }}>Choose Designer</Text>
-                            <FlatList
-                                data={this.state.designerdata}
-                                renderItem={this.renderItem2}
-                                keyExtractor={(item) => item._id}
-                                showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false} />
-                        </View>
-                    </View>
-                </Modal> */}
+                {this.state.isLoading ? <View style={{ flex: 1, alignItems: 'center', justifyContent: "center" }}>
+                    <ActivityIndicator size="large" color={mycolor.pink} />
+                </View> :
+                    <FlatList
+                        style={{ marginBottom: 30 }}
+                        data={this.state.designerdata}
+                        renderItem={this.renderItem.bind(this)}
+                        keyExtractor={(item) => item._id}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false} />
+                }
 
-                {/* <View style={{ marginTop: 10, marginRight: 20, marginLeft: 20 }}>
-                    <TextInputComp
-                        onPressRightBtn={() => this.setState({ modalVisible: true })}
-                        tintcolor={mycolor.lightgray}
-                        onChangeText={text => this.searchItems(text)}
-                        leftIcon={require('../../assets/icon_search.png')}
-                        textviewstyle={{ height: 40 }}></TextInputComp>
-                </View> */}
-                <FlatList
-                    style={{ marginBottom: 30 }}
-                    data={this.state.designerdata}
-                    renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item) => item._id}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false} />
 
             </View>
         );
@@ -106,25 +82,23 @@ export default class ReceivedDesign extends Component {
         // checkedCopy[index] = !checkedCopy[index]
         // this.setState({
         //     checked: checkedCopy,
-        // })
+        // }) Tue 15 Mar,2021
     }
     renderItem({ item, index }) {
         console.log("inex: " + index);
         return (
 
-            // <TouchableWithoutFeedback style={{
-            //   marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, }} onPress={() => actionOnRow(item,props)}>
+            // moment(testDate).format('MM/DD/YYYY');
             <TouchableOpacity style={styles.itemView} onPress={() => this.actionOnRow(item, index)}>
-                <Image source={require('../../assets/icon_dumy.png')} resizeMode="contain" style={{ width: '94%', height: 200, borderRadius: 6, margin: 10 }}></Image>
+                <Image source={{ uri: item.design_card }} resizeMode="contain" style={{ width: '94%', height: 200, borderRadius: 6, margin: 10 }}></Image>
                 <View style={{ flexDirection: 'row', marginLeft: 10, marginRight: 10, marginTop: 20 }}>
                     <Text style={{ fontSize: 12, color: "#A3A3B1" }}>{Trans.translate('received_date')}</Text>
                     <Text style={{ fontSize: 12, color: "#A3A3B1", marginLeft: 'auto' }}>{Trans.translate('Time')}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', marginLeft: 10, marginRight: 10, marginTop: 5, marginBottom: 20 }}>
-                    <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Tue 15 Mar,2021</Text>
-                    <Text style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 'auto' }}>05:00 PM</Text>
+                    <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{moment(item.submit_date).format('ddd DD MMM,YYYY')}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: 'bold', marginLeft: 'auto' }}>{moment(item.submit_date).format('HH:mm A')}</Text>
                 </View>
-
             </TouchableOpacity>
         );
     }
@@ -151,7 +125,7 @@ export default class ReceivedDesign extends Component {
         );
     }
     componentDidMount() {
-        this.getAllDesigners()
+        this.getDesigns()
     }
 
     logCallback = (log, callback) => {
@@ -167,15 +141,12 @@ export default class ReceivedDesign extends Component {
         // this.props.navigation.navigate('DesignerDetails', { "DesingerData": itemdata })
     }
 
-    async getAllDesigners() {
-        this.logCallback("getAllDesigner :", this.state.contentLoading = true);
-        // var userdata = await Prefs.get(Keys.userData);
-        // var parsedata = JSON.parse(userdata)
-
-        ApiCalls.getapicall("get_designers", "").then(data => {
+    async getDesigns() {
+        this.logCallback("getDesigns :", this.state.contentLoading = true);
+        ApiCalls.getapicall("get_event_cards", "?event_id=73").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                this.setState({ designerdata: data.data })
+                this.setState({ designerdata: data.data, isLoading: false })
             } else {
                 Alert.alert('Failed', data.message);
             }

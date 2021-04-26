@@ -15,6 +15,7 @@ import ContactsComp from '../Components/ContactsComp';
 import ApiCalls from "../Services/ApiCalls";
 import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
+import StatusBarComp from '../Components/StatusBarComp';
 
 export default class GuestList extends Component {
 
@@ -27,30 +28,35 @@ export default class GuestList extends Component {
     render() {
 
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
-                <StatusBar
+            <View style={{ flex: 1, backgroundColor: mycolor.white }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                {/* <StatusBar
                     backgroundColor='#F54260'
-                />
+                /> */}
                 <HeaderComp2
                     // textfonts={'bold'}
                     // righttitle={Trans.translate('Resend')}
                     titlepos={'center'}
-                    leftBtnClicked={() => navigation.goBack()}
+                    // leftBtnClicked={() => navigation.goBack()}
                     title={Trans.translate('guestlist')}
                     // righttitle={Trans.translate('Save')}
                     // righttextfonts={'bold'}
                     // rightBtnClicked={() => this.CreateCategoryCall()}
-                    leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
+                    // leftBtn={require('../../assets/icon_back.png')}
+                    >
+
+                    </HeaderComp2>
 
                 <FlatList
                     data={this.state.ContactsList}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item._id}
+                    contentContainerStyle={{marginTop: 20}}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
 
 
-            </SafeAreaView>
+            </View>
 
         );
     }

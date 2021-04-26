@@ -19,6 +19,7 @@ import MultiSelect from "react-multi-select-component";
 import DatePicker from 'react-native-date-picker'
 // import Snackbar from 'react-native-snackbar';
 import HeaderComp2 from '../Components/HeaderComp2';
+import StatusBarComp from '../Components/StatusBarComp';
 
 export default class CreateEvent extends Component {
 
@@ -48,18 +49,16 @@ export default class CreateEvent extends Component {
     show: false,
     time: new Date(),
     loadDropDown: false
-
-
-
   }
 
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar
+      <View style={styles.container}>
+        {/* <StatusBar
           backgroundColor='#F54260'
-        />
+        /> */}
+        <StatusBarComp backgroundColor={mycolor.pink} />
         <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateEvents')}  textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
 
         <ScrollView>
@@ -169,7 +168,7 @@ export default class CreateEvent extends Component {
             </View>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
 
   }
