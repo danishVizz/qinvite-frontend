@@ -4,7 +4,11 @@ import { WebView } from 'react-native-webview'
 import Keys from "../Constants/keys"
 import mycolor from "../Constants/Colors"
 import Trans from "../Translation/translation"
+<<<<<<< HEAD
 import AwesomeAlert from 'react-native-awesome-alerts';
+=======
+import StatusBarComp from '../Components/StatusBarComp';
+>>>>>>> 8e0f8cd2e2a7317f1efe1fdf35e5337431bad93c
 import { ActivityIndicator } from 'react-native';
 import HeaderComp from '../Components/HeaderComp';
 import { SafeAreaView } from 'react-native';
@@ -28,10 +32,8 @@ export class Payment extends Component {
         return (
 
 
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar
-                    backgroundColor={mycolor.pink}
-                />
+            <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Payment')} textfonts={'bold'} textsize={18} titlepos="center" />
 
                 <WebView

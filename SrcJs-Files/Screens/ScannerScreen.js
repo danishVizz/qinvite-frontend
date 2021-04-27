@@ -1,6 +1,6 @@
 import { Component } from "react";
 import React from 'react'
-import { Button, Image, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { Button, Image, Alert, TouchableOpacity, StyleSheet } from "react-native";
 import { Dimensions, View, Text } from "react-native";
 import Draggable from 'react-native-draggable';
 import ViewShot from "react-native-view-shot";
@@ -179,12 +179,11 @@ export default class ScannerScreen extends Component {
         let query = "/" + id
         ApiCalls.getGenericCall("check_in", query).then(data => {
             if (data.status == true) {
-                this.setState({ isLoading: false, showAlert: false });
-                 Alert.alert("Checked In")
-                 // already checked in status show message
-                 // checked out status should be handle
+                // Alert.alert('You are Welcome to Event', data.message);
+                this.setState({ isLoading: false, showAlert: false, scanner: false });
             } else {
                 Alert.alert('Failed', data.message);
+                this.setState({ isLoading: false, showAlert: false, scanner: false });
             }
         }, error => {
             Alert.alert('Error', JSON.stringify(error));

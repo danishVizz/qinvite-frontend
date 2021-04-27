@@ -14,7 +14,7 @@ export default class ReceptionTabComp extends Component {
 
   state = {
     showFilter: false,
-    query:''
+    query: ''
   }
 
   Tab = createMaterialTopTabNavigator();
@@ -31,8 +31,6 @@ export default class ReceptionTabComp extends Component {
   }
 
   render() {
-    console.log("this.props.navigation TABNAV");
-    console.log(this.props.navigation);
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
         {/* <HeaderComp style={{}} title='Events' textsize={20} textfonts='bold' rightBtn={require('../../assets/icon_search.png')} tintColor='white' /> */}
@@ -51,18 +49,18 @@ export default class ReceptionTabComp extends Component {
           tabBarOptions={this.tabBarOptions}>
           <this.Tab.Screen name={Trans.translate('all')}
             //  component={Events}
-            children={() => <AllEvents query ={this.state.query} type="All" navigation={this.props.navigation} showFilter={this.state.showFilter}/>}
+            children={() => <AllEvents query={this.state.query} type="All" navigation={this.props.navigation} showFilter={this.state.showFilter} hideAlertCallback={this.alertCallback.bind(this)} />}
           >
           </this.Tab.Screen>
 
           <this.Tab.Screen name={Trans.translate('active')}
             // component={Events}
-            children={() => <AllEvents query ={this.state.query} type="Active" navigation={this.props.navigation} showFilter={this.state.showFilter} />}
+            children={() => <AllEvents query={this.state.query} type="Active" navigation={this.props.navigation} showFilter={this.state.showFilter} hideAlertCallback={this.alertCallback.bind(this)} />}
           >
           </this.Tab.Screen>
           <this.Tab.Screen name={Trans.translate('closed')}
             // component={Events}
-            children={() => <AllEvents query ={this.state.query} type="Closed" navigation={this.props.navigation} showFilter={this.state.showFilter} />}
+            children={() => <AllEvents query={this.state.query} type="Closed" navigation={this.props.navigation} showFilter={this.state.showFilter} hideAlertCallback={this.alertCallback.bind(this)} />}
           >
           </this.Tab.Screen>
 
@@ -79,7 +77,14 @@ export default class ReceptionTabComp extends Component {
   // }
 
   getaccesstochild(query) {
-   return query;
+    return query;
+  }
+
+  alertCallback(data) {
+    console.log(data)
+    this.setState({
+      showFilter: false
+    });
   }
 }
 

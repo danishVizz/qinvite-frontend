@@ -117,10 +117,10 @@ export default class CategoryContactsSelection extends Component {
         formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
         formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
         formadata.append("user_id", parsedata.id)
-        // formadata.append("participants", this.state.selectedLists)
-        this.state.selectedLists.map((item, index) => {
-            formadata.append("participants[" + index + "]", this.state.selectedLists[index])
-          });
+        formadata.append("participants", JSON.stringify(this.state.selectedLists))
+        // this.state.selectedLists.map((item, index) => {
+        //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
+        //   });
         if (this.props.route.params.categorydata.iseditcategory) {
             formadata.append("id", this.props.route.params.categorydata.categoryid)
             apiname = "edit_category "

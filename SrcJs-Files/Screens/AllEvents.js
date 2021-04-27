@@ -26,13 +26,17 @@ export default class AllEvents extends Component {
         list: [],
         isChecked: [],
         selectedLists: [],
-        catdata: {}
+        catdata: {},
+        isFetching: false
+    }
+
+    hideAlert() {
+        console.log("hideAlert");
+        this.props.hideAlertCallback(false); //Change: passing prop onPressItem and calling _onPressItem
     }
 
     render() {
         {
-            console.log("back query : " + this.props.query);
-            console.log("simple query : " + query);
             if (this.props.query != query) {
                 this.filterData(this.props.query)
                 query = this.props.query
@@ -48,26 +52,35 @@ export default class AllEvents extends Component {
                     onTextchange={() => this.getparentdata()}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
+                    onDismiss={() => this.hideAlert()}
                     customView={this.alertView()}
                 />
 
                 { this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
                 <FlatList
-                    data={this.state.list}
+                    // data={this.state.list}
+                    data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
                     getparentdata={this.onparendata}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false} />
+                    showsHorizontalScrollIndicator={false}
+                    onRefresh={() => this.onRefresh()}
+                    refreshing={this.state.isFetching} />
             </View>
         );
     }
+
+    onRefresh() {
+        this.setState({ isFetching: true, }, () => { this.getAllEvents(); });
+    }
+
     onparendata = (value) => {
-        console.log('Query ' + value)
+        // console.log('Query ' + value)
     }
 
     filterData(query) {
-        console.log("filterdata")
+        // console.log("filterdata")
         if (query.length >= 3) {
             var filteredList = [];
             for (let obj of this.state.originalList) {
@@ -145,7 +158,7 @@ export default class AllEvents extends Component {
 
 
     actionOnRow(index) {
-        console.log('good');
+        // console.log('good');
         var list = this.state.ContactsList;
         list[index].status = !(list[index].status);
         this.setState({ ContactsList: list });
@@ -157,7 +170,7 @@ export default class AllEvents extends Component {
     }
 
     getparentdata(value) {
-        console.log(value)
+        // console.log(value)
     }
 
     async getAllEvents() {
@@ -166,8 +179,7 @@ export default class AllEvents extends Component {
         let query = '?receptionist_id=38'
         ApiCalls.getGenericCall("get_rp_events", query).then(data => {
             if (data.status == true) {
-                this.setState({ list: data.data, originalList: data.data, isLoading: false })
-                // console.log(data.data)
+                this.setState({ list: data.data, originalList: data.data, isLoading: false, isFetching: false})
             } else {
                 Alert.alert('Failed', data.message);
             }
@@ -176,6 +188,33 @@ export default class AllEvents extends Component {
         }
         )
     }
+
+    getallData() {
+        try {
+          var filterarray = this.state.list
+          return filterarray
+    
+        } catch {
+          return this.state.list
+        }
+    
+      }
+      getActiveData() {
+        try {
+          var filterarray = this.state.list.filter(eventdata => eventdata.event_status == "1")
+          return filterarray
+        } catch {
+          return this.state.list
+        }
+      }
+      getCloseData() {
+        try {
+          var filterarray = this.state.list.filter(eventdata => eventdata.event_status == "2")
+          return filterarray
+        } catch {
+          return this.state.list
+        }
+      }
 }
 
 

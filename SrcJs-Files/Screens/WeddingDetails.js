@@ -86,12 +86,12 @@ export default class WeddingDetails extends Component {
 
     renderItem({ item, index, props }) {
         return (
-            <View style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF', marginLeft: 20, marginRight: 20, marginTop: 5, marginBottom: 5, borderRadius: 8, backgroundColor: '#C5FFE6' }}>
+            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 5, marginBottom: 5, borderRadius: 8, backgroundColor: item.check_in == '1' ? '#C5FFE6' : '#FFDBE1' }}>
                 <View style={{ flexDirection: 'row', height: 70, alignItems: 'center', marginLeft: 15, marginRight: 15 }}>
                     <Image resizeMode='cover' style={{ height: 40, width: 40, borderRadius: 20, backgroundColor: 'gray' }} source={require('../../assets/icon_lady.png')}></Image>
                     <View style={{ flexDirection: 'row', marginLeft: 15, flex: 1, height: 60, alignItems: 'center' }}>
                         <Text style={{ fontSize: 14, color: mycolor.darkgray }}>{item.name}</Text>
-                        <TouchableOpacity style={{ marginLeft: 'auto' }}>
+                        {/* <TouchableOpacity style={{ marginLeft: 'auto' }}>
                             {(item.check_in == "1") ?
                                 <View style={{ width: 50, justifyContent: 'center', alignItems: 'center' }}>
                                     <Image resizeMode='cover' style={{ height: 12, width: 12 }} source={require('../../assets/green_tick.png')}></Image>
@@ -99,7 +99,7 @@ export default class WeddingDetails extends Component {
                                 :
                                 <Text style={{ fontSize: 12, color: mycolor.pink }}>Check In</Text>
                             }
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
             </View>
