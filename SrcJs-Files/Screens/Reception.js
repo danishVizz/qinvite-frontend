@@ -43,40 +43,6 @@ export default class Reception extends Component {
     }
     render() {
         return (
-            // <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.white }}>
-            //     <StatusBar
-            //         backgroundColor='#F54260'
-            //     />
-            //     {/* <HeaderComp2
-            //         // textfonts={'bold'}
-            //         // righttitle={Trans.translate('Resend')}
-            //         titlepos={'center'}
-            //         leftBtnClicked={() => navigation.goBack()}
-            //         title="Events"
-            //         // righttitle={Trans.translate('Save')}
-            //         // righttextfonts={'bold'}
-            //         // rightBtnClicked={() => this.CreateCategoryCall()}
-            //         leftBtn={require('../../assets/icon_back.png')}></HeaderComp2> */}
-
-            //     <View style={{ backgroundColor: mycolor.pink, padding: 20 }}>
-            //         <View style={{ flexDirection: 'row', backgroundColor: '#fff', height: 40, alignItems: 'center', borderRadius: 4 }}>
-            //             <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/icon_search.png')}></Image>
-            //             <TextInput style={{ flex: 4 }} placeholder="Search"></TextInput>
-            //             <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/icon_search.png')}></Image>
-            //         </View>
-
-            //     </View>
-
-
-            //     <FlatList
-            //         data={this.state.ContactsList}
-            //         renderItem={this.renderItem.bind(this)}
-            //         keyExtractor={(item) => item._id}
-            //         showsVerticalScrollIndicator={false}
-            //         showsHorizontalScrollIndicator={false} />
-
-
-            // </SafeAreaView>
             <Tab.Navigator
                 activeColor="#F54260"
                 inactiveColor="#D9D9D9"
@@ -104,7 +70,7 @@ export default class Reception extends Component {
                         blur: () => navigation.setParams({ screen: undefined }),
                     })}
                 />
-                <Tab.Screen name="Packages" component={GuestList} options={{
+                {/* <Tab.Screen name="Packages" component={GuestList} options={{
                     tabBarLabel: '',
                     tabBarIcon: ({ focused, color, size }) => (
                         <Image
@@ -119,7 +85,7 @@ export default class Reception extends Component {
                             }}
                         />
                     )
-                }} />
+                }} /> */}
 
                 <Tab.Screen name="Profile" component={BottomNavigator} options={{
                     tabBarLabel: '',
@@ -165,7 +131,7 @@ export default class Reception extends Component {
 
 
     actionOnRow(index) {
-        console.log('good');
+        // console.log('good');
         var list = this.state.ContactsList;
         list[index].status = !(list[index].status);
         this.setState({ ContactsList: list });

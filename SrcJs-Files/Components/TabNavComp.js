@@ -24,8 +24,6 @@ export default class TabNavComp extends Component {
   }
 
   render() {
-    console.log("this.props.navigation TABNAV");
-    console.log(this.props.navigation);
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
         <HeaderComp style={{}} title={Trans.translate('events')} textsize={20} textfonts='bold' rightBtn={require('../../assets/icon_search.png')} tintColor='white'rightBtnClicked={()=>this.props.navigation.navigate('SearchScreen')} />

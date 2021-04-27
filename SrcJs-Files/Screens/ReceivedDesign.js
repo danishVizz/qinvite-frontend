@@ -37,9 +37,7 @@ export default class ReceivedDesign extends Component {
             <View style={{ flex: 1, backgroundColor: "white" }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('received_design')} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp2>
-                {/* <StatusBar
-                    backgroundColor={mycolor.pink}
-                /> */}
+                
                 {this.state.isLoading ? <View style={{ flex: 1, alignItems: 'center', justifyContent: "center" }}>
                     <ActivityIndicator size="large" color={mycolor.pink} />
                 </View> :
@@ -47,7 +45,7 @@ export default class ReceivedDesign extends Component {
                         style={{ marginBottom: 30 }}
                         data={this.state.designerdata}
                         renderItem={this.renderItem.bind(this)}
-                        keyExtractor={(item) => item._id}
+                        keyExtractor={(item) => item.id}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
                 }
@@ -137,8 +135,7 @@ export default class ReceivedDesign extends Component {
 
 
     actionOnRow(itemdata, index) {
-
-        // this.props.navigation.navigate('DesignerDetails', { "DesingerData": itemdata })
+        this.props.navigation.navigate('ImageEditor', { "imagedata": itemdata.design_card })
     }
 
     async getDesigns() {

@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview'
 import Keys from "../Constants/keys"
 import mycolor from "../Constants/Colors"
 import Trans from "../Translation/translation"
-
+import StatusBarComp from '../Components/StatusBarComp';
 import { ActivityIndicator } from 'react-native';
 import HeaderComp from '../Components/HeaderComp';
 import { SafeAreaView } from 'react-native';
@@ -26,10 +26,8 @@ export class Payment extends Component {
         return (
 
 
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar
-                    backgroundColor={mycolor.pink}
-                />
+            <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Payment')} textfonts={'bold'} textsize={18} titlepos="center" />
 
                 <WebView
@@ -66,7 +64,7 @@ export class Payment extends Component {
     }
     handleMessage(message) {
         if (message.toLowerCase() == "transaction successful")
-            this.props.navigation.navigate('Todos')
+            this.props.navigation.replace('Todos')
         else {
             Alert("Payment Failed Please Try again")
         }
