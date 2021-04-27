@@ -4,12 +4,13 @@ import { WebView } from 'react-native-webview'
 import Keys from "../Constants/keys"
 import mycolor from "../Constants/Colors"
 import Trans from "../Translation/translation"
-
+import AwesomeAlert from 'react-native-awesome-alerts';
 import { ActivityIndicator } from 'react-native';
 import HeaderComp from '../Components/HeaderComp';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'react-native';
-import { Alert } from 'react-native';
+import { Alert,Text,Image } from 'react-native';
+import ButtonComp from '../Components/ButtonComp';
 
 // const jsCode = `window.postMessage(document.getElementById('gb-main').innerHTML)`
 const jsCode = "window.postMessage(document.getElementsByClassName(payment-response))"
@@ -19,10 +20,11 @@ const injectedJs = `
 `;
 export class Payment extends Component {
     state = {
-        visible: true
+        visible: true,
+        showAlert:true
     }
     render() {
-       
+
         return (
 
 
@@ -42,7 +44,8 @@ export class Payment extends Component {
                         this.handleMessage(event.nativeEvent.data)
                     }}
                     // source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${Keys.invitealldata["Eventdata"].event_id}` }} />
-                    source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.props.route.params.event_id}` }} />
+                    // source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.props.route.params.event_id}` }} />
+                    ></WebView>
                 {this.state.visible && (
                     <View style={{
                         position: 'absolute',
@@ -56,6 +59,16 @@ export class Payment extends Component {
                         <ActivityIndicator size="large" color={mycolor.pink} />
                     </View>
                 )}
+                <AwesomeAlert
+                    show={this.state.showAlert}
+                    contentContainerStyle={{ width: '100%', borderRadius: 4 }}
+                    showProgress={false}
+                    onTextchange={() => this.getparentdata()}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    customView={this.alertView()}
+                />
+
             </SafeAreaView>
 
 
@@ -66,12 +79,31 @@ export class Payment extends Component {
     }
     handleMessage(message) {
         if (message.toLowerCase() == "transaction successful")
-            this.props.navigation.replace('Todos')
+            this.setState({showAlert:false})
         else {
             Alert("Payment Failed Please Try again")
         }
 
     }
+    onpaymentsuccess()
+    {
+        this.setState({showAlert:false})
+        this.props.navigation.replace('Todos')
+    }
+    alertView() {
+        return (
+            <View style={{ width: '100%' }}>
+                <Text style={{ fontSize: 28, marginTop: 5, textAlign:'center', fontWeight: 'bold', color: mycolor.darkgray }}>{Trans.translate("Paymentsuccess")}</Text>
+                <View style={{ flexDirection: 'row', marginTop: 40, width: '100%',justifyContent:'center'}}>
+                <Image style={{ width: 50, height: 50}} source={require('../../assets/icon_success.png')}></Image>
+               </View>    
+                <View style={{ marginTop:20, justifyContent: 'center', alignContent: 'center' }}>
+                    <ButtonComp onPress={() => this.onpaymentsuccess()} style={{backgroundColor:"#25AE88"}} textstyle={{ color: mycolor.white, fontSize: 14 }} text={Trans.translate('Ok')}></ButtonComp>
+                </View>
+            </View>
+        );
+    }
+
 
 }
 export default Payment;

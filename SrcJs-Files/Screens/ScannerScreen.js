@@ -24,6 +24,7 @@ import ButtonComp from '../Components/ButtonComp';
 import FloatingButtonComp from '../Components/FloatingButtonComp';
 import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from '../Services/ApiCalls';
+import { Alert } from "react-native";
 const WINDOW = Dimensions.get('window');
 
 export default class ScannerScreen extends Component {
@@ -178,7 +179,10 @@ export default class ScannerScreen extends Component {
         let query = "/" + id
         ApiCalls.getGenericCall("check_in", query).then(data => {
             if (data.status == true) {
-                this.setState({ isLoading: false });
+                this.setState({ isLoading: false, showAlert: false });
+                 Alert.alert("Checked In")
+                 // already checked in status show message
+                 // checked out status should be handle
             } else {
                 Alert.alert('Failed', data.message);
             }

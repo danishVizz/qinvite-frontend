@@ -154,7 +154,7 @@ export default class ChooseCategory extends Component {
         ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
-                this.setState({ categoriesdata: data.data })
+                this.setState({ categoriesdata: data.data },()=>console.log("Categorydata---"+JSON.stringify(this.state.categoriesdata)))
             } else {
                 Alert.alert('Failed', data.message);
             }

@@ -135,6 +135,7 @@
     "set_as_deadline": "Set as Deadline",
     "logout": "Logout",
     "scan":"SCAN",
+    "Paymentsuccess":"Payment Successful",
     "check_all_required_conditions_msg": "Please check all required conditions for design",
     "conditions": "Conditions"
 }
