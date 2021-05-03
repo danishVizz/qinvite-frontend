@@ -8,7 +8,7 @@ import mycolor from "../../Constants/Colors";
 import Trans from "../../Translation/translation";
 import Keys from "../../Constants/keys";
 import moment from 'moment';
-
+import StatusBarComp from '../../Components/StatusBarComp';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default class RequestDetails extends Component {
@@ -17,13 +17,11 @@ export default class RequestDetails extends Component {
     }
 
     render() {
-        console.log(Keys.invitealldata["ImageData"])
         return (
-            <SafeAreaView style={styles.container}>
-                <StatusBar
-                    backgroundColor={mycolor.pink} />
+            <View style={styles.container}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../../assets/icon_back.png')} title={this.props.route.params.detail.event_name} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp2>
-                <ScrollView style={{ flex: 2.5 }}>
+                <View style={{ flex: 2.5 }}>
                     <View style={{ flex: 2.5, marginTop: 30, marginLeft: 20, marginRight: 20, marginBottom: 20, borderRadius: 2, borderWidth: 5, borderColor: 'white', elevation: 2 }}>
 
                         <Text style={{ marginLeft: 20, marginRight: 20, marginTop: 20, fontSize: 24, fontWeight: 'bold', color: mycolor.darkgray }}>{this.props.route.params.detail.event_name}</Text>
@@ -53,22 +51,25 @@ export default class RequestDetails extends Component {
 
                             }} />
 
-                        <Text style={{ alignSelf: 'center', margin: 5, textAlign: 'center' ,fontWeight:'bold'}}>{Trans.translate('PointtoPonder')}</Text>
-                        <Text style={{ alignSelf: 'center', marginTop:20, margin: 50, textAlign: 'center' }}>{Trans.translate('SpaceAdjusted')}</Text>
+                        <Text style={{ alignSelf: 'center', margin: 5, textAlign: 'center', fontWeight: 'bold' }}>{Trans.translate('PointtoPonder')}</Text>
+                        <Text style={{ alignSelf: 'center', marginTop: 20, margin: 50, textAlign: 'center' }}>{Trans.translate('SpaceAdjusted')}</Text>
 
-                        <View style={{ marginTop: 30, marginBottom: 30,margin:20 }}>
-                            <ButtonComp text={Trans.translate('SubmitDesign')}
-                                textstyle={{ color: mycolor.white, fontWeight: 'bold' }}
-                                isloading={this.state.contentLoading}
-                                onPress={() => this.props.navigation.navigate('UploadDesign', { event: this.props.route.params.detail, from: 'request_details'})}>
-                            </ButtonComp>
-                        </View>
+                        {this.props.route.params.detail.request_status == "1" &&
+                            <View style={{ marginTop: 30, marginBottom: 30, margin: 20 }}>
+                                <ButtonComp text={Trans.translate('SubmitDesign')}
+                                    textstyle={{ color: mycolor.white, fontWeight: 'bold' }}
+                                    isloading={this.state.contentLoading}
+                                    onPress={() => this.props.navigation.navigate('UploadDesign', { event: this.props.route.params.detail, from: 'request_details' })}>
+                                </ButtonComp>
+                            </View>
+                        }
                     </View>
-                </ScrollView>
-            </SafeAreaView>
+                </View>
+            </View>
         );
     }
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -25,7 +25,7 @@ export default class Todos extends Component {
                 <View style={styles.container}>
 
                     <EventDetailsComp
-                        Onpress={() => this.props.navigation.navigate('Designer')}
+                        Onpress={() => this.onPressInviteDesign()}
                         mainviewstyle={{ backgroundColor: this.state.imagedatadstatus == undefined ? mycolor.offPink : "#C5FFE6", height: 120, borderWidth: 1, borderRadius: 8, borderColor: '#F54260', alignSelf: 'center', justifyContent: 'center', alignContent: 'center' }}
                         imagestyle={{ height: 56, width: 69, marginLeft: 30, flex: 3, alignSelf: 'center' }}
                         title={Trans.translate('invite_design')}
@@ -54,6 +54,17 @@ export default class Todos extends Component {
     componentDidMount() {
         console.log("Working")
         this.setState({ imagedatadstatus: Keys.invitealldata["ImageData"], categoriestatus: Keys.invitealldata["CategoriesData"] }, () => console.log(this.state.imagedatadstatus))
+    }
+
+    onPressInviteDesign() {
+        console.log("IMAGE DATA");
+        console.log(Keys.invitealldata["ImageData"]);
+        if (Keys.invitealldata["ImageData"] != undefined) {
+            this.props.navigation.navigate('ImageEditor');
+        } else {
+            this.props.navigation.navigate('Designer');
+        }
+        
     }
 }
 

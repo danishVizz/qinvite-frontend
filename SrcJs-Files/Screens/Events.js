@@ -60,7 +60,7 @@ export default class Events extends Component {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
+          { !this.state.isFetching && this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
         </View>
 
 

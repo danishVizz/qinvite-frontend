@@ -4,7 +4,6 @@ import { WebView } from 'react-native-webview'
 import Keys from "../Constants/keys"
 import mycolor from "../Constants/Colors"
 import Trans from "../Translation/translation"
-import AwesomeAlert from 'react-native-awesome-alerts';
 import StatusBarComp from '../Components/StatusBarComp';
 import { ActivityIndicator } from 'react-native';
 import HeaderComp from '../Components/HeaderComp';

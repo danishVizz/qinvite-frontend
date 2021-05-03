@@ -56,13 +56,13 @@ export default class AllEvents extends Component {
                     customView={this.alertView()}
                 />
 
-                { this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
+                { !this.state.isFetching && this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
                 <FlatList
                     // data={this.state.list}
                     data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
                     getparentdata={this.onparendata}
                     renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => String(item.key)}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     onRefresh={() => this.onRefresh()}

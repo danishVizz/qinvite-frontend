@@ -131,6 +131,8 @@ export default class CreateEvent extends Component {
             </View> */}
 
             {this.state.loadDropDown ?
+
+            // <View style={{zIndex: 100}}>
               <DropDownPicker
                 items={this.state.user}
                 containerStyle={{ height: 60, marginTop: 10 }}
@@ -147,11 +149,12 @@ export default class CreateEvent extends Component {
                 // multipleText={"%d items have been selected."}
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder={Trans.translate('select_receptionists')}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
+                dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
                 removeItem={(value => this.removeItem(value))}
                 onChangeItemMultiple={item => this.setState({
                 }, console.log("Multi......" + this.state.selectedCountries))}
                 onChangeItem={(item, index) => this.updateUser(item, index)} />
+                // </View>
               :
               null
             }
@@ -191,6 +194,7 @@ export default class CreateEvent extends Component {
         buttontxt: Trans.translate('Edit')
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
 
+      mykeys.invitealldata = { "ImageData": this.props.route.params.eventdata.event_card }
 
     }
     this.getAllReceptionists()
@@ -224,7 +228,10 @@ export default class CreateEvent extends Component {
       return;
     }
     else {
+<<<<<<< HEAD
 
+=======
+>>>>>>> d7d0c01fb480efa60b7c7849c381d510f087cf3a
       var usersdata = await Prefs.get(Keys.userData);
       var parsedata = JSON.parse(usersdata)
       var data = {
@@ -232,12 +239,22 @@ export default class CreateEvent extends Component {
         "event_date": this.state.date,
         "event_address": this.state.eventaddress,
         "user_id": parsedata.id,
+<<<<<<< HEAD
         "event_id": this.state.eventid,
         "no_of_receptionists": this.state.recpntistcount,
         "receptionists": this.state.selectedvaluesarr
       }
       mykeys.invitealldata = { "Eventdata": data }
 
+=======
+        "no_of_receptionists": this.state.recpntistcount,
+        "receptionists": this.state.selectedvaluesarr,
+        "event_card": this.props.route.params.eventdata.event_card,
+        "event_id": this.state.eventid,
+        "categoriesList": this.props.route.params.eventdata.categories
+      }
+      mykeys.invitealldata = { "Eventdata": data,"ImageData": data.event_card   }
+>>>>>>> d7d0c01fb480efa60b7c7849c381d510f087cf3a
       if (!(this.state.iseditevent)) {
         this.props.navigation.navigate('Packages')
       }

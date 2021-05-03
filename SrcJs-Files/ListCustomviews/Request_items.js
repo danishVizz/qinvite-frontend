@@ -12,6 +12,7 @@ class Request_items extends Component {
     }
 
     render() {
+        console.log("this.props.item.design_status : " + this.props.item.design_status)
         return (
             <View style={styles.container} >
                 <View style={{ flex: 9 }} >
@@ -29,15 +30,18 @@ class Request_items extends Component {
 
                     </View>
                 </View>
-                <View style={{ flex: 1 }}>
+
+                <View style={{ display: this.props.showMenu == true ? 'flex' : 'none'}}>
                     <OptionsMenu
+                    
                         button={require('../../assets/icon_option.png')}
                         buttonStyle={{ width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'flex-end' }}
                         destructiveIndex={1}
-                        options={[Trans.translate('accept'), Trans.translate('reject')]}
-                        actions={[() => this.onPressButtonChildren("accept", this.props.item), () => this.onPressButtonChildren("reject", this.props.item)]} />
+                        options={[Trans.translate('accept'), Trans.translate('reject'), Trans.translate('cancel')]}
+                        actions={[() => this.onPressButtonChildren("accept", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item)]} />
 
                 </View>
+
             </View>
         );
     }

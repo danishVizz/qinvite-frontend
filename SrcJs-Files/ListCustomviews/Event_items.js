@@ -37,8 +37,8 @@ class Event_items extends Component {
                         button={require('../../assets/icon_option.png')}
                         buttonStyle={{ width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'flex-end' }}
                         destructiveIndex={1}
-                        options={["Edit", "Delete"]}
-                        actions={[() => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item)]} />
+                        options={[Trans.translate('Edit'), Trans.translate('Delete'), Trans.translate('cancel')]} 
+                        actions={[() => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item)]} />
 
                 </View>
             </View>

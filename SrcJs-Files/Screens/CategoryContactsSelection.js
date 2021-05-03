@@ -100,7 +100,7 @@ export default class CategoryContactsSelection extends Component {
     }
 
     logCallback = (log, callback) => {
-        console.log(log);
+        // console.log(log);
         this.setState({
             callback
         });
@@ -110,11 +110,7 @@ export default class CategoryContactsSelection extends Component {
         var apiname = ''
         var usersdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(usersdata)
-        // console.log("MYDATA" + JSON.stringify(this.state.selectedLists))
-        // this.state.selectedLists.map((item) => {
-        //     console.log(item)
-        // });
-        // console.log(this.state.selectedLists)
+        // console.log("MYDATA" + parsedata.id)
 
         var formadata = new FormData()
         formadata.append("name", this.props.route.params.categorydata.categoryename)
@@ -134,7 +130,7 @@ export default class CategoryContactsSelection extends Component {
 
         }
 
-        console.log(formadata)
+        // console.log(formadata)
         // this.state.selectedLists.map((item, index) => {
         //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
         // });
@@ -180,17 +176,14 @@ export default class CategoryContactsSelection extends Component {
         } else {
             this.state.selectedLists.pop(contactdata)
         }
-
-        console.log("MYDATA" + JSON.stringify(this.state.selectedLists))
-        this.state.selectedLists.map((item) => {
-            console.log(item)
-        });
+        // console.log("SelectedIndextoChange" + this.state.selectedLists)
 
     }
 
     renderItem({ item, index, props }) {
         return (
-            <TouchableOpacity style={{ backgroundColor: item.isselected ? '#DDD' : '#FFF' }} onPress={() => this.isIconCheckedOrNot(item, index)}>
+
+            <TouchableOpacity style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF' }} onPress={() => this.isIconCheckedOrNot(item, index)}>
                 <ContactsComp
                     isChecked={this.state.ContactsList[index].isselected}
                     imagepath={require('../../assets/icon_lady.png')}
@@ -214,7 +207,7 @@ export default class CategoryContactsSelection extends Component {
 
 
     }
-
+    ß
     actionOnRow(key) {
         let authUsers = [...this.state.ContactsList]
         for (let item of authUsers) {
@@ -224,27 +217,29 @@ export default class CategoryContactsSelection extends Component {
             }
         }
         this.setState({ authUsers });
-        console.log("key is" + key)
+        // console.log("key is" + key)
 
     }
 
 
     successCallBackData = (data) => {
-        console.log(data)// can get callback data here
+        // console.log(data)// can get callback data here
     }
 
     componentDidMount() {
         var categorydataaa = this.props.route.params.categorydata.contactlist;
         console.log("---Carrrrrr"+categorydataaa)
         var isphoneallow = this.props.route.params.categorydata.isphoneallowd
+        // console.log("dsfsadfsadfs" + JSON.stringify(categorydataaa))
+        // console.log("catdaaaaaa" + categorydataaa)
         var contactlist = []
         if (categorydataaa.length !== 0) {
 
             categorydataaa.map((item, index) => {
                 var contactdata = {
                     "name": item.name,
-                    "number": item.number,
-                    "isselected": true,
+                    "number": item.number.startsWith("0") ? item.number.replace('0', '+92') : item.number,
+                    "isSelected": true,
                     "isphoneallow": item.isphoneallow == "1" ? true : false
                 }
                 // let { isChecked } = this.state;
@@ -256,7 +251,7 @@ export default class CategoryContactsSelection extends Component {
             })
             console.log("----SelectedValuesFrom Array"+JSON.stringify(this.state.selectedLists))
 
-            this.setState({ ContactsList: contactlist, ContactListReplicae: contactlist }, () => console.log("??ContactListUpdated????" + this.state.ContactsList))
+            this.setState({ ContactsList: contactlist, ContactListReplicae: contactlist }, () => console.log("??ContactListUpdated????" + JSON.stringify(this.state.ContactsList)))
         }
 
         PermissionsAndroid.request(
@@ -276,18 +271,18 @@ export default class CategoryContactsSelection extends Component {
                             isselected = true
                         }
                         obj.isphoneallow = isphoneallow;
-                        obj.name = obj.displayName
-                        obj.isselected = isselected
+                        obj.name = (Platform.OS === "android") ? obj.displayName : obj.givenName
+                        obj.isSelected = isselected
                         obj.number = obj.phoneNumbers[0]?.number
+                        let num = String(obj.phoneNumbers[0]?.number);
+                        console.log("TYPEOF 3: ", typeof(num));
 
-                        // contactlist.push(obj)
-                        // var obj1=JSON.parse(obj)
-                        // console.log(obj)
+                        if (num.startsWith("0")) {
+                            obj.number = num.replace('0', '+92');
+                        }
                     });
-
-
-
-                    this.setState({ ContactsList: contacts, ContactListReplicae: contacts })
+                    contacts = contacts.filter(item => item.phoneNumbers[0]?.number != undefined)
+                    this.setState({ ContactsList: this.state.ContactsList.concat(contacts), ContactListReplicae: this.state.ContactsList.concat(contacts) })
                 })
 
         })

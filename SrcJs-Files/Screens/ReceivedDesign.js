@@ -13,6 +13,7 @@ import { CheckBox } from 'react-native-elements';
 import ApiCalls from '../Services/ApiCalls';
 import Keys from '../Constants/keys';
 import moment from 'moment';
+import RNFetchBlob from 'react-native-fetch-blob'
 
 // const MyStatusBar = ({ backgroundColor, ...props }) => (
 //     <View style={[styles.statusBar, { backgroundColor }]}>
@@ -37,12 +38,11 @@ export default class ReceivedDesign extends Component {
             <View style={{ flex: 1, backgroundColor: "white" }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('received_design')} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp2>
-                
+
                 {this.state.isLoading ? <View style={{ flex: 1, alignItems: 'center', justifyContent: "center" }}>
                     <ActivityIndicator size="large" color={mycolor.pink} />
                 </View> :
                     <FlatList
-                        style={{ marginBottom: 30 }}
                         data={this.state.designerdata}
                         renderItem={this.renderItem.bind(this)}
                         keyExtractor={(item) => item.id}
@@ -123,6 +123,7 @@ export default class ReceivedDesign extends Component {
         );
     }
     componentDidMount() {
+        // this.downloadPDF();
         this.getDesigns()
     }
 
@@ -152,6 +153,33 @@ export default class ReceivedDesign extends Component {
             Alert.alert('Error', JSON.stringify(error));
         }
         )
+    }
+
+    async downloadPDF() {
+        
+        RNFetchBlob.fetch('GET', 'http://samples.leanpub.com/thereactnativebook-sample.pdf', {
+            // Authorization: 'Bearer access-token...',
+            // more headers  ..
+        })
+            // when response status code is 200
+            .then((res) => {
+                // the conversion is done in native code
+                let base64Str = res.base64()
+                // the following conversions are done in js, it's SYNC
+                let text = res.text()
+                let json = res.json()
+                console.log("text");
+                console.log(text);
+
+                console.log("json");
+                console.log(json);
+            })
+            // Status code is not 200
+            .catch((errorMessage, statusCode) => {
+                // error handling
+                console.log("errorMessage");
+                console.log(errorMessage);
+            })
     }
 
 }
