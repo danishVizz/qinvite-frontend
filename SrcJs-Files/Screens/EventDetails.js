@@ -63,6 +63,8 @@ export default class EventDetails extends Component {
 
                         </View>
                     </TouchableOpacity>
+
+                    
                 </ScrollView>
             </View>
         );

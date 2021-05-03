@@ -79,7 +79,7 @@ export default class SendEditor extends Component {
                 multiple={false}
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder={Trans.translate('ChooseCategory')}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
+                dropDownStyle={{ backgroundColor: '#fafafa' ,height:100}}
                 onChangeItem={(item => this.updateUser(item))} />
 
 

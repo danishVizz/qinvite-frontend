@@ -176,6 +176,7 @@ export default class Events extends Component {
   };
 
   onPressButtonChildren = (value, item) => {
+    console.log("EditEvent--"+JSON.stringify(item))
     switch (value) {
       case 'delete':
         this.setState({ showalert: true, currentselected: item.id })

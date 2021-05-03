@@ -89,7 +89,7 @@ export default class DesignerDetails extends Component {
     componentDidMount() {
         console.log(this.props.route.params.DesignerData.request_status);
         console.log(this.props.route.params.DesignerData.design_status);
-        if ((this.props.route.params.DesignerData.request_status == '1' && this.props.route.params.DesignerData.design_status == '0') || (this.props.route.params.DesignerData.request_status == '1' && this.props.route.params.DesignerData.design_status == '1')) {
+        if ((this.props.route.params.DesignerData.request_status == '1' || this.props.route.params.DesignerData.design_status == '0') || (this.props.route.params.DesignerData.request_status == '1' && this.props.route.params.DesignerData.design_status == '1')) {
             this.setState({
                 isresponded: true
             });
@@ -111,7 +111,7 @@ export default class DesignerDetails extends Component {
         var formadata = new FormData()
         formadata.append("user_id", this.props.route.params.DesignerData.user_id)
         formadata.append("designer_id", designerid)
-        formadata.append("event_id", this.props.route.params.DesignerData.event_id)
+        formadata.append("event_id", Keys.invitealldata["Eventdata"].event_id)
 
         ApiCalls.postApicall(formadata, "request_designer").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);

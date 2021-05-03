@@ -110,14 +110,18 @@ export default class CategoryContactsSelection extends Component {
         var apiname = ''
         var usersdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(usersdata)
-        console.log("MYDATA" + parsedata.id)
+        // console.log("MYDATA" + JSON.stringify(this.state.selectedLists))
+        // this.state.selectedLists.map((item) => {
+        //     console.log(item)
+        // });
+        // console.log(this.state.selectedLists)
 
         var formadata = new FormData()
         formadata.append("name", this.props.route.params.categorydata.categoryename)
         formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
         formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
         formadata.append("user_id", parsedata.id)
-        formadata.append("participants", JSON.stringify(this.state.selectedLists))
+        formadata.append("participants",JSON.stringify(this.state.selectedLists))
         // this.state.selectedLists.map((item, index) => {
         //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
         //   });
@@ -127,9 +131,9 @@ export default class CategoryContactsSelection extends Component {
         }
         else {
             apiname = "add_category"
-            
+
         }
-  
+
         console.log(formadata)
         // this.state.selectedLists.map((item, index) => {
         //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
@@ -141,6 +145,7 @@ export default class CategoryContactsSelection extends Component {
         ApiCalls.postApicall(formadata, apiname).then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
+                console.log("--ServerResponse----"+data)
                 this.props.navigation.push('ChooseCategory')
 
             } else {
@@ -161,29 +166,33 @@ export default class CategoryContactsSelection extends Component {
         // isChecked[index] = !this.state.isChecked[index];
         // this.setState({ isChecked: isChecked });
         var arr = this.state.ContactsList;
-        arr[index].isSelected = !(arr[index].isSelected)
+        arr[index].isselected = !(arr[index].isselected)
         this.setState({ ContactsList: arr });
 
-        var contactdata = JSON.stringify({
+        var contactdata = {
             "name": item.name,
             "number": item.number,
+            "isselected":false,
             "isphoneallow": item.isphoneallow
-        })
-
-        if (this.state.ContactsList[index].isSelected == true) {
+        }
+        if (this.state.ContactsList[index].isselected == true) {
             this.state.selectedLists.push(contactdata)
         } else {
             this.state.selectedLists.pop(contactdata)
         }
-        console.log("SelectedIndextoChange" + this.state.selectedLists)
+
+        console.log("MYDATA" + JSON.stringify(this.state.selectedLists))
+        this.state.selectedLists.map((item) => {
+            console.log(item)
+        });
 
     }
 
     renderItem({ item, index, props }) {
         return (
-            <TouchableOpacity style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF' }} onPress={() => this.isIconCheckedOrNot(item, index)}>
+            <TouchableOpacity style={{ backgroundColor: item.isselected ? '#DDD' : '#FFF' }} onPress={() => this.isIconCheckedOrNot(item, index)}>
                 <ContactsComp
-                    isChecked={this.state.ContactsList[index].isSelected}
+                    isChecked={this.state.ContactsList[index].isselected}
                     imagepath={require('../../assets/icon_lady.png')}
                     contactname={item.name}
                     index={index}
@@ -226,24 +235,26 @@ export default class CategoryContactsSelection extends Component {
 
     componentDidMount() {
         var categorydataaa = this.props.route.params.categorydata.contactlist;
+        console.log("---Carrrrrr"+categorydataaa)
         var isphoneallow = this.props.route.params.categorydata.isphoneallowd
-        console.log("dsfsadfsadfs" + JSON.stringify(categorydataaa))
-        console.log("catdaaaaaa" + categorydataaa)
         var contactlist = []
         if (categorydataaa.length !== 0) {
+
             categorydataaa.map((item, index) => {
                 var contactdata = {
                     "name": item.name,
                     "number": item.number,
-                    "isSelected": true,
+                    "isselected": true,
                     "isphoneallow": item.isphoneallow == "1" ? true : false
                 }
                 // let { isChecked } = this.state;
                 // isChecked[index] = true;
                 // this.setState({ isChecked: isChecked })
                 contactlist.push(contactdata)
-                this.state.selectedLists.push(JSON.stringify(contactdata))
+                this.state.selectedLists.push(contactdata)
+                
             })
+            console.log("----SelectedValuesFrom Array"+JSON.stringify(this.state.selectedLists))
 
             this.setState({ ContactsList: contactlist, ContactListReplicae: contactlist }, () => console.log("??ContactListUpdated????" + this.state.ContactsList))
         }
@@ -266,7 +277,7 @@ export default class CategoryContactsSelection extends Component {
                         }
                         obj.isphoneallow = isphoneallow;
                         obj.name = obj.displayName
-                        obj.isSelected = isselected
+                        obj.isselected = isselected
                         obj.number = obj.phoneNumbers[0]?.number
 
                         // contactlist.push(obj)

@@ -109,6 +109,7 @@ export default class ChooseCategory extends Component {
                 this.setState({ showalert: true, currentselected: item.id })
                 break
             case 'edit':
+                console.log("----EddittCat"+JSON.stringify(item))
                 this.props.navigation.navigate('CreateCategory', { "categorydata": item })
                 break
             default:

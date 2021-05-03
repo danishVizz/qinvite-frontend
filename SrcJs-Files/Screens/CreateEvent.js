@@ -176,7 +176,7 @@ export default class CreateEvent extends Component {
 
   componentDidMount() {
     this.state.eventdata = this.props.route.params.eventdata ?? []
-    console.log("-----------------" + this.props.route.params.eventdata)
+    console.log("-----------------" + JSON.stringify(this.props.route.params.eventdata))
 
     if (this.state.eventdata.length != 0) {
       this.setState({
@@ -204,7 +204,7 @@ export default class CreateEvent extends Component {
         this.setState({ selectedvaluesarr: this.state.selectedvaluesarr.concat(item.id) })
         // receptionistsarr.push(receptionists
       })
-      this.setState({ editreceptionistarr: receptionistdata }, () => console.log("Editarratlenght" + this.state.editreceptionistarr[1].id))
+      this.setState({ editreceptionistarr: receptionistdata })
     }
 
   }
@@ -219,32 +219,34 @@ export default class CreateEvent extends Component {
   async onSignupPress() {
     console.log('createEvent 2');
     var check = this.checkforError()
-    console.log("check : "+check);
+    console.log("check : " + check);
     if (check) {
       return;
     }
     else {
+
+      var usersdata = await Prefs.get(Keys.userData);
+      var parsedata = JSON.parse(usersdata)
+      var data = {
+        "event_name": this.state.eventname,
+        "event_date": this.state.date,
+        "event_address": this.state.eventaddress,
+        "user_id": parsedata.id,
+        "event_id": this.state.eventid,
+        "no_of_receptionists": this.state.recpntistcount,
+        "receptionists": this.state.selectedvaluesarr
+      }
+      mykeys.invitealldata = { "Eventdata": data }
+
       if (!(this.state.iseditevent)) {
-        var usersdata = await Prefs.get(Keys.userData);
-        var parsedata = JSON.parse(usersdata)
-        var data = {
-          "event_name": this.state.eventname,
-          "event_date": this.state.date,
-          "event_address": this.state.eventaddress,
-          "user_id": parsedata.id,
-          "no_of_receptionists": this.state.recpntistcount,
-          "receptionists": this.state.selectedvaluesarr
-        }
-        mykeys.invitealldata = { "Eventdata": data }
         this.props.navigation.navigate('Packages')
-        // this.CreateEvent()
       }
       else {
         console.log('createEvent thsi');
         this.CreateEvent()
       }
     }
-    
+
   }
 
   checkforError() {
@@ -325,13 +327,13 @@ export default class CreateEvent extends Component {
 
       this.logCallback("Response came", this.state.isLoading = false);
       if (data.status == true) {
-        console.log('payment : '+this.state.paymentstatus);
+        console.log('payment : ' + this.state.paymentstatus);
         if (this.state.paymentstatus == 3)
           this.props.navigation.replace('Todos')
         else {
           this.props.navigation.navigate("Payment", { "event_id": this.state.eventid })
         }
-          
+
 
       } else {
         Alert.alert('Failed', data.message);
@@ -346,6 +348,7 @@ export default class CreateEvent extends Component {
 
   async getAllReceptionists() {
     this.logCallback("getProducts :", this.state.contentLoading = true);
+    console.log("----EditRec" + this.state.editreceptionistarr)
 
     ApiCalls.getapicall("receptionists", "").then(data => {
       this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);

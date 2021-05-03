@@ -4,11 +4,8 @@ import { WebView } from 'react-native-webview'
 import Keys from "../Constants/keys"
 import mycolor from "../Constants/Colors"
 import Trans from "../Translation/translation"
-<<<<<<< HEAD
 import AwesomeAlert from 'react-native-awesome-alerts';
-=======
 import StatusBarComp from '../Components/StatusBarComp';
->>>>>>> 8e0f8cd2e2a7317f1efe1fdf35e5337431bad93c
 import { ActivityIndicator } from 'react-native';
 import HeaderComp from '../Components/HeaderComp';
 import { SafeAreaView } from 'react-native';
@@ -25,7 +22,7 @@ const injectedJs = `
 export class Payment extends Component {
     state = {
         visible: true,
-        showAlert:true
+        showAlert:false
     }
     render() {
 
@@ -46,8 +43,8 @@ export class Payment extends Component {
                         this.handleMessage(event.nativeEvent.data)
                     }}
                     // source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${Keys.invitealldata["Eventdata"].event_id}` }} />
-                    // source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.props.route.params.event_id}` }} />
-                    ></WebView>
+                    source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.props.route.params.event_id}` }} />
+                    {/* ></WebView> */}
                 {this.state.visible && (
                     <View style={{
                         position: 'absolute',
@@ -81,7 +78,7 @@ export class Payment extends Component {
     }
     handleMessage(message) {
         if (message.toLowerCase() == "transaction successful")
-            this.setState({showAlert:false})
+            this.setState({showAlert:true})
         else {
             Alert("Payment Failed Please Try again")
         }

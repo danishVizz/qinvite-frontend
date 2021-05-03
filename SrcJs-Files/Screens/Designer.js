@@ -5,7 +5,8 @@ import Trans from '../Translation/translation'
 import FloatingButtonComp from '../Components/FloatingButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import DesignerComp from '../Components/DesignerComp';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import Prefs from '../Prefs/Prefs'
+import Keys from '../Constants/keys'
 import TextInputComp from '../Components/TextInputComp';
 import CircleImageComp from '../Components/CircleImageComp';
 import { CheckBox } from 'react-native-elements';
@@ -21,7 +22,8 @@ export default class Designer extends Component {
         designerdata: [],
         modalVisible: false,
         checked: false,
-        contentLoading: false
+        contentLoading: false,
+        isFetching:false
     }
     render() {
         let designerdialog =
@@ -70,6 +72,8 @@ export default class Designer extends Component {
                     data={this.state.designerdata}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
+                    onRefresh={() => this.onRefresh()}
+                    refreshing={this.state.isFetching}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
 
@@ -87,6 +91,10 @@ export default class Designer extends Component {
             </View>
         );
     }
+
+    onRefresh() {
+        this.setState({ isFetching: true, }, () => { this.getAllDesigners() });
+      }
 
     searchItems = text => {
         var datatosearch = this.state.designerdata
@@ -178,12 +186,12 @@ export default class Designer extends Component {
     }
 
     async getAllDesigners() {
-        this.logCallback("getAllDesigner :", this.state.contentLoading = true);
-        // var userdata = await Prefs.get(Keys.userData);
-        // var parsedata = JSON.parse(userdata)
+        this.logCallback("getAllDesigner :", this.state.contentLoading = true,this.state.isFetching=false);
+        var userdata = await Prefs.get(Keys.userData);
+        var parsedata = JSON.parse(userdata)
 
-        ApiCalls.getapicall("get_designers", "").then(data => {
-            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+        ApiCalls.getapicall("get_designers", "?user_id="+parsedata.id).then(data => {
+            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false,this.state.isFetching=false);
             if (data.status == true) {
                 this.setState({ designerdata: data.data })
             } else {

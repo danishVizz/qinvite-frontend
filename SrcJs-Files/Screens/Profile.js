@@ -61,8 +61,10 @@ export default class Profile extends Component {
                         <EditTextComp value={this.state.countrytxt} isEnable={this.state.allfieldsenabel} onChangeText={(country) => this.setState({ countrytxt: country, eventnameError: false })} text={Trans.translate('Country')}></EditTextComp>
 
                         <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.DeleteProfile()}>
+
                             <Image style={{ height: 17, width: 15 }} resizeMode='contain' source={require('../../assets/icon_delete.png')}></Image>
                             <Text style={{ alignItems: 'center', marginLeft: 10, fontSize: 14, color: mycolor.pink }}>{Trans.translate('DeleteAcc')}</Text>
+
                         </TouchableOpacity>
                         <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.logout()}>
                             <Image style={{ height: 17, width: 15 }} resizeMode='contain' source={require('../../assets/logout.png')}></Image>
@@ -83,14 +85,14 @@ export default class Profile extends Component {
         var userdata = await Prefs.get(Keys.userData);
         console.log(userdata)
         var parsedata = JSON.parse(userdata)
-        this.setState({ firstnametxt: parsedata.first_name })
-        this.setState({ lastnametxt: parsedata.last_name })
-        this.setState({ emailtxt: parsedata.email })
+        this.setState({ firstnametxt: parsedata.first_name})
+        this.setState({ lastnametxt: parsedata.last_name})
+        this.setState({ emailtxt: parsedata.email})
         this.setState({ idcardtxt: parsedata.username })
-        this.setState({ citytxt: parsedata.city })
-        this.setState({ countrytxt: parsedata.country })
-        this.setState({ user_id: parsedata.id })
-        this.setState({ response: parsedata.user_image })
+        this.setState({ citytxt: parsedata.city})
+        this.setState({ countrytxt: parsedata.country})
+        this.setState({ user_id: parsedata.id})
+        this.setState({ response: parsedata.user_image})
     }
 
 

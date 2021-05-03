@@ -20,7 +20,8 @@ export class Packages extends Component {
   state = {
     packagesdata: [],
     contentLoading: false,
-    selectedItem: null
+    selectedItem: null,
+    isFetching: false,
   }
 
   render() {
@@ -52,8 +53,8 @@ export class Packages extends Component {
             data={this.state.packagesdata}
             renderItem={this.renderItem.bind(this)}
             keyExtractor={(item) => item.id}
-            // refreshing={false}
-            // onRefresh={this.getAllPackages()}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.isFetching}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false} />
 
@@ -80,6 +81,9 @@ export class Packages extends Component {
     );
   }
 
+  onRefresh() {
+    this.setState({ isFetching: true, }, () => { this.getAllPackages() });
+  }
 
   renderItem({ item, index }) {
     return (
@@ -131,7 +135,7 @@ export class Packages extends Component {
     var parsedata = JSON.parse(userdata)
 
     ApiCalls.getapicall("get_packages", "?user_id=" + parsedata.id).then(data => {
-      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false,this.state.isFetching = false);
       if (data.status == true) {
         this.setState({ packagesdata: data.data })
         this.setState({ isLoading: false })
@@ -143,7 +147,7 @@ export class Packages extends Component {
         Alert.alert('Failed', data.message);
       }
     }, error => {
-      this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+      this.logCallback("Something Went Wrong", this.state.contentLoading = false,this.state.isFetching = false);
       Alert.alert('Error', JSON.stringify(error));
     }
     )

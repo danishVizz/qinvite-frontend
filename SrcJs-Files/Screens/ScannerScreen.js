@@ -24,12 +24,13 @@ import ButtonComp from '../Components/ButtonComp';
 import FloatingButtonComp from '../Components/FloatingButtonComp';
 import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from '../Services/ApiCalls';
-import { Alert } from "react-native";
+
 const WINDOW = Dimensions.get('window');
 
 export default class ScannerScreen extends Component {
     state = {
         showAlert: false,
+        showsuccessAlert: false,
         isLoading: false,
         name: 'Aisha Alobaidi',
         phone: '+974 3333 9082',
@@ -86,7 +87,6 @@ export default class ScannerScreen extends Component {
                     show={this.state.showAlert}
                     contentContainerStyle={{ width: '100%', borderRadius: 4 }}
                     showProgress={false}
-                    onTextchange={() => this.getparentdata()}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
                     customView={this.alertView()}
@@ -94,17 +94,6 @@ export default class ScannerScreen extends Component {
 
                 <QRCodeScanner
                     onRead={this.onSuccess}
-                    // flashMode={RNCamera.Constants.FlashMode.torch}
-                    // topContent={
-                    //     <Text style={styles.centerText}>
-                    //         Go to{' '}
-                    //         <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code.</Text>
-                    // }
-                    // bottomContent={
-                    //     <TouchableOpacity style={styles.buttonTouchable} onPress={() => this.setState({ showAlert: true })}>
-                    //         <Text style={styles.buttonText}>OK. Got it!</Text>
-                    //     </TouchableOpacity>
-                    // }
                     containerStyle={{ backgroundColor: '#fff', display: this.state.scanner == true ? 'flex' : 'none' }}
                 />
 
@@ -116,9 +105,37 @@ export default class ScannerScreen extends Component {
                         text={Trans.translate('scan')}></ButtonComp>
                 </View>
 
+                <AwesomeAlert
+                    show={this.state.showsuccessAlert}
+                    contentContainerStyle={{ width: '100%', borderRadius: 4 }}
+                    showProgress={false}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    customView={this.alertsuccessView()}
+                />
+
             </View>
 
 
+        );
+    }
+
+    oncheckedin()
+    {
+        this.setState({ isLoading: false, showAlert: false, scanner: false });
+    }
+
+    alertsuccessView() {
+        return (
+            <View style={{ width: '100%' }}>
+                <Text style={{ fontSize: 28, marginTop: 5, textAlign:'center', fontWeight: 'bold', color: mycolor.darkgray }}>{Trans.translate("Checkedin")}</Text>
+                <View style={{ flexDirection: 'row', marginTop: 40, width: '100%',justifyContent:'center'}}>
+                <Image style={{ width: 50, height: 50}} source={require('../../assets/icon_success.png')}></Image>
+               </View>    
+                <View style={{ marginTop:20, justifyContent: 'center', alignContent: 'center' }}>
+                    <ButtonComp onPress={() => this.oncheckedin()} style={{backgroundColor:"#25AE88"}} textstyle={{ color: mycolor.white, fontSize: 14 }} text={Trans.translate('Ok')}></ButtonComp>
+                </View>
+            </View>
         );
     }
 
@@ -174,13 +191,14 @@ export default class ScannerScreen extends Component {
         }
     }
 
+    
+
     async updateCheckInStatus(id) {
         this.setState({ isLoading: true });
         let query = "/" + id
         ApiCalls.getGenericCall("check_in", query).then(data => {
             if (data.status == true) {
-                // Alert.alert('You are Welcome to Event', data.message);
-                this.setState({ isLoading: false, showAlert: false, scanner: false });
+                this.setState({showsuccessAlert:true})
             } else {
                 Alert.alert('Failed', data.message);
                 this.setState({ isLoading: false, showAlert: false, scanner: false });
