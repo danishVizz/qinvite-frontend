@@ -64,7 +64,7 @@ export default class ImageEditor extends Component {
     super(props);
   };
   componentDidMount() {
-    this.setState({ imagedata: this.props.route.params.imagedata })
+    this.setState({ imagedata: Keys.invitealldata["ImageData"] })
     this.addText()
   }
   state = {
@@ -300,7 +300,7 @@ export default class ImageEditor extends Component {
               <ViewShot ref="viewShot" options={{ format: "jpg", quality: 1.0 }}>
                 <ImageBackground
                   resizeMode='contain'
-                  source={{ uri: this.state.imagedata }}
+                  source={{ uri: this.state.imagedata != undefined ? this.state.imagedata : this.props.route.params.imagedata }}
                   // style={{ height: WINDOW.height/2, width: WINDOW.width, borderRadius: 5, borderWidth: 1}}
                   style={{ width: WINDOW.width - 20, height: WINDOW.height / 2, backgroundColor: '#fff' }}>
 

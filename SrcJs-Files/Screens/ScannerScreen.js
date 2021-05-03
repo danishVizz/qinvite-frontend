@@ -36,20 +36,24 @@ export default class ScannerScreen extends Component {
         kids: 0,
         phoneAllowed: 1,
         host: 'Mariam',
-        scanner: false
+        scanner: false,
+        participantID: ''
     }
 
     onSuccess = e => {
         this.setState({ showAlert: true });
+        console.log("SACNNED DATA");
         console.log(JSON.parse(e.data));
         let response = JSON.parse(e.data)
         this.setState({
+            participantID: response.id,
             name: response.name,
             phone: response.number,
             person: response.category.people_per_qr,
             phoneAllowed: response.isphoneallow,
             host: response.host_data.first_name
         });
+        // this.scanner.reactivate();
     };
 
     render() {
@@ -91,29 +95,36 @@ export default class ScannerScreen extends Component {
                     customView={this.alertView()}
                 />
 
-                <QRCodeScanner
-                    onRead={this.onSuccess}
-                    // flashMode={RNCamera.Constants.FlashMode.torch}
-                    // topContent={
-                    //     <Text style={styles.centerText}>
-                    //         Go to{' '}
-                    //         <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code.</Text>
-                    // }
-                    // bottomContent={
-                    //     <TouchableOpacity style={styles.buttonTouchable} onPress={() => this.setState({ showAlert: true })}>
-                    //         <Text style={styles.buttonText}>OK. Got it!</Text>
-                    //     </TouchableOpacity>
-                    // }
-                    containerStyle={{ backgroundColor: '#fff', display: this.state.scanner == true ? 'flex' : 'none' }}
-                />
+                { this.state.scanner &&
+                    <QRCodeScanner
+                        onRead={this.onSuccess}
+                        ref={(node) => { this.scanner = node }}
+                        reactivate = {this.state.showAlert}
+                        // flashMode={RNCamera.Constants.FlashMode.torch}
+                        // topContent={
+                        //     <Text style={styles.centerText}>
+                        //         Go to{' '}
+                        //         <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code.</Text>
+                        // }
+                        // bottomContent={
+                        //     <TouchableOpacity style={styles.buttonTouchable} onPress={() => this.setState({ showAlert: true })}>
+                        //         <Text style={styles.buttonText}>OK. Got it!</Text>
+                        //     </TouchableOpacity>
+                        // }
+                        containerStyle={{ backgroundColor: '#fff', display: this.state.scanner == true ? 'flex' : 'none' }}
+                    />
+                }
 
-                <View style={{ display: this.state.scanner == false ? 'flex' : 'none', flex: 1, justifyContent: 'center', alignItems: 'center', color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 20, marginRight: 20 }}>
-                    <ButtonComp
-                        onPress={() => this.setState({ scanner: true })}
-                        style={{ width: 200, height: 200, borderRadius: 100 }}
-                        textstyle={{ color: mycolor.white, fontWeight: 'bold' }}
-                        text={Trans.translate('scan')}></ButtonComp>
-                </View>
+                { !this.state.scanner &&
+                    <View style={{ display: this.state.scanner == false ? 'flex' : 'none', flex: 1, justifyContent: 'center', alignItems: 'center', color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 20, marginRight: 20 }}>
+                        <ButtonComp
+                            onPress={() => this.setState({ scanner: true })}
+                            style={{ width: 200, height: 200, borderRadius: 100 }}
+                            textstyle={{ color: mycolor.white, fontWeight: 'bold' }}
+                            text={Trans.translate('scan')}></ButtonComp>
+                    </View>
+                }
+
 
             </View>
 
@@ -142,10 +153,10 @@ export default class ScannerScreen extends Component {
                     </View>
                 </View>
                 <View style={{ marginTop: 100, justifyContent: 'center', alignContent: 'center', color: 'white', fontSize: 14, fontWeight: 'bold' }}>
-                    <ButtonComp onPress={() => this.updateCheckInStatus('24')} textstyle={{ color: mycolor.white, fontWeight: 'bold' }} text={Trans.translate('check_in')} isloading={this.state.isLoading}></ButtonComp>
+                    <ButtonComp onPress={() => this.updateCheckInStatus(this.state.participantID)} textstyle={{ color: mycolor.white, fontWeight: 'bold' }} text={Trans.translate('check_in')} isloading={this.state.isLoading}></ButtonComp>
                 </View>
                 <View style={{ marginTop: 0, justifyContent: 'center', alignContent: 'center' }}>
-                    <ButtonComp onPress={() => this.setState({ showAlert: false })} style={{ backgroundColor: '#fff', borderWidth: 0 }} textstyle={{ color: mycolor.darkgray, fontSize: 14 }} text={Trans.translate('cancel')}></ButtonComp>
+                    <ButtonComp onPress={() => this.setState({ scanner: false, showAlert: false })} style={{ backgroundColor: '#fff', borderWidth: 0 }} textstyle={{ color: mycolor.darkgray, fontSize: 14 }} text={Trans.translate('cancel')}></ButtonComp>
                 </View>
             </View>
         );

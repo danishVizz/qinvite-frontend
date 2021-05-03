@@ -131,6 +131,8 @@ export default class CreateEvent extends Component {
             </View> */}
 
             {this.state.loadDropDown ?
+
+            // <View style={{zIndex: 100}}>
               <DropDownPicker
                 items={this.state.user}
                 containerStyle={{ height: 60, marginTop: 10 }}
@@ -147,11 +149,12 @@ export default class CreateEvent extends Component {
                 // multipleText={"%d items have been selected."}
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder={Trans.translate('select_receptionists')}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
+                dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
                 removeItem={(value => this.removeItem(value))}
                 onChangeItemMultiple={item => this.setState({
                 }, console.log("Multi......" + this.state.selectedCountries))}
                 onChangeItem={(item, index) => this.updateUser(item, index)} />
+                // </View>
               :
               null
             }
@@ -191,6 +194,7 @@ export default class CreateEvent extends Component {
         buttontxt: Trans.translate('Edit')
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
 
+      mykeys.invitealldata = { "ImageData": this.props.route.params.eventdata.event_card }
 
     }
     this.getAllReceptionists()
@@ -219,32 +223,34 @@ export default class CreateEvent extends Component {
   async onSignupPress() {
     console.log('createEvent 2');
     var check = this.checkforError()
-    console.log("check : "+check);
+    console.log("check : " + check);
     if (check) {
       return;
     }
     else {
+      var usersdata = await Prefs.get(Keys.userData);
+      var parsedata = JSON.parse(usersdata)
+      var data = {
+        "event_name": this.state.eventname,
+        "event_date": this.state.date,
+        "event_address": this.state.eventaddress,
+        "user_id": parsedata.id,
+        "no_of_receptionists": this.state.recpntistcount,
+        "receptionists": this.state.selectedvaluesarr,
+        "event_card": this.props.route.params.eventdata.event_card,
+        "event_id": this.state.eventid,
+        "categoriesList": this.props.route.params.eventdata.categories
+      }
+      mykeys.invitealldata = { "Eventdata": data,"ImageData": data.event_card   }
       if (!(this.state.iseditevent)) {
-        var usersdata = await Prefs.get(Keys.userData);
-        var parsedata = JSON.parse(usersdata)
-        var data = {
-          "event_name": this.state.eventname,
-          "event_date": this.state.date,
-          "event_address": this.state.eventaddress,
-          "user_id": parsedata.id,
-          "no_of_receptionists": this.state.recpntistcount,
-          "receptionists": this.state.selectedvaluesarr
-        }
-        mykeys.invitealldata = { "Eventdata": data }
         this.props.navigation.navigate('Packages')
-        // this.CreateEvent()
       }
       else {
         console.log('createEvent thsi');
         this.CreateEvent()
       }
     }
-    
+
   }
 
   checkforError() {
@@ -325,13 +331,13 @@ export default class CreateEvent extends Component {
 
       this.logCallback("Response came", this.state.isLoading = false);
       if (data.status == true) {
-        console.log('payment : '+this.state.paymentstatus);
+        console.log('payment : ' + this.state.paymentstatus);
         if (this.state.paymentstatus == 3)
           this.props.navigation.replace('Todos')
         else {
           this.props.navigation.navigate("Payment", { "event_id": this.state.eventid })
         }
-          
+
 
       } else {
         Alert.alert('Failed', data.message);

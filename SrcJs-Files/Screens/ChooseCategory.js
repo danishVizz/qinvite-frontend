@@ -45,7 +45,7 @@ export default class ChooseCategory extends Component {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                        {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
+                        { !this.state.isFetching && this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                     </View>
 
                     <FlatList
@@ -78,8 +78,6 @@ export default class ChooseCategory extends Component {
 
 
     }
-
-
 
     renderItem({ item, index }) {
         return (
@@ -133,6 +131,8 @@ export default class ChooseCategory extends Component {
         }
     }
     componentDidMount() {
+        // console.log("EVENT DATA")
+        // console.log(Keys.invitealldata["Eventdata"])
         this.getAllCategories()
     }
 
@@ -154,7 +154,19 @@ export default class ChooseCategory extends Component {
         ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
+                let eventCategories =  Keys.invitealldata["Eventdata"].categoriesList;
                 this.setState({ categoriesdata: data.data })
+                // this.state.categoriesdata.map((item,index =>{
+                //  if(item.id == )
+
+                // }))
+                for (let i in data.data) {
+                    for (let j in eventCategories) {
+                        if (data.data[i].id == eventCategories[j].category_id) {
+                            this.choosecategory(data.data[i], i);
+                        }
+                    }
+                }
             } else {
                 Alert.alert('Failed', data.message);
             }

@@ -81,7 +81,7 @@ export default class Designer extends Component {
 
                 <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 20, right: 20 }}>
                     <FloatingButtonComp containerStyle={{ marginRight: 10 }} imagesrc={require('../../assets/icon_upload.png')} floatingclick={() => this.props.navigation.navigate("UploadMedia")}></FloatingButtonComp>
-                    <FloatingButtonComp imagesrc={require('../../assets/icon_selection.png')} ></FloatingButtonComp>
+                    {/* <FloatingButtonComp imagesrc={require('../../assets/icon_selection.png')} ></FloatingButtonComp> */}
                 </View>
 
             </View>
@@ -167,6 +167,8 @@ export default class Designer extends Component {
     actionOnRow(itemdata, index) {
         let requestStatus = itemdata.request_status;
         let designStatus = itemdata.design_status;
+     
+      
 
         if ((requestStatus == '0' && designStatus == '0') || (requestStatus == '1' && designStatus == '2') || (requestStatus == '0' && designStatus == '2')) {
             this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
@@ -185,7 +187,7 @@ export default class Designer extends Component {
         ApiCalls.getapicall("get_designers", "").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                this.setState({ designerdata: data.data })
+                this.setState({ designerdata: data.data },console.log(this.state.designerdata))
             } else {
                 Alert.alert('Failed', data.message);
             }

@@ -43,7 +43,9 @@ export default class DesignerDetails extends Component {
                             {!(this.state.isresponded)
                                 ? <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 10, alignSelf: 'center' }}>
                                     <Image style={{ height: 300, width: 200 }} resizeMode='contain' source={require('../../assets/icon_designprocedure.png')} />
-                                    <ButtonComp textstyle={{ color: 'white' }} style={{ marginTop: 10 }} text={Trans.translate('RequestDesign')} onPress={() => this.SendRequestDesigners(this.props.route.params.DesignerData.designer_id)}> </ButtonComp>
+                                    <ButtonComp 
+                                    isloading={this.state.contentLoading}
+                                    textstyle={{ color: 'white' }} style={{ marginTop: 10 }} text={Trans.translate('RequestDesign')} onPress={() => this.SendRequestDesigners(this.props.route.params.DesignerData.designer_id)}> </ButtonComp>
 
                                 </View> : null}
                             {/* after Acceptview */}
@@ -116,7 +118,7 @@ export default class DesignerDetails extends Component {
         ApiCalls.postApicall(formadata, "request_designer").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                this.setState({ designerdata: data.data })
+                this.setState({ designerdata: data.data ,isresponded:true})
             } else {
                 Alert.alert('Failed', data.message);
             }

@@ -144,17 +144,11 @@ export default class UploadDesign extends Component {
         formadata.append("event_card", photo);
 
         ApiCalls.postApicall(formadata, "submit_design").then(data => {
-            // if (data.status == true) {
-            //     this.setState({ isLoading: false});
-            // } else {
-            //     console.log(data);
-            //     Alert.alert('Failed', data.message);
-            //     this.setState({ isLoading: false});
-            // }
             this.setState({ isLoading: false});
-            this.props.navigation.dispatch(
-                StackActions.popToTop()
-            )
+            this.props.navigation.goBack();
+            // this.props.navigation.dispatch(
+            //     StackActions.popToTop()
+            // )
         }, error => {
             Alert.alert('Error', JSON.stringify(error));
             this.setState({ isLoading: false});
