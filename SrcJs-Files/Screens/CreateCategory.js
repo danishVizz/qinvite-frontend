@@ -51,14 +51,16 @@ export default class CreateCategory extends Component {
                             <Text style={{ fontSize: 14, fontWeight: 'bold', color: 'black', flex: 9 }}>{Trans.translate('InvitedCount')}</Text>
                             <InputSpinner
                                 style={styles.spinner}
-                                type={"real"}
-                                min={this.state.invitationcount}
-                                inputStyle={{ height: 40 }}
-                                step={1} 
-                                skin='paper'
+                                max={10}
+                                min={1}
+                                step={1}
+                                colorMax={"#f04048"}
+                                colorMin={mycolor.pink}
+                                color={mycolor.pink}
                                 value={this.state.invitationcount}
-                                colorRight={mycolor.darkgray}
-                                colorLeft={mycolor.darkgray}
+                                onChange={(num) => {
+                                    console.log(num);
+                                }}
                                 onChange={(num) => {
                                     this.setState({ invitationcount: num })
                                 }}></InputSpinner>
@@ -66,7 +68,7 @@ export default class CreateCategory extends Component {
 
                         </View>
                         <View style={{ flex: 1, marginTop: 50, justifyContent: 'center', alignContent: 'center', color: 'white', fontSize: 14, fontWeight: 'bold' }}>
-                            <ButtonComp onPress={() => this.OnNextScreen()} textstyle={{ color: mycolor.white, fontWeight: 'bold' }} text={Trans.translate('AddCategory')}></ButtonComp>
+                            <ButtonComp onPress={() => this.OnNextScreen()} textstyle={{ color: mycolor.white, fontWeight: 'bold' }} text={Trans.translate('Next')}></ButtonComp>
                         </View>
 
                     </View>
@@ -80,6 +82,7 @@ export default class CreateCategory extends Component {
 
     componentDidMount() {
         this.state.categorydata = this.props.route.params.categorydata ?? []
+        console.log("-----------"+JSON.stringify(this.state.categorydata))
         if (this.state.categorydata.length != 0) {
             this.setState({
                 categoryid: this.state.categorydata.id,
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
 
     spinner: {
         flex: 1,
-        height: 40,
+        height: 30,
         width: 50,
         borderRadius: 15,
         minWidth: 80,

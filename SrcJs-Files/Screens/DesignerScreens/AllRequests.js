@@ -45,7 +45,7 @@ export default class AllRequests extends Component {
                     {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                 </View>
 
-                <View style={{
+                {this.state.showDatePicker?<View style={{
                     display: this.state.showDatePicker == true ? 'flex' : 'none', width: '100%', backgroundColor: '#FFF', position: 'absolute', bottom: 0, borderTopLeftRadius: 30, borderTopRightRadius: 30, justifyContent: 'center', alignItems: 'center', shadowColor: "#000",
                     shadowOffset: {
                         width: 0,
@@ -60,6 +60,7 @@ export default class AllRequests extends Component {
                     <DatePicker
                         date={this.state.date}
                         mode="datetime"
+                        
                         onDateChange={(date) => this.setState({ date: date, eventdate: date })}
                     />
                     <View style={{ margin: 20, width: '70%' }}>
@@ -68,7 +69,7 @@ export default class AllRequests extends Component {
                             textstyle={{ color: 'white' }}
                             text={Trans.translate("set_as_deadline")}></ButtonComp>
                     </View>
-                </View>
+                </View>:null}
             </View>);
     }
 
