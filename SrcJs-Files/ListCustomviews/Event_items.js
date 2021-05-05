@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
-
-
+import Trans from "../Translation/translation";
 
 class Event_items extends Component {
 
