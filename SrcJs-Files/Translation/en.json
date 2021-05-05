@@ -138,6 +138,7 @@
     "Paymentsuccess":"Payment Successful",
     "check_all_required_conditions_msg": "Please check all required conditions for design",
     "conditions": "Conditions",
-    "Checkedin": "Checked in successfully"
+    "Checkedin": "Checked in successfully",
+    "categories" : "Categories"
     
 }

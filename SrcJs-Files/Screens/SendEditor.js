@@ -98,12 +98,7 @@ export default class SendEditor extends Component {
 
 
               </View>
-              {/* <View style={{ width: '100%', marginTop: 0}}>
-              <ButtonComp textstyle={{ color: 'white' }} text={Trans.translate('Savepdf')}
-                  // onPress={() => this.props.navigation.navigate('Packages')}
-                  onPress={() => console.log("Hello")}
-                ></ButtonComp>
-              </View> */}
+          
             </View>
           </View>
         </ScrollView>

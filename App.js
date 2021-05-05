@@ -9,7 +9,8 @@ import CreateEvent from './SrcJs-Files/Screens/CreateEvent'
 import SendEditor from './SrcJs-Files/Screens/SendEditor'
 import Todos from './SrcJs-Files/Screens/Todos'
 import Events from './SrcJs-Files/Screens/Events'
-import ChooseCategory from './SrcJs-Files/Screens/ChooseCategory'
+import ChooseCategory from './SrcJs-Files/Screens/ChooseCategory' 
+import CategoryList from './SrcJs-Files/Screens/CategoryList'
 import EventDetails from './SrcJs-Files/Screens/EventDetails'
 import CreateCategory from './SrcJs-Files/Screens/CreateCategory'
 import ContactListing from './SrcJs-Files/Screens/ContactListing'
@@ -40,7 +41,7 @@ import ImageEditor from './SrcJs-Files/Screens/ImageEditor';
 import { render } from 'react-dom';
 import UploadDesign from './SrcJs-Files/Screens/DesignerScreens/UploadDesign';
 import RequestDetails from './SrcJs-Files/Screens/DesignerScreens/RequestDetails';
-import DesignerRequests from './SrcJs-Files/Screens/DesignerScreens/DesignerRequests';
+import DesignerRequests from './SrcJs-Files/Screens/DesignerScreens/DesignerRequests'; 
 import mykeys from './SrcJs-Files/Constants/keys';
 import Prefs from './SrcJs-Files/Prefs/Prefs';
 import Payment from './SrcJs-Files/Screens/Payment';
@@ -70,7 +71,7 @@ export default class App extends Component {
 
     return (
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName={"ReceivedDesign"}>
+        <RootStack.Navigator initialRouteName={"SplashScreen"}>
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
           <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="RequestDetails" component={RequestDetails} options={{ headerShown: false }} />
@@ -107,7 +108,8 @@ export default class App extends Component {
           <RootStack.Screen name="WeddingDetails" component={WeddingDetails} options={{ headerShown: false }} />
           <RootStack.Screen name="ScannerScreen" component={ScannerScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="DesignerRequests" component={DesignerRequests} options={{ headerShown: false }} />
-          <RootStack.Screen name="ReceivedDesign" component={ReceivedDesign} options={{ headerShown: false }} />
+          <RootStack.Screen name="ReceivedDesign" component={ReceivedDesign} options={{ headerShown: false }} /> 
+          <RootStack.Screen name="CategoryList" component={CategoryList} options={{ headerShown: false }} />
           {/* <RootStack.Screen name="Home" component={Home} options={{headerShown:false}} /> */}
         </RootStack.Navigator>
       </NavigationContainer>

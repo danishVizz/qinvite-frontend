@@ -15,16 +15,6 @@ import Keys from '../Constants/keys';
 import moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
 
-// const MyStatusBar = ({ backgroundColor, ...props }) => (
-//     <View style={[styles.statusBar, { backgroundColor }]}>
-//         <SafeAreaView>
-//             <StatusBar translucent backgroundColor={backgroundColor} {...props} />
-//         </SafeAreaView>
-//     </View>
-// );
-
-
-
 export default class ReceivedDesign extends Component {
 
     state = {
@@ -33,7 +23,6 @@ export default class ReceivedDesign extends Component {
         modalVisible: false,
         checked: false,
     }
-
 
     render() {
         return (
@@ -51,8 +40,6 @@ export default class ReceivedDesign extends Component {
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
                 }
-
-
             </View>
         );
     }
@@ -229,16 +216,13 @@ export default class ReceivedDesign extends Component {
             if (Platform.OS === "ios") {
                 RNFetchBlob.fs.writeFile(configfb.path, res.data, 'base64');
                 RNFetchBlob.ios.previewDocument(configfb.path);
+                console.log(res.path());
             }
             if (Platform.OS == 'android') {
                 console.log("File downloaded" + res.path())
             }
         })
-
-
-
     }
-
 }
 
 const styles = StyleSheet.create({
