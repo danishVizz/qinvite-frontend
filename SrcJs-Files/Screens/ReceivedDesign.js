@@ -126,7 +126,8 @@ export default class ReceivedDesign extends Component {
     }
     componentDidMount() {
         // this.downloadPDF();
-        this.permissionFunc()
+        // this.permissionFunc()
+        this.getDesigns()
     }
 
     logCallback = (log, callback) => {
