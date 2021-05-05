@@ -59,9 +59,9 @@ export default class PreviewInvite extends Component {
                             onPress={() => this.CreateEvent()}>
 
                         </ButtonComp>
-                        <ButtonComp style={{ marginTop: 15, backgroundColor: mycolor.white }}
+                        {/* <ButtonComp style={{ marginTop: 15, backgroundColor: mycolor.white }}
                             onPress={()=> this.myAsyncPDFFunction()}
-                            textstyle={{ color: mycolor.pink, fontWeight: 'bold' }} text={Trans.translate('Savepdf')} ></ButtonComp>
+                            textstyle={{ color: mycolor.pink, fontWeight: 'bold' }} text={Trans.translate('Savepdf')} ></ButtonComp> */}
 
                     </View>
                 </ScrollView>
@@ -126,6 +126,7 @@ export default class PreviewInvite extends Component {
         // formadata.append("event_card", alleventdata["ImageData"])
         formadata.append("event_card",photo)
         formadata.append("event_id",alleventdata["Eventdata"].event_id)
+        formadata.append("categories_messages",JSON.stringify(alleventdata["CategoriesMessages"]))
         // formadata.append("event_name", alleventdata["Eventdata"].event_name)
         // formadata.append("event_date", String(moment(alleventdata["Eventdata"].event_date).format("YYYY-MM-D")))
         // formadata.append("event_address", alleventdata["Eventdata"].event_address)
@@ -147,7 +148,7 @@ export default class PreviewInvite extends Component {
         ApiCalls.postApicall(formadata, "add_event_details").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                this.props.navigation.navigate('CombineComp')
+                this.props.navigation.push('CombineComp')
             } else {
                 Alert.alert('Failed', data.message);
             }

@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
-import Trans from "../Translation/translation";
+import Trans from '../Translation/translation'
+
+
 
 class Event_items extends Component {
 
@@ -23,9 +25,9 @@ class Event_items extends Component {
                             <Text style={styles.description}>
                                 {this.props.description}
                             </Text>
-                            <Text style={{ marginTop: 4, fontSize: 12 }}>
+                            {/* <Text style={{ marginTop: 4, fontSize: 12 }}>
                                 {this.props.description}
-                            </Text>
+                            </Text> */}
                         </View>
                         {/* <Image source={require('../../assets/icon_option.png')}style={styles.leftphoto}/> */}
 

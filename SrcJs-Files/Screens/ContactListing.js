@@ -45,7 +45,13 @@ export default class ContactListing extends Component {
 
     renderItem({ item, index, props }) {
         console.log("inex: " + index);
+        var status = ''
+        if (item.status == "0") { status = "Pending" }
+        else if (item.status == "1") { status = " Message Sent" }
+        else if (item.status == "2") { status = "Message Delivered" }
+        else if (item.status == "3") { status = "Message Seen" }
         return (
+
 
             // <TouchableWithoutFeedback style={{
             //   marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, }} onPress={() => actionOnRow(item,props)}>
@@ -54,7 +60,7 @@ export default class ContactListing extends Component {
                 // propsfromparents={onPressButtonChildren.bind()}
                 imagepath={require('../../assets/icon_lady.png')}
                 contactname={item.name}
-                status={item.number}
+                status={item.number + "\n" + status}
                 time={String(moment(item.invitation_date).format("HH:MM A"))}
             />
             // </TouchableWithoutFeedback>

@@ -29,6 +29,7 @@ const WINDOW = Dimensions.get('window');
 export default class ScannerScreen extends Component {
     state = {
         showAlert: false,
+        showsuccessAlert: false,
         isLoading: false,
         name: 'Aisha Alobaidi',
         phone: '+974 3333 9082',
@@ -89,7 +90,6 @@ export default class ScannerScreen extends Component {
                     show={this.state.showAlert}
                     contentContainerStyle={{ width: '100%', borderRadius: 4 }}
                     showProgress={false}
-                    onTextchange={() => this.getparentdata()}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
                     customView={this.alertView()}
@@ -126,9 +126,37 @@ export default class ScannerScreen extends Component {
                 }
 
 
+                <AwesomeAlert
+                    show={this.state.showsuccessAlert}
+                    contentContainerStyle={{ width: '100%', borderRadius: 4 }}
+                    showProgress={false}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    customView={this.alertsuccessView()}
+                />
+
             </View>
 
 
+        );
+    }
+
+    oncheckedin()
+    {
+        this.setState({ isLoading: false, showAlert: false, scanner: false });
+    }
+
+    alertsuccessView() {
+        return (
+            <View style={{ width: '100%' }}>
+                <Text style={{ fontSize: 28, marginTop: 5, textAlign:'center', fontWeight: 'bold', color: mycolor.darkgray }}>{Trans.translate("Checkedin")}</Text>
+                <View style={{ flexDirection: 'row', marginTop: 40, width: '100%',justifyContent:'center'}}>
+                <Image style={{ width: 50, height: 50}} source={require('../../assets/icon_success.png')}></Image>
+               </View>    
+                <View style={{ marginTop:20, justifyContent: 'center', alignContent: 'center' }}>
+                    <ButtonComp onPress={() => this.oncheckedin()} style={{backgroundColor:"#25AE88"}} textstyle={{ color: mycolor.white, fontSize: 14 }} text={Trans.translate('Ok')}></ButtonComp>
+                </View>
+            </View>
         );
     }
 
@@ -184,13 +212,14 @@ export default class ScannerScreen extends Component {
         }
     }
 
+    
+
     async updateCheckInStatus(id) {
         this.setState({ isLoading: true });
         let query = "/" + id
         ApiCalls.getGenericCall("check_in", query).then(data => {
             if (data.status == true) {
-                // Alert.alert('You are Welcome to Event', data.message);
-                this.setState({ isLoading: false, showAlert: false, scanner: false });
+                this.setState({showsuccessAlert:true})
             } else {
                 Alert.alert('Failed', data.message);
                 this.setState({ isLoading: false, showAlert: false, scanner: false });

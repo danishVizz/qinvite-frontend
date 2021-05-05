@@ -8,6 +8,7 @@ import StatusBarComp from '../Components/StatusBarComp';
 import Translation from '../Translation/translation'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import HeaderComp2 from '../Components/HeaderComp2';
+import ButtonComp from '../Components/ButtonComp';
 import Trans from '../Translation/translation';
 
 export default class EventDetails extends Component {
@@ -28,7 +29,7 @@ export default class EventDetails extends Component {
                     backgroundColor='#F54260'
                 /> */}
                 <ScrollView>
-                    
+
 
 
                     <View style={styles.imagecontainer}>
@@ -63,15 +64,31 @@ export default class EventDetails extends Component {
 
                         </View>
                     </TouchableOpacity>
+
+                    <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
+                        <ButtonComp
+                            style={{width: '70%'}}
+                            textstyle={{ color: 'white' }}
+                            text={Trans.translate('Savepdf')}
+                            onPress={() => this.props.navigation.navigate('CategoryList', {categories : this.props.route.params.eventdata.categories})}
+                        ></ButtonComp>
+                    </View>
                 </ScrollView>
             </View>
         );
     }
+
+    componentDidMount() {
+        console.log("CategoryList");
+        console.log(this.props.route.params.eventdata.categories)
+    }
+
     Participantsdetail(eventdata) {
         console.log(eventdata.receptionists)
         this.props.navigation.navigate('ContactListing', { 'Participants': eventdata.participants })
     }
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -82,7 +99,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 20, marginRight: 20, marginBottom: 20,
         borderWidth: 1,
-  
+
         borderColor: mycolor.lightgray,
         borderRadius: 5,
         alignSelf: 'center',

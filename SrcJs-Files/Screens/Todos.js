@@ -16,6 +16,7 @@ export default class Todos extends Component {
         categoriestatus: ''
     }
     render() {
+        console.log("????" + Keys.invitealldata["CategoriesData"])
 
         return (
             <View>
@@ -25,18 +26,19 @@ export default class Todos extends Component {
                 <View style={styles.container}>
 
                     <EventDetailsComp
+                        //  backgroundColor: Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined ? mycolor.offPink : "#C5FFE6"
                         Onpress={() => this.onPressInviteDesign()}
-                        mainviewstyle={{ backgroundColor: this.state.imagedatadstatus == undefined ? mycolor.offPink : "#C5FFE6", height: 120, borderWidth: 1, borderRadius: 8, borderColor: '#F54260', alignSelf: 'center', justifyContent: 'center', alignContent: 'center' }}
-                        imagestyle={{ height: 56, width: 69, marginLeft: 30, flex: 3, alignSelf: 'center' }}
+                        mainviewstyle={{  backgroundColor: mycolor.offPink,height: 120, borderWidth: 1, borderRadius: 8, borderColor: '#F54260', alignSelf: 'center', justifyContent: 'center', alignContent: 'center' }}
+                        imagestyle={{  height: 56, width: 69, marginLeft: 30, flex: 3, alignSelf: 'center' }}
                         title={Trans.translate('invite_design')}
                         containerStyle={{ justifyContent: "center" }}
                         titlestyle={{ alignItems: 'center', marginLeft: 10, flexDirection: 'column', alignItems: 'center', fontSize: 22, fontWeight: 'bold', color: mycolor.pink }}
                         lefticon={require('../../assets/icon_cards.png')}
                     ></EventDetailsComp>
-
+                    {/* backgroundColor: Keys.invitealldata["Event"] == "" || Keys.invitealldata["CategoriesData"] == undefined ?  mycolor.offPink : "#C5FFE6" */}
                     <EventDetailsComp
                         Onpress={() => this.props.navigation.navigate('ChooseCategory')}
-                        mainviewstyle={{ backgroundColor: this.state.imagedatadstatus == undefined ? mycolor.offPink : "#C5FFE6", height: 120, borderWidth: 1, borderRadius: 8, borderColor: '#F54260' }}
+                        mainviewstyle={{ backgroundColor: mycolor.offPink ,height: 120, borderWidth: 1, borderRadius: 8, borderColor: '#F54260' }}
                         imagestyle={{ height: 56, width: 69, marginLeft: 30, flex: 3, alignSelf: 'center' }}
                         title={Trans.translate('guestlist')}
                         containerStyle={{ justifyContent: "center" }}
@@ -52,19 +54,20 @@ export default class Todos extends Component {
     }
 
     componentDidMount() {
-        console.log("Working")
-        this.setState({ imagedatadstatus: Keys.invitealldata["ImageData"], categoriestatus: Keys.invitealldata["CategoriesData"] }, () => console.log(this.state.imagedatadstatus))
+        console.log(Keys.invitealldata["ImageData"])
+        this.setState({ imagedatadstatus: Keys.invitealldata["ImageData"], categoriestatus: Keys.invitealldata["CategoriesData"] }, () => console.log(Keys.invitealldata["ImageData"]))
     }
 
     onPressInviteDesign() {
         console.log("IMAGE DATA");
         console.log(Keys.invitealldata["ImageData"]);
-        if (Keys.invitealldata["ImageData"] != undefined) {
-            this.props.navigation.navigate('ImageEditor');
-        } else {
+        if (Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined) {
             this.props.navigation.navigate('Designer');
+
+        } else {
+            this.props.navigation.navigate('ImageEditor');
         }
-        
+
     }
 }
 

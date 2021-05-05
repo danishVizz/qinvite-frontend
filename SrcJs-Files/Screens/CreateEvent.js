@@ -179,7 +179,7 @@ export default class CreateEvent extends Component {
 
   componentDidMount() {
     this.state.eventdata = this.props.route.params.eventdata ?? []
-    console.log("-----------------" + this.props.route.params.eventdata)
+    console.log("-----------------" + this.props.route.params.eventdata.event_card)
 
     if (this.state.eventdata.length != 0) {
       this.setState({
@@ -194,7 +194,7 @@ export default class CreateEvent extends Component {
         buttontxt: Trans.translate('Edit')
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
 
-      mykeys.invitealldata = { "ImageData": this.props.route.params.eventdata.event_card }
+      mykeys.invitealldata = {"ImageData": this.props.route.params.eventdata.event_card}
 
     }
     this.getAllReceptionists()
@@ -246,7 +246,7 @@ export default class CreateEvent extends Component {
         this.props.navigation.navigate('Packages')
       }
       else {
-        console.log('createEvent thsi');
+      
         this.CreateEvent()
       }
     }
@@ -336,6 +336,7 @@ export default class CreateEvent extends Component {
           this.props.navigation.replace('Todos')
         else {
           this.props.navigation.navigate("Payment", { "event_id": this.state.eventid })
+          // this.props.navigation.replace('Todos')
         }
 
 

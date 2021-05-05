@@ -79,13 +79,13 @@ export default class SendEditor extends Component {
                 multiple={false}
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder={Trans.translate('ChooseCategory')}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
+                dropDownStyle={{ backgroundColor: '#fafafa' ,height:100}}
                 onChangeItem={(item => this.updateUser(item))} />
 
 
               <View style={{ flexDirection: 'row', marginTop: 15, alignItems: 'center' }}>
                 <TouchableOpacity onPress={() => this.setState({ sendToAll: !(this.state.sendToAll) })}>
-                  <Image style={{ width: 24, height: 24, backgroundColor: 'gray' }} source={this.state.sendToAll ? require('../../assets/icon_check.png') : require('../../assets/uncheckbox.png')}></Image>
+                  <Image style={{ width: 24, height: 24, backgroundColor: 'gray' }} source={this.state.sendToAll ? require('../../assets/icon_checked.png') : require('../../assets/uncheckbox.png')}></Image>
                 </TouchableOpacity>
                 <Text style={{ fontSize: 14, marginLeft: 7, color: mycolor.txtGray }}>{Trans.translate("send_to_all")}</Text>
               </View>
@@ -98,12 +98,7 @@ export default class SendEditor extends Component {
 
 
               </View>
-              {/* <View style={{ width: '100%', marginTop: 0}}>
-              <ButtonComp textstyle={{ color: 'white' }} text={Trans.translate('Savepdf')}
-                  // onPress={() => this.props.navigation.navigate('Packages')}
-                  onPress={() => console.log("Hello")}
-                ></ButtonComp>
-              </View> */}
+          
             </View>
           </View>
         </ScrollView>
