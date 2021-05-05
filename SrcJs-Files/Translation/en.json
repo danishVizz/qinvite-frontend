@@ -139,6 +139,7 @@
     "check_all_required_conditions_msg": "Please check all required conditions for design",
     "conditions": "Conditions",
     "Checkedin": "Checked in successfully",
-    "categories" : "Categories"
+    "categories" : "Categories",
+    "Download_Pdf" : "Download pdf for non WhatsApp Invitations"
     
 }

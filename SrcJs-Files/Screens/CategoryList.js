@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, FlatList, TouchableOpacity, PermissionsAndroid } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import mycolor from '../Constants/Colors';
 import ApiCalls from '../Services/ApiCalls';
@@ -61,7 +61,7 @@ export default class CategoryList extends Component {
     alertView() {
         return (
             <View>
-                <ActivityIndicator style={{marginBottom: 20}} size='large' />
+                <ActivityIndicator style={{ marginBottom: 20 }} size='large' color={mycolor.pink}/>
                 <TextComp
                     text="Downloading pdf ..." />
             </View>
@@ -72,7 +72,7 @@ export default class CategoryList extends Component {
         return (
 
             <TouchableOpacity
-                style={{ borderWidth: 1, borderColor: mycolor.lightgray, borderRadius: 5, margin: 15, padding: 30 }}
+                style={{  borderWidth: 1, flexDirection: "row", borderColor: mycolor.lightgray, borderRadius: 5, margin: 15, padding: 30, alignItems: 'center' }}
                 onPress={() => this.permissionFunc(item.pdf)}>
                 {/* <CategoryComp lefticon={require('../../assets/icon_category.png')}
                     title={item.category_name}
@@ -81,10 +81,22 @@ export default class CategoryList extends Component {
                     containerstyle={this.state.isChecked[index] ? { backgroundColor: mycolor.lightPink } : {}}
                     fromchildprops={this.onPressButtonChildren}
                     righticon={null}></CategoryComp> */}
-                <TextComp
-                    textStyle={{ fontSize: 20, fontWeight: 'bold' }}
-                    text={item.category_name}
-                />
+                <View >
+                    <TextComp
+
+                        textStyle={{ fontSize: 20, fontWeight: 'bold' }}
+                        text={item.category_name}
+                    />
+                    <TextComp
+
+                        textStyle={{ fontSize: 15, fontWeight: 'normal',marginTop:5}}
+                        text={Trans.translate("Download_Pdf")}
+                    />
+                </View>
+                <Image
+                    style={{ marginLeft: 'auto' ,height:30,width:30}}
+                    source={require("../../assets/icon_download.png")}
+                ></Image>
             </TouchableOpacity>
         );
     }

@@ -130,5 +130,6 @@
     "check_all_required_conditions_msg": "يرجى التحقق من جميع الشروط المطلوبة للتصميم.",
     "Checkedin": "تم تسجيل الوصول بنجاح",
     "conditions": "الظروف",
-    "categories" : "فئات"
+    "categories" : "فئات",
+    "Download_Pdf" : "قم بتنزيل ملف pdf لغير WhatsApp رسالة دعوة"
   }

@@ -280,7 +280,7 @@ export default class CategoryContactsSelection extends Component {
                         console.log("TYPEOF 3: ", typeof (num));
 
                         if (num.startsWith("0")) {
-                            obj.number = num.replace('0', '+92');
+                            obj.number = num.replace('0', '+974');
                         }
                     });
                     contacts = contacts.filter(item => item.phoneNumbers[0]?.number != undefined)
