@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import mycolor from '../Constants/Colors'
-import { FlatList, StyleSheet, ActivityIndicator, Text, TouchableOpacity, View, Alert, Image, Modal } from 'react-native'
+import { FlatList, StyleSheet, ActivityIndicator, Text, TouchableOpacity, View, Alert, Image, PermissionsAndroid } from 'react-native'
 import Trans from '../Translation/translation'
 import FloatingButtonComp from '../Components/FloatingButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
@@ -13,7 +13,7 @@ import { CheckBox } from 'react-native-elements';
 import ApiCalls from '../Services/ApiCalls';
 import Keys from '../Constants/keys';
 import moment from 'moment';
-import RNFetchBlob from 'react-native-fetch-blob'
+import RNFetchBlob from 'rn-fetch-blob'
 
 // const MyStatusBar = ({ backgroundColor, ...props }) => (
 //     <View style={[styles.statusBar, { backgroundColor }]}>
@@ -22,6 +22,8 @@ import RNFetchBlob from 'react-native-fetch-blob'
 //         </SafeAreaView>
 //     </View>
 // );
+
+
 
 export default class ReceivedDesign extends Component {
 
@@ -124,7 +126,7 @@ export default class ReceivedDesign extends Component {
     }
     componentDidMount() {
         // this.downloadPDF();
-        this.getDesigns()
+        this.permissionFunc()
     }
 
     logCallback = (log, callback) => {
@@ -155,31 +157,85 @@ export default class ReceivedDesign extends Component {
         )
     }
 
-    async downloadPDF() {
-        
-        RNFetchBlob.fetch('GET', 'http://samples.leanpub.com/thereactnativebook-sample.pdf', {
-            // Authorization: 'Bearer access-token...',
-            // more headers  ..
-        })
-            // when response status code is 200
-            .then((res) => {
-                // the conversion is done in native code
-                let base64Str = res.base64()
-                // the following conversions are done in js, it's SYNC
-                let text = res.text()
-                let json = res.json()
-                console.log("text");
-                console.log(text);
+    permissionFunc = async () => {
+        if (Platform.OS == 'ios') {
+            this.actualDownload();
+        } else {
+            // if (this.state.downloaded) {
+            try {
+                const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    console.log("---Downloadfunc call")
+                    this.actualDownload();
+                } else {
+                    PermissionsAndroid.request(
+                        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE && PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+                        {
+                            'title': 'Save Pdf',
+                            'message': 'This app would like to access storage to save pdf'
+                        }
+                    ).then(() => {
+                        this.actualDownload();
+                    })
+                    // showSnackbar('You need to give storage permission to download the file');
 
-                console.log("json");
-                console.log(json);
-            })
-            // Status code is not 200
-            .catch((errorMessage, statusCode) => {
-                // error handling
-                console.log("errorMessage");
-                console.log(errorMessage);
-            })
+                }
+            }
+            catch (err) {
+                console.warn(err);
+            }
+            // }
+            // else {
+            //     console.log('File is already downloaded.');
+            // }
+        }
+    }
+
+    actualDownload = () => {
+        console.log("Downloading")
+
+        const { config, fs } = RNFetchBlob
+        const date = new Date()
+        const { dirs } = RNFetchBlob.fs;
+        const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir
+        const configfb = {
+            useDownloadManager: true,
+            notification: true,
+            path: `${dirToSave}/${(Math.floor(date.getTime() + date.getSeconds() / 2))}.pdf`,
+
+        }
+        let options = {
+            fileCache: true,
+            addAndroidDownloads: {
+                useDownloadManager: true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
+                notification: true,
+                path: configfb.path, // this is the path where your downloaded file will live in
+                description: 'Downloading Pdf.'
+            }
+        }
+
+
+        const configOptions = Platform.select({
+            ios: {
+                fileCache: configfb.fileCache,
+                title: configfb.title,
+                path: configfb.path,
+                appendExt: 'pdf',
+            },
+            android: options,
+        });
+        config(configOptions).fetch('GET', "https://qinvite.vizzwebsolutions.com/pdf/1620114635.jpg-1620015785-03325349569.png.jpg.pdf").then((res) => {
+            if (Platform.OS === "ios") {
+                RNFetchBlob.fs.writeFile(configfb.path, res.data, 'base64');
+                RNFetchBlob.ios.previewDocument(configfb.path);
+            }
+            if (Platform.OS == 'android') {
+                console.log("File downloaded" + res.path())
+            }
+        })
+
+
+
     }
 
 }

@@ -64,6 +64,7 @@ export default class ImageEditor extends Component {
     super(props);
   };
   componentDidMount() {
+    console.log("--------Image------"+ Keys.invitealldata["ImageData"])
     this.setState({ imagedata: Keys.invitealldata["ImageData"] })
     this.addText()
   }
@@ -300,7 +301,7 @@ export default class ImageEditor extends Component {
               <ViewShot ref="viewShot" options={{ format: "jpg", quality: 1.0 }}>
                 <ImageBackground
                   resizeMode='contain'
-                  source={{ uri: this.state.imagedata != undefined ? this.state.imagedata : this.props.route.params.imagedata }}
+                  source={{ uri: Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined ? this.props.route.params.imagedata : Keys.invitealldata["ImageData"]}}
                   // style={{ height: WINDOW.height/2, width: WINDOW.width, borderRadius: 5, borderWidth: 1}}
                   style={{ width: WINDOW.width - 20, height: WINDOW.height / 2, backgroundColor: '#fff' }}>
 

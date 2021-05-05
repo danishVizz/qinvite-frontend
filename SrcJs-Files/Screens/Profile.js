@@ -43,7 +43,12 @@ export default class Profile extends Component {
                 <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
                     <View style={styles.innercontainer}>
                         <View style={{ justifyContent: 'center', alignSelf: 'center', height: 150 }}>
-                            <CircleImageComp imagesrc={(this.state.response == null || this.state.response == '') ? require('../../assets/profile-icon.png') : { uri: this.state.response }} backgroundColor='orange' style={styles.circleimage} imagestyle={{ height: 110, width: 110, borderRadius: 55 }}></CircleImageComp>
+                            {/* <CircleImageComp imagesrc={(this.state.response == null || this.state.response == '') ? require('../../assets/profile-icon.png') : { uri: this.state.response }} backgroundColor='orange' style={styles.circleimage} imagestyle={{ height: 100, width: 100, borderRadius: 50,borderColor:'red',borderWidth:1 }}></CircleImageComp> */}
+                            <Image
+                                source={
+                                    (this.state.response == null || this.state.response == '') ? require('../../assets/profile-icon.png') : { uri: this.state.response }}
+                                style={{ width: 100, height: 100, borderRadius: 100 / 2, borderColor: 'white', borderWidth: 1 }}
+                            />
                             <View style={{ position: 'absolute', alignSelf: 'center', bottom: 10, right: 10, borderColor: 'white' }}>
                                 <TouchableOpacity onPress={this.chooseImage}>
                                     <CircleImageComp style={{ borderColor: 'white', borderWidth: 3 }} imagesrc={require('../../assets/icon_camera.png')} ></CircleImageComp>
@@ -85,23 +90,26 @@ export default class Profile extends Component {
         var userdata = await Prefs.get(Keys.userData);
         console.log(userdata)
         var parsedata = JSON.parse(userdata)
-        this.setState({ firstnametxt: parsedata.first_name})
-        this.setState({ lastnametxt: parsedata.last_name})
-        this.setState({ emailtxt: parsedata.email})
+        this.setState({ firstnametxt: parsedata.first_name })
+        this.setState({ lastnametxt: parsedata.last_name })
+        this.setState({ emailtxt: parsedata.email })
         this.setState({ idcardtxt: parsedata.username })
-        this.setState({ citytxt: parsedata.city})
-        this.setState({ countrytxt: parsedata.country})
-        this.setState({ user_id: parsedata.id})
-        this.setState({ response: parsedata.user_image})
+        this.setState({ citytxt: parsedata.city })
+        this.setState({ countrytxt: parsedata.country })
+        this.setState({ user_id: parsedata.id })
+        this.setState({ response: parsedata.user_image })
     }
 
 
     onProfileUpdate() {
+
+
         var photo = {
             uri: Platform.OS === "android" ? this.state.response : this.state.response.replace("file://", ""),
             type: 'image/jpeg',
             name: 'photo.jpg',
         };
+        console.log("Imageeeeeeee"+JSON.stringify(photo))
         var formadata = new FormData()
         formadata.append("firstname", this.state.firstnametxt)
         formadata.append("lastname", this.state.lastnametxt)
@@ -112,11 +120,12 @@ export default class Profile extends Component {
         formadata.append("country", this.state.countrytxt)
         formadata.append("user_image ", photo)
 
-        this.logCallback('Creating Package Start', this.state.isLoading = true);
+        this.logCallback('Updating Started....', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, "update_user").then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
                 Prefs.save(Keys.userData, JSON.stringify(data.data))
+                console.log("---updatedDaata"+ JSON.stringify(data.data))
                 // this.getUserData()
             } else {
                 Alert.alert('Failed', data.message);
@@ -162,7 +171,7 @@ export default class Profile extends Component {
                 this.props.navigation.dispatch(
                     StackActions.pop(1)
                 )
-                
+
                 // const pushAction = StackActions.push('LandingScreen');
                 // this.props.navigation.dispatch(pushAction);
             }

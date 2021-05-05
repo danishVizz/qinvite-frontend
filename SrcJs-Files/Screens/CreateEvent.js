@@ -179,7 +179,7 @@ export default class CreateEvent extends Component {
 
   componentDidMount() {
     this.state.eventdata = this.props.route.params.eventdata ?? []
-    console.log("-----------------" + JSON.stringify(this.props.route.params.eventdata))
+    console.log("-----------------" + this.props.route.params.eventdata.event_card)
 
     if (this.state.eventdata.length != 0) {
       this.setState({
@@ -194,7 +194,7 @@ export default class CreateEvent extends Component {
         buttontxt: Trans.translate('Edit')
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
 
-      mykeys.invitealldata = { "ImageData": this.props.route.params.eventdata.event_card }
+      mykeys.invitealldata = {"ImageData": this.props.route.params.eventdata.event_card}
 
     }
     this.getAllReceptionists()
@@ -208,7 +208,7 @@ export default class CreateEvent extends Component {
         this.setState({ selectedvaluesarr: this.state.selectedvaluesarr.concat(item.id) })
         // receptionistsarr.push(receptionists
       })
-      this.setState({ editreceptionistarr: receptionistdata })
+      this.setState({ editreceptionistarr: receptionistdata }, () => console.log("Editarratlenght" + this.state.editreceptionistarr[1].id))
     }
 
   }
@@ -228,10 +228,6 @@ export default class CreateEvent extends Component {
       return;
     }
     else {
-<<<<<<< HEAD
-
-=======
->>>>>>> d7d0c01fb480efa60b7c7849c381d510f087cf3a
       var usersdata = await Prefs.get(Keys.userData);
       var parsedata = JSON.parse(usersdata)
       var data = {
@@ -239,14 +235,6 @@ export default class CreateEvent extends Component {
         "event_date": this.state.date,
         "event_address": this.state.eventaddress,
         "user_id": parsedata.id,
-<<<<<<< HEAD
-        "event_id": this.state.eventid,
-        "no_of_receptionists": this.state.recpntistcount,
-        "receptionists": this.state.selectedvaluesarr
-      }
-      mykeys.invitealldata = { "Eventdata": data }
-
-=======
         "no_of_receptionists": this.state.recpntistcount,
         "receptionists": this.state.selectedvaluesarr,
         "event_card": this.props.route.params.eventdata.event_card,
@@ -254,12 +242,11 @@ export default class CreateEvent extends Component {
         "categoriesList": this.props.route.params.eventdata.categories
       }
       mykeys.invitealldata = { "Eventdata": data,"ImageData": data.event_card   }
->>>>>>> d7d0c01fb480efa60b7c7849c381d510f087cf3a
       if (!(this.state.iseditevent)) {
         this.props.navigation.navigate('Packages')
       }
       else {
-        console.log('createEvent thsi');
+      
         this.CreateEvent()
       }
     }
@@ -349,6 +336,7 @@ export default class CreateEvent extends Component {
           this.props.navigation.replace('Todos')
         else {
           this.props.navigation.navigate("Payment", { "event_id": this.state.eventid })
+          // this.props.navigation.replace('Todos')
         }
 
 
@@ -365,7 +353,6 @@ export default class CreateEvent extends Component {
 
   async getAllReceptionists() {
     this.logCallback("getProducts :", this.state.contentLoading = true);
-    console.log("----EditRec" + this.state.editreceptionistarr)
 
     ApiCalls.getapicall("receptionists", "").then(data => {
       this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);

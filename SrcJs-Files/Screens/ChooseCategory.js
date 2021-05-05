@@ -157,10 +157,6 @@ export default class ChooseCategory extends Component {
             if (data.status == true) {
                 let eventCategories =  Keys.invitealldata["Eventdata"].categoriesList;
                 this.setState({ categoriesdata: data.data })
-                // this.state.categoriesdata.map((item,index =>{
-                //  if(item.id == )
-
-                // }))
                 for (let i in data.data) {
                     for (let j in eventCategories) {
                         if (data.data[i].id == eventCategories[j].category_id) {

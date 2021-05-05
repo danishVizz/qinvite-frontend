@@ -85,7 +85,7 @@ export default class SendEditor extends Component {
 
               <View style={{ flexDirection: 'row', marginTop: 15, alignItems: 'center' }}>
                 <TouchableOpacity onPress={() => this.setState({ sendToAll: !(this.state.sendToAll) })}>
-                  <Image style={{ width: 24, height: 24, backgroundColor: 'gray' }} source={this.state.sendToAll ? require('../../assets/icon_check.png') : require('../../assets/uncheckbox.png')}></Image>
+                  <Image style={{ width: 24, height: 24, backgroundColor: 'gray' }} source={this.state.sendToAll ? require('../../assets/icon_checked.png') : require('../../assets/uncheckbox.png')}></Image>
                 </TouchableOpacity>
                 <Text style={{ fontSize: 14, marginLeft: 7, color: mycolor.txtGray }}>{Trans.translate("send_to_all")}</Text>
               </View>

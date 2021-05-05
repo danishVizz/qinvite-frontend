@@ -94,6 +94,7 @@ export default class Designer extends Component {
 
     onRefresh() {
         this.setState({ isFetching: true, }, () => { this.getAllDesigners() });
+        
       }
 
     searchItems = text => {
@@ -173,17 +174,20 @@ export default class Designer extends Component {
     }
 
     actionOnRow(itemdata, index) {
+        
         let requestStatus = itemdata.request_status;
         let designStatus = itemdata.design_status;
-     
-      
 
-        if ((requestStatus == '0' && designStatus == '0') || (requestStatus == '1' && designStatus == '2') || (requestStatus == '0' && designStatus == '2')) {
+        // if ((requestStatus == '0' && designStatus == '0') || (requestStatus == '1' && designStatus == '2') || (requestStatus == '0' && designStatus == '2')) {
+        if (requestStatus == '0'||requestStatus=="1") {
             this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
-        } else if ((requestStatus == '1' && designStatus == '0') || (requestStatus == '1' && designStatus == '1')) {
+        } else if (designStatus == '1'|| designStatus=="0") {
             this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
-        } else {
+        } else  if(designStatus=="3") {
             this.props.navigation.navigate('ReceivedDesign', { "DesignerData": itemdata })
+        }
+        else{
+            this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
         }
     }
 
@@ -195,7 +199,7 @@ export default class Designer extends Component {
         ApiCalls.getapicall("get_designers", "?user_id="+parsedata.id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false,this.state.isFetching=false);
             if (data.status == true) {
-                this.setState({ designerdata: data.data },console.log(this.state.designerdata))
+                this.setState({designerdata:data.data})
             } else {
                 Alert.alert('Failed', data.message);
             }

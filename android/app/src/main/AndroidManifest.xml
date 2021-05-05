@@ -24,8 +24,10 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+  <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
   <!-- END OPTIONAL PERMISSIONS -->
-
+<uses-permission tools:node="merge" android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission tools:node="merge" android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
   <uses-sdk
         android:minSdkVersion="16"
@@ -38,7 +40,6 @@
     android:usesCleartextTraffic="true"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
-
     tools:replace="android:allowBackup"
     android:theme="@style/AppTheme">
   
@@ -53,6 +54,7 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
+         <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>  
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>

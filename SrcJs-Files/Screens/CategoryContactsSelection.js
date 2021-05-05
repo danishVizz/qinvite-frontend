@@ -64,7 +64,7 @@ export default class CategoryContactsSelection extends Component {
                     <FlatList
                         data={this.state.ContactsList}
                         renderItem={this.renderItem.bind(this)}
-                        keyExtractor={(item) => item.number}
+                        keyExtractor={(item, index) => String(index)}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
                 </View>
@@ -117,7 +117,7 @@ export default class CategoryContactsSelection extends Component {
         formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
         formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
         formadata.append("user_id", parsedata.id)
-        formadata.append("participants",JSON.stringify(this.state.selectedLists))
+        formadata.append("participants", JSON.stringify(this.state.selectedLists))
         // this.state.selectedLists.map((item, index) => {
         //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
         //   });
@@ -141,7 +141,7 @@ export default class CategoryContactsSelection extends Component {
         ApiCalls.postApicall(formadata, apiname).then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
-                console.log("--ServerResponse----"+data)
+                console.log("--ServerResponse----" + data)
                 this.props.navigation.push('ChooseCategory')
 
             } else {
@@ -168,7 +168,7 @@ export default class CategoryContactsSelection extends Component {
         var contactdata = {
             "name": item.name,
             "number": item.number,
-            "isselected":false,
+            "isselected": false,
             "isphoneallow": item.isphoneallow
         }
         if (this.state.ContactsList[index].isselected == true) {
@@ -189,6 +189,7 @@ export default class CategoryContactsSelection extends Component {
                     imagepath={require('../../assets/icon_lady.png')}
                     contactname={item.name}
                     index={index}
+
                     isphonellow={item.isphoneallow}
                     fromchildprops={this.onPressButtonChildren}
                     phonestate={item.isphoneallow ? (require('../../assets/icon_phallow.png')) : (require('../../assets/icon_phnotallow.png'))}
@@ -228,7 +229,7 @@ export default class CategoryContactsSelection extends Component {
 
     componentDidMount() {
         var categorydataaa = this.props.route.params.categorydata.contactlist;
-        console.log("---Carrrrrr"+categorydataaa)
+        console.log("---Carrrrrr" + categorydataaa)
         var isphoneallow = this.props.route.params.categorydata.isphoneallowd
         // console.log("dsfsadfsadfs" + JSON.stringify(categorydataaa))
         // console.log("catdaaaaaa" + categorydataaa)
@@ -239,7 +240,7 @@ export default class CategoryContactsSelection extends Component {
                 var contactdata = {
                     "name": item.name,
                     "number": item.number.startsWith("0") ? item.number.replace('0', '+92') : item.number,
-                    "isSelected": true,
+                    "isselected": true,
                     "isphoneallow": item.isphoneallow == "1" ? true : false
                 }
                 // let { isChecked } = this.state;
@@ -247,9 +248,9 @@ export default class CategoryContactsSelection extends Component {
                 // this.setState({ isChecked: isChecked })
                 contactlist.push(contactdata)
                 this.state.selectedLists.push(contactdata)
-                
+
             })
-            console.log("----SelectedValuesFrom Array"+JSON.stringify(this.state.selectedLists))
+            console.log("----SelectedValuesFrom Array" + JSON.stringify(this.state.selectedLists))
 
             this.setState({ ContactsList: contactlist, ContactListReplicae: contactlist }, () => console.log("??ContactListUpdated????" + JSON.stringify(this.state.ContactsList)))
         }
@@ -272,17 +273,23 @@ export default class CategoryContactsSelection extends Component {
                         }
                         obj.isphoneallow = isphoneallow;
                         obj.name = (Platform.OS === "android") ? obj.displayName : obj.givenName
-                        obj.isSelected = isselected
+                        obj.isselected = isselected
                         obj.number = obj.phoneNumbers[0]?.number
+
                         let num = String(obj.phoneNumbers[0]?.number);
-                        console.log("TYPEOF 3: ", typeof(num));
+                        console.log("TYPEOF 3: ", typeof (num));
 
                         if (num.startsWith("0")) {
                             obj.number = num.replace('0', '+92');
                         }
                     });
                     contacts = contacts.filter(item => item.phoneNumbers[0]?.number != undefined)
-                    this.setState({ ContactsList: this.state.ContactsList.concat(contacts), ContactListReplicae: this.state.ContactsList.concat(contacts) })
+                    contacts = this.state.ContactsList.concat(contacts);
+                    let uniqueArray = this.getUniqueArray(contacts);
+
+
+                    this.setState({ ContactsList: uniqueArray, ContactListReplicae: this.state.ContactsList.concat(contacts) }, console.log("---Contc" + JSON.stringify(this.state.ContactsList)))
+                    // this.setState({ ContactsList: contacts, ContactListReplicae: this.state.ContactsList.concat(contacts)},console.log("---Contc"+JSON.stringify(this.state.ContactsList)))
                 })
 
         })
@@ -291,7 +298,31 @@ export default class CategoryContactsSelection extends Component {
             })
     }
     // }
+
+    getUniqueArray(array) {
+        var uniqueArray = [];
+        if (array.length > 0) {
+            uniqueArray[0] = array[0];
+        }
+        for (var i = 0; i < array.length; i++) {
+            var isExist = false;
+            for (var j = 0; j < uniqueArray.length; j++) {
+                if (array[i].number == uniqueArray[j].number) {
+                    isExist = true;
+                    break;
+                }
+                else {
+                    isExist = false;
+                }
+            }
+            if (isExist == false) {
+                uniqueArray[uniqueArray.length] = array[i];
+            }
+        }
+        return uniqueArray;
+    }
 }
+
 
 
 

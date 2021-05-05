@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'react-native';
 import { Alert,Text,Image } from 'react-native';
 import ButtonComp from '../Components/ButtonComp';
+import AwesomeAlert from 'react-native-awesome-alerts'
 
 // const jsCode = `window.postMessage(document.getElementById('gb-main').innerHTML)`
 const jsCode = "window.postMessage(document.getElementsByClassName(payment-response))"

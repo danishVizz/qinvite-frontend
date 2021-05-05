@@ -20,9 +20,9 @@ export default class AllRequests extends Component {
         contentLoading: true,
         showDatePicker: false,
         date: new Date(),
+        isFetching:false,
         status: '',
-        id: '',
-        isFetching: false
+        id:''
     }
 
     _onPress() {
@@ -37,9 +37,9 @@ export default class AllRequests extends Component {
                     data={this.props.type == "All" ? this.getallData() : this.props.type == "Accepted" ? this.getActiveData() : this.getCloseData()}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
+                    showsVerticalScrollIndicator={false}
                     onRefresh={() => this.onRefresh()}
                     refreshing={this.state.isFetching}
-                    showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
                 <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
                     {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
@@ -73,6 +73,11 @@ export default class AllRequests extends Component {
             </View>);
     }
 
+    onRefresh() {
+        this.setState({ isFetching: true, }, () => { this.getAllEvents() });
+    }
+
+
     getallData() {
         try {
             var filterarray = this.state.EventAllData
@@ -101,11 +106,6 @@ export default class AllRequests extends Component {
             return this.state.EventAllData
         }
     }
-
-    onRefresh() {
-        this.setState({ isFetching: true, }, () => { this.getAllEvents() });
-    }
-
     componentDidMount() {
         console.log('Mounted');
 
@@ -122,7 +122,7 @@ export default class AllRequests extends Component {
     async getAllEvents() {
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
-
+        // parsedata.id = "17";
         ApiCalls.getapicall("get_event_requests", "?designer_id=" + parsedata.id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
@@ -174,11 +174,12 @@ export default class AllRequests extends Component {
         console.log("value : " + value);
         console.log(item);
         if (value == 'accept') {
-            this.setState({
+            this.setState({ 
                 showDatePicker: true,
                 status: value,
-                id: item.event_id
+                id: item.event_id 
             }, console.log("status : " + this.state.status + ", id : " + this.state.id));
+    
         }
         // this.changeDesignerStatus(value, item.event_id);
     }

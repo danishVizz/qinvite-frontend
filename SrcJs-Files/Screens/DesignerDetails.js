@@ -91,7 +91,8 @@ export default class DesignerDetails extends Component {
     componentDidMount() {
         console.log(this.props.route.params.DesignerData.request_status);
         console.log(this.props.route.params.DesignerData.design_status);
-        if ((this.props.route.params.DesignerData.request_status == '1' || this.props.route.params.DesignerData.design_status == '0') || (this.props.route.params.DesignerData.request_status == '1' && this.props.route.params.DesignerData.design_status == '1')) {
+        // if ((this.props.route.params.DesignerData.request_status == '1' || this.props.route.params.DesignerData.design_status == '0') || (this.props.route.params.DesignerData.request_status == '1' && this.props.route.params.DesignerData.design_status == '1')) {
+        if ((this.props.route.params.DesignerData.request_status == '1')||this.props.route.params.DesignerData.design_status == '1') {
             this.setState({
                 isresponded: true
             });
