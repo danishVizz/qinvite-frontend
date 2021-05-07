@@ -22,7 +22,7 @@ export default class CategoryList extends Component {
 
         return (
             <View style={styles.container}>
-                <AwesomeAlert
+                {/* {this.state.loading ? <AwesomeAlert
                     show={this.state.loading}
                     contentContainerStyle={{ width: '100%', borderRadius: 4 }}
                     showProgress={false}
@@ -30,20 +30,21 @@ export default class CategoryList extends Component {
                     closeOnTouchOutside={false}
                     closeOnHardwareBackPress={false}
                     customView={this.alertView()}
-                />
+                /> : null } */}
+
                 <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp2 leftBtnClicked={() => this.props.navigation.goBack()} alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('categories')} titlepos='center' ></HeaderComp2>
-                <View style={{ flex: 1 }}>
 
-                    <FlatList
-                        data={this.props.route.params.categories}
-                        renderItem={this.renderItem.bind(this)}
-                        keyExtractor={(item) => item.category_id}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false} />
-
-
-                </View>
+                {this.state.loading ?
+                    this.loadingView() :
+                    <View style={{ flex: 1 }}>
+                        <FlatList
+                            data={this.props.route.params.categories}
+                            renderItem={this.renderItem.bind(this)}
+                            keyExtractor={(item) => item.category_id}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false} />
+                    </View>}
 
                 {/* <ButtonComp
                     onPress={() => this.onNextScreen()}
@@ -58,10 +59,26 @@ export default class CategoryList extends Component {
 
     }
 
+    componentDidMount() {
+        // this.permissionFunc("https://qinvite.vizzwebsolutions.com/pdf/1620114635.jpg-1620298644.jpg.pdf")
+    }
+
+    loadingView() {
+        return (
+            <View style={{ width: '100%', height: '100%', backgroundColor: 'rgba(52, 52, 52, 0.5)', position: 'absolute', zIndex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <View>
+                    <ActivityIndicator style={{ marginBottom: 20 }} size='large' color="#FFF" />
+                    <TextComp
+                        text="Downloading pdf ..." />
+                </View>
+            </View>
+        )
+    }
+
     alertView() {
         return (
             <View>
-                <ActivityIndicator style={{ marginBottom: 20 }} size='large' color={mycolor.pink}/>
+                <ActivityIndicator style={{ marginBottom: 20 }} size='large' color={mycolor.pink} />
                 <TextComp
                     text="Downloading pdf ..." />
             </View>
@@ -72,7 +89,7 @@ export default class CategoryList extends Component {
         return (
 
             <TouchableOpacity
-                style={{  borderWidth: 1, flexDirection: "row", borderColor: mycolor.lightgray, borderRadius: 5, margin: 15, padding: 30, alignItems: 'center' }}
+                style={{ borderWidth: 1, flexDirection: "row", borderColor: mycolor.lightgray, borderRadius: 5, margin: 15, padding: 30, alignItems: 'center' }}
                 onPress={() => this.permissionFunc(item.pdf)}>
                 {/* <CategoryComp lefticon={require('../../assets/icon_category.png')}
                     title={item.category_name}
@@ -89,12 +106,12 @@ export default class CategoryList extends Component {
                     />
                     <TextComp
 
-                        textStyle={{ fontSize: 15, fontWeight: 'normal',marginTop:5}}
+                        textStyle={{ fontSize: 15, fontWeight: 'normal', marginTop: 5 }}
                         text={Trans.translate("Download_Pdf")}
                     />
                 </View>
                 <Image
-                    style={{ marginLeft: 'auto' ,height:30,width:30}}
+                    style={{ marginLeft: 'auto', height: 30, width: 30 }}
                     source={require("../../assets/icon_download.png")}
                 ></Image>
             </TouchableOpacity>
@@ -149,6 +166,7 @@ export default class CategoryList extends Component {
             path: `${dirToSave}/${(Math.floor(date.getTime() + date.getSeconds() / 2))}.pdf`,
 
         }
+
         let options = {
             fileCache: true,
             addAndroidDownloads: {
@@ -158,7 +176,6 @@ export default class CategoryList extends Component {
                 description: 'Downloading Pdf.'
             }
         }
-
 
         const configOptions = Platform.select({
             ios: {
@@ -171,6 +188,7 @@ export default class CategoryList extends Component {
         });
         config(configOptions).fetch('GET', url).then((res) => {
             // console.log(JSON.stringify(res));
+            this.setState({ loading: false });
             if (Platform.OS === "ios") {
                 RNFetchBlob.fs.writeFile(configfb.path, res.data, 'base64');
                 RNFetchBlob.ios.previewDocument(configfb.path);
@@ -179,7 +197,7 @@ export default class CategoryList extends Component {
             if (Platform.OS == 'android') {
                 console.log("File downloaded" + res.path())
             }
-            this.setState({ loading: false });
+
         })
     }
 }
