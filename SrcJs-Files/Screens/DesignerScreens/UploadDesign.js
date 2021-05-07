@@ -39,7 +39,7 @@ export default class UploadDesign extends Component {
                 {/* <ScrollView> */}
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Image source={require('../../../assets/icon_uploadhint.png')} resizeMode='center'></Image>
+                        <Image style={{width: 300, height: 300}} source={require('../../../assets/icon_uploadhint.png')} resizeMode='center'></Image>
                     </View>
                     <View style={{ flex: 2, alignSelf: 'center', justifyContent: 'flex-start', alignSelf: 'center' }}>
                         <Text style={{ color: 'black', fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>{Trans.translate('UploadDesign')}</Text>

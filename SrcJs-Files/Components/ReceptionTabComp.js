@@ -39,7 +39,7 @@ export default class ReceptionTabComp extends Component {
             <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/icon_search.png')}></Image>
             <TextInput style={{ flex: 4 }} placeholder={Trans.translate('search')} onChangeText={(text) => this.setState({ query: text })}></TextInput>
             <TouchableOpacity onPress={() => this.setState({ showFilter: true })}>
-              <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/filter.png')}></Image>
+              {/* <Image resizeMode="cover" style={styles.searchImg} source={require('../../assets/filter.png')}></Image> */}
             </TouchableOpacity>
 
           </View>
