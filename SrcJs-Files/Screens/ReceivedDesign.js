@@ -72,7 +72,7 @@ export default class ReceivedDesign extends Component {
         // }) Tue 15 Mar,2021
     }
     renderItem({ item, index }) {
-        console.log("inex: " + index);
+        console.log("inex: " + item.design_card);
         return (
 
             // moment(testDate).format('MM/DD/YYYY');
@@ -131,15 +131,15 @@ export default class ReceivedDesign extends Component {
 
     async getDesigns() {
         this.logCallback("getDesigns :", this.state.contentLoading = true);
-        ApiCalls.getapicall("get_event_cards", "?event_id=73").then(data => {
-            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+        ApiCalls.getapicall("get_event_cards", "?event_id="+this.props.route.params.DesignerData.event_id).then(data => {
+            this.logCallback("Response came" + JSON.stringify(data), this.state.isLoading = false);
             if (data.status == true) {
                 this.setState({ designerdata: data.data, isLoading: false })
             } else {
                 Alert.alert('Failed', data.message);
             }
         }, error => {
-            this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+            this.logCallback("Something Went Wrong", this.state.isLoading = false);
             Alert.alert('Error', JSON.stringify(error));
         }
         )

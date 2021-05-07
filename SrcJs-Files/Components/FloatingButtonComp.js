@@ -12,7 +12,7 @@ export default class FloatingButtonComp extends Component {
                 <TouchableOpacity
                     style={[styles.container, this.props.containerStyle]}
                     onPress={this.props.floatingclick}>
-                    <Image source={this.props.imagesrc} style={{ resizeMode: 'center',height:60,width:60 }} />
+                    <Image resizeMode='center' source={this.props.imagesrc} style={{height:60,width:60 }} />
                 </TouchableOpacity>
             // </View>
 

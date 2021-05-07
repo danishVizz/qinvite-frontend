@@ -81,7 +81,7 @@ export default class CreateEvent extends Component {
                 placeholder={Trans.translate("Eventdatetime")}
                 placeholderTextColor={mycolor.lightgray}
                 textinstyle={{ paddingLeft: 0 }}
-                value={String(this.state.date)}
+                value={String(this.state.eventdate)}
                 keyboardType={'numeric'}
                 isEnable={false}
                 rightImgStyle={{ tintColor: mycolor.darkgray, marginRight: 40 }}
@@ -179,15 +179,15 @@ export default class CreateEvent extends Component {
 
   componentDidMount() {
     this.state.eventdata = this.props.route.params.eventdata ?? []
-    console.log("-----------------" + this.props.route.params.eventdata.event_card)
-
+    console.log(moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss'))
     if (this.state.eventdata.length != 0) {
+      let event_Date=moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss');// 2021-05-07 01:51:29
       this.setState({
         eventid: this.state.eventdata.id,
         eventname: this.state.eventdata.event_name,
         eventaddress: this.state.eventdata.event_address,
-        eventdate: this.state.eventdata.event_date,
-        date: this.state.eventdata.event_date,
+        eventdate: event_Date,
+        // date: event_Date,
         recpntistcount: this.state.eventdata.no_of_receptionists,
         iseditevent: true,
         paymentstatus: this.state.eventdata.payment_status,
@@ -445,13 +445,13 @@ export default class CreateEvent extends Component {
   // }
 
   renderPicker() {
-    // if (this.state.picker) {
+    console.log("PICKER DATE : "+this.state.date);
     return (
       this.state.show && (<View style={{ marginTop: 20 }}>
         <DatePicker
           date={this.state.date}
           mode="datetime"
-          onDateChange={(date) => this.setState({ date: date, eventdate: date })}
+          onDateChange={(date) => this.setState({ date: date, eventdate: moment(date).format('ddd MMM DD HH:mm:ss') })}
         />
         <View style={{ margin: 20 }}>
           <ButtonComp

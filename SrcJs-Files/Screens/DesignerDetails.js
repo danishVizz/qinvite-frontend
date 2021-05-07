@@ -45,7 +45,7 @@ export default class DesignerDetails extends Component {
                                     <Image style={{ height: 300, width: 200 }} resizeMode='contain' source={require('../../assets/icon_designprocedure.png')} />
                                     <ButtonComp 
                                     isloading={this.state.contentLoading}
-                                    textstyle={{ color: 'white' }} style={{ marginTop: 10 }} text={Trans.translate('RequestDesign')} onPress={() => this.SendRequestDesigners(this.props.route.params.DesignerData.designer_id)}> </ButtonComp>
+                                    textstyle={{ color: 'white' }} style={{ marginTop: 10 }} text={Trans.translate('RequestDesign')} onPress={() => this.SendRequestDesigners(this.props.route.params.DesignerData.id)}> </ButtonComp>
 
                                 </View> : null}
                             {/* after Acceptview */}
@@ -60,7 +60,8 @@ export default class DesignerDetails extends Component {
                                 <View style={{ flexDirection: 'row', width: '100%', marginTop: 20 }}>
                                     <View style={{ flex: 1, marginLeft: 20, margin: 10 }}>
                                         <ButtonComp
-                                            onPress={() => this.props.navigation.goBack()}
+                                            // onPress={() => this.props.navigation.goBack()}
+                                            onPress={() => this.props.navigation.push('Designer')}
                                             text={Trans.translate("changedesigner")}
                                             style={{ backgroundColor: mycolor.white, marginTop: 20 }}
                                             textcolor={mycolor.darkgray}
@@ -91,6 +92,7 @@ export default class DesignerDetails extends Component {
     componentDidMount() {
         console.log(this.props.route.params.DesignerData.request_status);
         console.log(this.props.route.params.DesignerData.design_status);
+        console.log(this.props.route.params.DesignerData.designer_id);
         // if ((this.props.route.params.DesignerData.request_status == '1' || this.props.route.params.DesignerData.design_status == '0') || (this.props.route.params.DesignerData.request_status == '1' && this.props.route.params.DesignerData.design_status == '1')) {
         if ((this.props.route.params.DesignerData.request_status == '1')||this.props.route.params.DesignerData.design_status == '1') {
             this.setState({
@@ -112,7 +114,7 @@ export default class DesignerDetails extends Component {
         var parsedata = JSON.parse(userdata);
 
         var formadata = new FormData()
-        formadata.append("user_id", this.props.route.params.DesignerData.user_id)
+        formadata.append("user_id", parsedata.id)
         formadata.append("designer_id", designerid)
         formadata.append("event_id", Keys.invitealldata["Eventdata"].event_id)
 

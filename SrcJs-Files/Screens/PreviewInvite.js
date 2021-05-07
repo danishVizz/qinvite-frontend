@@ -126,24 +126,14 @@ export default class PreviewInvite extends Component {
         // formadata.append("event_card", alleventdata["ImageData"])
         formadata.append("event_card",photo)
         formadata.append("event_id",alleventdata["Eventdata"].event_id)
+      
         formadata.append("categories_messages",JSON.stringify(alleventdata["CategoriesMessages"]))
-        // formadata.append("event_name", alleventdata["Eventdata"].event_name)
-        // formadata.append("event_date", String(moment(alleventdata["Eventdata"].event_date).format("YYYY-MM-D")))
-        // formadata.append("event_address", alleventdata["Eventdata"].event_address)
-        // formadata.append("user_id", parsedata.id)
-        // formadata.append("package_id", alleventdata["PackageData"])
-        // formadata.append("no_of_receptionists", alleventdata["Eventdata"].no_of_receptionists)
-
-        //  var receptionists = alleventdata["Eventdata"].receptionists
-        // receptionists.map((item, index) => {
-        //     formadata.append("receptionists[" + index + "]", item.id)
-        // })
-
+   
         var categories = alleventdata["CategoriesData"].SelectedCategories
         categories.map((item, index) => {
             formadata.append("categories[" + index + "]", item.id)
         })
-        console.log("Formdataaaaa?????" + JSON.stringify(formadata))
+        console.log("Formdataaaaa?????" + JSON.stringify(formadata.categories_messages))
 
         ApiCalls.postApicall(formadata, "add_event_details").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
@@ -153,6 +143,7 @@ export default class PreviewInvite extends Component {
                 Alert.alert('Failed', data.message);
             }
         }, error => {
+            console.log(error);
             this.logCallback("Something Went Wrong", this.state.contentLoading = false);
             Alert.alert('Error', JSON.stringify(error));
             // this.props.navigation.navigate('CombineComp')

@@ -23,7 +23,7 @@ export default class Designer extends Component {
         modalVisible: false,
         checked: false,
         contentLoading: false,
-        isFetching:false
+        isFetching: false
     }
     render() {
         let designerdialog =
@@ -94,8 +94,8 @@ export default class Designer extends Component {
 
     onRefresh() {
         this.setState({ isFetching: true, }, () => { this.getAllDesigners() });
-        
-      }
+
+    }
 
     searchItems = text => {
         var datatosearch = this.state.designerdata
@@ -134,7 +134,7 @@ export default class Designer extends Component {
                     // toggle={() => this.onToggle(index)}
                     // propsfromparents={onPressButtonChildren.bind()}
                     imagesrc={item.user_image}
-                    designername={item.first_name+' '+item.last_name}
+                    designername={item.first_name + ' ' + item.last_name}
                     designercontact={item.phone}
                 />
             </TouchableOpacity>
@@ -174,32 +174,32 @@ export default class Designer extends Component {
     }
 
     actionOnRow(itemdata, index) {
-        
+
         let requestStatus = itemdata.request_status;
         let designStatus = itemdata.design_status;
-
+        console.log(itemdata)
         // if ((requestStatus == '0' && designStatus == '0') || (requestStatus == '1' && designStatus == '2') || (requestStatus == '0' && designStatus == '2')) {
-        if (requestStatus == '0'||requestStatus=="1") {
+        if (requestStatus == '0' || requestStatus == "1"&& designStatus != "3") {
             this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
-        } else if (designStatus == '1'|| designStatus=="0") {
+        } else if (designStatus == '1' || designStatus == "0") {
             this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
-        } else  if(designStatus=="3") {
+        } else if (designStatus == "3") {
             this.props.navigation.navigate('ReceivedDesign', { "DesignerData": itemdata })
         }
-        else{
+        else {
             this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
         }
     }
 
     async getAllDesigners() {
-        this.logCallback("getAllDesigner :", this.state.contentLoading = true,this.state.isFetching=false);
+        this.logCallback("getAllDesigner :", this.state.contentLoading = true, this.state.isFetching = false);
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
 
-        ApiCalls.getapicall("get_designers", "?user_id="+parsedata.id).then(data => {
-            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false,this.state.isFetching=false);
+        ApiCalls.getapicall("get_designers", "?user_id=" + parsedata.id).then(data => {
+            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
-                this.setState({designerdata:data.data})
+                this.setState({ designerdata: data.data })
             } else {
                 Alert.alert('Failed', data.message);
             }
