@@ -13,6 +13,7 @@ import AlertComp from '../Components/AlertComp';
 
 export default class Events extends Component {
 
+  
   state = {
     EventAllData: [],
     contentLoading: false,
@@ -24,6 +25,8 @@ export default class Events extends Component {
   _onPress() {
     this.props.onPressButtonChildren(this.props.item); //Change: passing prop onPressItem and calling _onPressItem
   }
+
+
 
   render() {
 
@@ -60,7 +63,7 @@ export default class Events extends Component {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          { !this.state.isFetching && this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
+          {!this.state.isFetching && this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
         </View>
 
 
@@ -176,7 +179,7 @@ export default class Events extends Component {
   };
 
   onPressButtonChildren = (value, item) => {
-    console.log("EditEvent--"+JSON.stringify(item))
+    console.log("EditEvent--" + JSON.stringify(item))
     switch (value) {
       case 'delete':
         this.setState({ showalert: true, currentselected: item.id })

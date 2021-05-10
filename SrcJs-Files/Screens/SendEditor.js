@@ -142,8 +142,6 @@ export default class SendEditor extends Component {
 }
   
   async CreateEvent() {
-
-
     if (this.state.sendToAll) {
       var messagesarray = []
       this.state.receptionistsarr.map((item) => {

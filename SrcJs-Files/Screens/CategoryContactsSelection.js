@@ -239,7 +239,7 @@ export default class CategoryContactsSelection extends Component {
             categorydataaa.map((item, index) => {
                 var contactdata = {
                     "name": item.name,
-                    "number": item.number.startsWith("0") ? item.number.replace('0', '+92') : item.number,
+                    "number": item.number.startsWith("0") ? item.number.replace('0', '+974') : item.number,
                     "isselected": true,
                     "isphoneallow": item.isphoneallow == "1" ? true : false
                 }
