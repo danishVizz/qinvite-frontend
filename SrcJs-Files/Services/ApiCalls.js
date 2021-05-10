@@ -13,7 +13,8 @@ class ApiCalls {
       let logindata = await fetch(fullurl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data; ',
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data; charset=utf-8',
         },
         body: formadata
       });
@@ -52,11 +53,7 @@ class ApiCalls {
       var fullurl = Base_url + apiname;
       let codeData = await fetch(`${fullurl}?keyword=${query}`, {
         method: 'GET',
-        // headers: {
-        //   'Accept': 'application/json',
-        //   'Content-Type': 'application/json',
-        //   'Authorization': token
-        // },
+      
       });
 
       let result = await codeData

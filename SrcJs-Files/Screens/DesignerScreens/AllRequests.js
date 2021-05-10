@@ -65,7 +65,7 @@ export default class AllRequests extends Component {
                     />
                     <View style={{ margin: 20, width: '70%' }}>
                         <ButtonComp
-                            onPress={() => this.changeDesignerStatus('2', '72')}
+                            onPress={() => this.changeDesignerStatus()}
                             textstyle={{ color: 'white' }}
                             text={Trans.translate("set_as_deadline")}></ButtonComp>
                     </View>
@@ -184,7 +184,7 @@ export default class AllRequests extends Component {
         // this.changeDesignerStatus(value, item.event_id);
     }
 
-    async changeDesignerStatus(status, id) {
+    async changeDesignerStatus() {
         this.setState({ showDatePicker: false });
         this.logCallback("getAllDesigner :", this.state.contentLoading = true);
 

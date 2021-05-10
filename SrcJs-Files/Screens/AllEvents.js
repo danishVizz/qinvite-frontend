@@ -146,8 +146,8 @@ export default class AllEvents extends Component {
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, margin: 14 }}>
                     <Image style={{ width: 24, height: 24 }} source={require('../../assets/icon_calendar.png')}></Image>
                     <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontSize: 18 }}>{item.event_name}</Text>
-                        <Text style={{ fontSize: 14, color: "#C9C9C9" }}>{moment(item.event_date).format('DD/MM/YYYY')}</Text>
+                        <Text style={{ fontSize: 15,color:"black" }}>{item.event_name}</Text>
+                        <Text style={{ fontSize: 12, color: "#C9C9C9" }}>{moment(item.event_date).format('DD/MM/YYYY')}</Text>
                     </View>
                     <Image resizeMode='contain' style={{ width: 15, height: 15, marginLeft: 'auto' }} source={require('../../assets/icon_arrowright.png')}></Image>
                 </View>
@@ -174,16 +174,18 @@ export default class AllEvents extends Component {
     }
 
     async getAllEvents() {
-        // var userdata = await Prefs.get(Keys.userData);
-        // var parsedata = JSON.parse(userdata)
-        let query = '?receptionist_id=38'
+        var userdata = await Prefs.get(Keys.userData);
+        var parsedata = JSON.parse(userdata)
+        let query = '?receptionist_id='+parsedata.id
         ApiCalls.getGenericCall("get_rp_events", query).then(data => {
             if (data.status == true) {
                 this.setState({ list: data.data, originalList: data.data, isLoading: false, isFetching: false})
             } else {
+                this.setState({isLoading:false,isFetching:false})
                 Alert.alert('Failed', data.message);
             }
         }, error => {
+            this.setState({isLoading:false,isFetching:false})
             Alert.alert('Error', JSON.stringify(error));
         }
         )

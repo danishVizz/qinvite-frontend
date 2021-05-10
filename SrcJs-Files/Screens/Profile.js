@@ -32,6 +32,7 @@ export default class Profile extends Component {
         emailtxt: '',
         idcardtxt: '',
         citytxt: '',
+        phonetxt:'',
         countrytxt: '',
         isLoading: false
     }
@@ -63,6 +64,7 @@ export default class Profile extends Component {
                         <EditTextComp value={this.state.emailtxt} isEnable={this.state.allfieldsenabel} onChangeText={(email) => this.setState({ emailtxt: email, eventnameError: false })} text={Trans.translate('Email')}></EditTextComp>
                         <EditTextComp value={this.state.idcardtxt} isEnable={this.state.allfieldsenabel} onChangeText={(idcard) => this.setState({ idcardtxt: idcard, eventnameError: false })} text={Trans.translate('IDCard')}></EditTextComp>
                         <EditTextComp value={this.state.citytxt} isEnable={this.state.allfieldsenabel} onChangeText={(city) => this.setState({ citytxt: city, eventnameError: false })} text={Trans.translate('City')}></EditTextComp>
+                        <EditTextComp value={this.state.phonetxt} isEnable={this.state.allfieldsenabel} onChangeText={(phone) => this.setState({ phonetxt: phone, eventnameError: false })} text={Trans.translate('Phonenumber')}></EditTextComp>
                         <EditTextComp value={this.state.countrytxt} isEnable={this.state.allfieldsenabel} onChangeText={(country) => this.setState({ countrytxt: country, eventnameError: false })} text={Trans.translate('Country')}></EditTextComp>
 
                         <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.DeleteProfile()}>
@@ -95,6 +97,7 @@ export default class Profile extends Component {
         this.setState({ emailtxt: parsedata.email })
         this.setState({ idcardtxt: parsedata.username })
         this.setState({ citytxt: parsedata.city })
+        this.setState({ phonetxt: parsedata.phone })
         this.setState({ countrytxt: parsedata.country })
         this.setState({ user_id: parsedata.id })
         this.setState({ response: parsedata.user_image })
@@ -117,6 +120,7 @@ export default class Profile extends Component {
         formadata.append("user_id", this.state.user_id)
         formadata.append("email", this.state.emailtxt)
         formadata.append("city", this.state.citytxt)
+        formadata.append("phone", this.state.phonetxt)
         formadata.append("country", this.state.countrytxt)
         formadata.append("user_image ", photo)
 

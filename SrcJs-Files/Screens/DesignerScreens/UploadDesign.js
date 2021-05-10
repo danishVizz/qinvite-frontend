@@ -39,7 +39,7 @@ export default class UploadDesign extends Component {
                 {/* <ScrollView> */}
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Image style={{width: 300, height: 300}} source={require('../../../assets/icon_uploadhint.png')} resizeMode='center'></Image>
+                        <Image style={{ width: 300, height: 300 }} source={require('../../../assets/icon_uploadhint.png')} resizeMode='center'></Image>
                     </View>
                     <View style={{ flex: 2, alignSelf: 'center', justifyContent: 'flex-start', alignSelf: 'center' }}>
                         <Text style={{ color: 'black', fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>{Trans.translate('UploadDesign')}</Text>
@@ -99,15 +99,15 @@ export default class UploadDesign extends Component {
     }
 
     componentDidMount() {
-        console.log("EVENT DATA");
-        console.log(this.props.route.params.event);
+        // console.log("EVENT DATA");
+        // console.log(this.props.route.params.event);
     }
 
-    checkConditions(){
+    checkConditions() {
         if (this.state.qualitycheck == true && this.state.spaceadjustcheck == true) {
             this.createDesign();
         } else {
-            Alert.alert(Trans.translate('conditions'), Trans.translate('check_all_required_conditions_msg')); 
+            Alert.alert(Trans.translate('conditions'), Trans.translate('check_all_required_conditions_msg'));
         }
     }
 
@@ -117,20 +117,23 @@ export default class UploadDesign extends Component {
                 this.props.navigation.navigate('DumyEditor', { "imagedata": this.state.imageuri })
             }
             else {
-                console.log("thisis here");
                 Snackbar.show({
                     text: Trans.translate("ImageSelection"),
                     duration: Snackbar.LENGTH_SHORT,
                 });
             }
         } else {
-            console.log("this is There");
-            this.submitDesign();
+            if (this.state.attachmentUrl == "") {
+                Alert.alert(Trans.translate('add_image'), Trans.translate('choose_design_image'))
+                return
+            } else {
+                this.submitDesign();
+            }
         }
     }
 
     async submitDesign() {
-        this.setState({ isLoading: true});
+        this.setState({ isLoading: true });
         var photo = {
             uri: Platform.OS === "android" ? this.state.attachmentUrl : this.state.attachmentUrl.replace("file://", ""),
             type: 'image/*',
@@ -138,20 +141,21 @@ export default class UploadDesign extends Component {
         };
         console.log("photo data");
         console.log(photo);
+
         var formadata = new FormData()
         formadata.append("designer_id", this.props.route.params.event.designer_id);
         formadata.append("event_id", this.props.route.params.event.event_id);
         formadata.append("event_card", photo);
 
         ApiCalls.postApicall(formadata, "submit_design").then(data => {
-            this.setState({ isLoading: false});
-            this.props.navigation.goBack();
+            this.setState({ isLoading: false });
+            this.props.navigation.navigate("DesignerRequests");
             // this.props.navigation.dispatch(
             //     StackActions.popToTop()
             // )
         }, error => {
             Alert.alert('Error', JSON.stringify(error));
-            this.setState({ isLoading: false});
+            this.setState({ isLoading: false });
         }
         )
 

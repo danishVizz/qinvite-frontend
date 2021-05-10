@@ -140,6 +140,8 @@
     "conditions": "Conditions",
     "Checkedin": "Checked in successfully",
     "categories" : "Categories",
-    "Download_Pdf" : "Download pdf for non WhatsApp Invitations"
+    "Download_Pdf" : "Download pdf for non WhatsApp Invitations",
+    "add_image": "Add Image",
+    "choose_design_image": "Please choose design image."
     
 }

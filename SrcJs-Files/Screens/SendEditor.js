@@ -48,7 +48,7 @@ export default class SendEditor extends Component {
         {/* <StatusBar
           backgroundColor='#F54260'
         /> */}
-        <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('SendInvites')}  textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
+        <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('SendInvites')} textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
         <ScrollView>
           <View style={styles.subContainer}>
             <View style={styles.innercontainer}>
@@ -79,7 +79,7 @@ export default class SendEditor extends Component {
                 multiple={false}
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder={Trans.translate('ChooseCategory')}
-                dropDownStyle={{ backgroundColor: '#fafafa' ,height:100}}
+                dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
                 onChangeItem={(item => this.updateUser(item))} />
 
 
@@ -98,7 +98,7 @@ export default class SendEditor extends Component {
 
 
               </View>
-          
+
             </View>
           </View>
         </ScrollView>
@@ -137,15 +137,34 @@ export default class SendEditor extends Component {
   logCallback = (log, callback) => {
     console.log(log);
     this.setState({
-      callback
+        callback
     });
-  }
-
+}
+  
   async CreateEvent() {
+
+
+    if (this.state.sendToAll) {
+      var messagesarray = []
+      this.state.receptionistsarr.map((item) => {
+        console.log("Message Item is "+item.value+" "+this.state.message)
+        var messageitem = {
+          message: this.state.message,
+          categoryid: item.value
+        }
+        messagesarray.push(messageitem)
+      })
+     await this.setState({ selectedvaluesarr: messagesarray, message: '' })
+
+    }
+    console.log(JSON.stringify(this.state.selectedvaluesarr))
     var invitedata = Keys.invitealldata
-    invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": Keys.invitealldata["ImageData"], "CategoriesMessages": this.state.selectedvaluesarr }
+    invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": Keys.invitealldata["ImageData"], "CategoriesMessages":  this.state.selectedvaluesarr }
     Keys.invitealldata = invitedata
     this.props.navigation.navigate("PreviewInvite")
+
+
+
 
     //   this.logCallback("Creating Event :", this.state.contentLoading = true);
     //   var userdata = await Prefs.get(Keys.userData);

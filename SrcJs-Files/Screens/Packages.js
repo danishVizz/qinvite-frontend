@@ -22,10 +22,10 @@ export class Packages extends Component {
     contentLoading: false,
     selectedItem: null,
     isFetching: false,
+    showLoaderView: false
   }
 
   render() {
-    // const {data} = this.props.route.data
     try {
       const data = this.props.route.params.data || 'none'
       data.selectedItem = this.state.selectedItem;
@@ -77,6 +77,9 @@ export class Packages extends Component {
             onPress={() => this.props.navigation.navigate('CreatePackage')}
           ></ButtonComp>
         </View>
+        { this.state.showLoaderView && <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(52, 52, 52, 0.8)', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color={mycolor.white}  />
+        </View>}
       </View>
     );
   }
@@ -88,11 +91,12 @@ export class Packages extends Component {
   renderItem({ item, index }) {
     return (
       <TouchableOpacity style={this.state.selectedItem === item.id ? {
-        marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, borderColor: mycolor.pink, borderWidth: 2, borderRadius: 5
+        marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, borderColor: mycolor.pink, borderWidth: 2, borderRadius: 5, opacity: this.props.route.name == 'PackagesTab' ? 0.5 : 1
       } : {
-        marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, backgroundColor: mycolor.white
+        marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, backgroundColor: mycolor.white, opacity: this.props.route.name == 'PackagesTab' ? 0.5 : 1
       }}
-        onPress={() => this.actionOnRow(item)}>
+        onPress={() => this.actionOnRow(item)}
+        disabled={this.props.route.name == 'PackagesTab' ? true : false}>
         <PackagesComp
           // toggle={() => this.onToggle(index)}
           image={item.package_name}
@@ -103,9 +107,6 @@ export class Packages extends Component {
       </TouchableOpacity>
     );
   }
-
-
-  
 
   componentDidMount() {
     console.log('Mounted');
@@ -135,7 +136,7 @@ export class Packages extends Component {
     var parsedata = JSON.parse(userdata)
 
     ApiCalls.getapicall("get_packages", "?user_id=" + parsedata.id).then(data => {
-      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false,this.state.isFetching = false);
+      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
       if (data.status == true) {
         this.setState({ packagesdata: data.data })
         this.setState({ isLoading: false })
@@ -147,7 +148,7 @@ export class Packages extends Component {
         Alert.alert('Failed', data.message);
       }
     }, error => {
-      this.logCallback("Something Went Wrong", this.state.contentLoading = false,this.state.isFetching = false);
+      this.logCallback("Something Went Wrong", this.state.contentLoading = false, this.state.isFetching = false);
       Alert.alert('Error', JSON.stringify(error));
     }
     )
@@ -155,7 +156,6 @@ export class Packages extends Component {
 
   async CreateEvent() {
     
-
     var invitedata = mykeys.invitealldata
     var apiname = 'add_event'
     var usersdata = await Prefs.get(Keys.userData);
@@ -167,27 +167,27 @@ export class Packages extends Component {
     formadata.append("user_id", parsedata.id)
     formadata.append("package_id", this.state.selectedItem)
     // console.log("--------------RR"+invitedata["Eventdata"].receptionists[index].id)
-    
+
     formadata.append("no_of_receptionists", invitedata["Eventdata"].no_of_receptionists)
     invitedata["Eventdata"].receptionists.map((item, index) => {
       formadata.append("receptionists[" + index + "]", invitedata["Eventdata"].receptionists[index].id)
     });
 
-   console.log(formadata)
+    console.log(formadata)
 
-    this.logCallback('Creating Event', this.state.contentLoading = true);
+    this.logCallback('Creating Event', this.state.showLoaderView = true);
     ApiCalls.postApicall(formadata, apiname).then(data => {
 
-      this.logCallback("Response came", this.state.contentLoading = false);
+      this.logCallback("Response came", this.state.showLoaderView = false);
       if (data.status == true) {
 
         var invitedata = mykeys.invitealldata
-        var eventdata=invitedata["Eventdata"]
-        eventdata.event_id=data.data.event_id
+        var eventdata = invitedata["Eventdata"]
+        eventdata.event_id = data.data.event_id
         console.log(eventdata)
-        invitedata = {"Eventdata": eventdata, "PackageData":this.state.selectedItem }
+        invitedata = { "Eventdata": eventdata, "PackageData": this.state.selectedItem }
         mykeys.invitealldata = invitedata
-        this.props.navigation.navigate('Payment',{"event_id":data.data.event_id})
+        this.props.navigation.navigate('Payment', { "event_id": data.data.event_id })
 
       } else {
         Alert.alert('Failed', data.message);

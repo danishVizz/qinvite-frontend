@@ -11,8 +11,7 @@ import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
 import { ScrollView } from "react-native-gesture-handler";
 import HeaderComp2 from "../Components/HeaderComp2";
-
-
+import StatusBarComp from '../Components/StatusBarComp';
 
 export default class CreatePackage extends Component {
 
@@ -30,9 +29,8 @@ export default class CreatePackage extends Component {
     render() {
         
         return (
-            <SafeAreaView style={styles.container}>
-                <StatusBar
-                    backgroundColor='#F54260' />
+            <View style={styles.container}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp2 alignSelf='center' textsize={18}leftBtnClicked={()=>this.props.navigation.goBack()} textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CreatePackage')} titlepos='center' ></HeaderComp2>
 
 
@@ -68,8 +66,8 @@ export default class CreatePackage extends Component {
                         /> */}
                         <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("Discount")}</Text>
                         <TextInputComp
-                            placeholder={'0'}
-                            inputtype={'numeric'}
+                            placeholder={Trans.translate("Discount")}
+                            // inputtype={'numeric'}
                             placeholderTextColor={mycolor.lightgray}
                             textinstyle={{ paddingLeft: 0, width: '100%' }}
                             onChangeText={(discount) => this.setState({ discounttxt: discount })}
@@ -81,12 +79,10 @@ export default class CreatePackage extends Component {
                                 isloading={this.state.isLoading}
                                 textcolor={mycolor.white}
                                 textstyle={{ color: mycolor.white, fontWeight: 'bold' }} text={Trans.translate('CreatePackage')} ></ButtonComp>
-
                         </View>
-                        
                     </View>
                 </ScrollView>
-            </SafeAreaView>
+            </View>
 
         );
 
