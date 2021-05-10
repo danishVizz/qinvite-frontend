@@ -344,6 +344,7 @@ export default class CreateEvent extends Component {
         Alert.alert('Failed', data.message);
       }
     }, error => {
+      console.log("Error"+error)
       this.logCallback("Something Went Wrong", this.state.isLoading = false);
       Alert.alert('Error', JSON.stringify(error));
     }
