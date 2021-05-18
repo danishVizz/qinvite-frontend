@@ -12,10 +12,10 @@ class ApiCalls {
 
       let logindata = await fetch(fullurl, {
         method: 'POST',
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-      },
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      // },
         body:formadata
       });
 
