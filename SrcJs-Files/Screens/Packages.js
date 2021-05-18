@@ -78,7 +78,7 @@ export class Packages extends Component {
           ></ButtonComp>
         </View>
         { this.state.showLoaderView && <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(52, 52, 52, 0.8)', justifyContent: 'center' }}>
-          <ActivityIndicator size="large" color={mycolor.white}  />
+          <ActivityIndicator size="large" color={mycolor.pink}  />
         </View>}
       </View>
     );
@@ -131,7 +131,7 @@ export class Packages extends Component {
 
 
   async getAllPackages() {
-    this.logCallback("getProducts :", this.state.contentLoading = true);
+    this.logCallback("getProducts :", this.state.contentLoading = !(this.state.isFetching));
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
 
@@ -159,10 +159,13 @@ export class Packages extends Component {
     var invitedata = mykeys.invitealldata
     var apiname = 'add_event'
     var usersdata = await Prefs.get(Keys.userData);
+
     var parsedata = JSON.parse(usersdata)
+console.log("UserData")
+console.log(parsedata)
     var formadata = new FormData()
     formadata.append("event_name", invitedata["Eventdata"].event_name)
-    formadata.append("event_date", String(moment(invitedata["Eventdata"].event_date).format("YYYY-MM-D")))
+    formadata.append("event_date", String(moment(invitedata["Eventdata"].event_date).format("YYYY-MM-DD HH:mm:ss")))
     formadata.append("event_address", invitedata["Eventdata"].event_address)
     formadata.append("user_id", parsedata.id)
     formadata.append("package_id", this.state.selectedItem)
@@ -194,7 +197,8 @@ export class Packages extends Component {
       }
     }, error => {
       this.logCallback("Something Went Wrong", this.state.contentLoading = false);
-      Alert.alert('Error', JSON.stringify(error));
+      this.props.navigation.navigate('Payment', { "event_id": data.data.event_id })
+      // Alert.alert('Error', JSON.stringify(error));
     }
     )
   }

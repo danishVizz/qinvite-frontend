@@ -5,7 +5,7 @@ import { FlatList, Image, View, StyleSheet, Alert } from 'react-native'
 import Trans from '../Translation/translation'
 import ConversationComp from '../Components/ConversationComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { StackActions } from '@react-navigation/native';
 import HeaderComp2 from '../Components/HeaderComp2';
 import { StatusBar } from 'expo-status-bar';
 import Contacts from 'react-native-contacts';
@@ -142,7 +142,10 @@ export default class CategoryContactsSelection extends Component {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
                 console.log("--ServerResponse----" + data)
-                this.props.navigation.push('ChooseCategory')
+                // this.props.navigation.push('ChooseCategory')
+
+                const popAction = StackActions.pop(2);
+                this.props.navigation.dispatch(popAction);
 
             } else {
                 Alert.alert('Failed', data.message);
@@ -150,7 +153,10 @@ export default class CategoryContactsSelection extends Component {
             }
         }, error => {
             this.logCallback("Something Went Wrong", this.state.isLoading = false);
-            this.props.navigation.navigate('ChooseCategory')
+            // this.props.navigation.navigate('ChooseCategory')
+            const popAction = StackActions.pop(2);
+            this.props.navigation.dispatch(popAction);
+
             // Alert.alert('Error', JSON.stringify(error));
         }
         )

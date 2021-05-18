@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { View, Text, StyleSheet, Image, StatusBar, Picker, Alert } from 'react-native';
 import { ScrollView, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import Prefs from '../Prefs/Prefs';
 import Keys from '../Constants/keys';
 import TextInputComp from '../Components/TextInputComp';
@@ -132,7 +132,7 @@ export default class CreateEvent extends Component {
 
             {this.state.loadDropDown ?
 
-            // <View style={{zIndex: 100}}>
+              // <View style={{zIndex: 100}}>
               <DropDownPicker
                 items={this.state.user}
                 containerStyle={{ height: 60, marginTop: 10 }}
@@ -154,7 +154,7 @@ export default class CreateEvent extends Component {
                 onChangeItemMultiple={item => this.setState({
                 }, console.log("Multi......" + this.state.selectedCountries))}
                 onChangeItem={(item, index) => this.updateUser(item, index)} />
-                // </View>
+              // </View>
               :
               null
             }
@@ -181,7 +181,7 @@ export default class CreateEvent extends Component {
     this.state.eventdata = this.props.route.params.eventdata ?? []
     console.log(moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss'))
     if (this.state.eventdata.length != 0) {
-      let event_Date=moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss');// 2021-05-07 01:51:29
+      let event_Date = moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss');// 2021-05-07 01:51:29
       this.setState({
         eventid: this.state.eventdata.id,
         eventname: this.state.eventdata.event_name,
@@ -194,7 +194,7 @@ export default class CreateEvent extends Component {
         buttontxt: Trans.translate('Edit')
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
 
-      mykeys.invitealldata = {"ImageData": this.props.route.params.eventdata.event_card}
+      mykeys.invitealldata = { "ImageData": this.props.route.params.eventdata.event_card }
 
     }
     this.getAllReceptionists()
@@ -208,7 +208,7 @@ export default class CreateEvent extends Component {
         this.setState({ selectedvaluesarr: this.state.selectedvaluesarr.concat(item.id) })
         // receptionistsarr.push(receptionists
       })
-      this.setState({ editreceptionistarr: receptionistdata }, () => console.log("Editarratlenght" + this.state.editreceptionistarr[1].id))
+      this.setState({ editreceptionistarr: receptionistdata })
     }
 
   }
@@ -221,18 +221,19 @@ export default class CreateEvent extends Component {
   }
 
   async onSignupPress() {
-    console.log('createEvent 2');
+    console.log('createEvent 1');
     var check = this.checkforError()
     console.log("check : " + check);
     if (check) {
       return;
     }
     else {
+      console.log('createEvent 2');
       var usersdata = await Prefs.get(Keys.userData);
       var parsedata = JSON.parse(usersdata)
       var data = {
         "event_name": this.state.eventname,
-        "event_date": this.state.date,
+        "event_date": this.state.eventdate,
         "event_address": this.state.eventaddress,
         "user_id": parsedata.id,
         "no_of_receptionists": this.state.recpntistcount,
@@ -241,12 +242,12 @@ export default class CreateEvent extends Component {
         "event_id": this.state.eventid,
         "categoriesList": this.props.route.params.eventdata.categories
       }
-      mykeys.invitealldata = { "Eventdata": data,"ImageData": data.event_card   }
+      mykeys.invitealldata = { "Eventdata": data, "ImageData": data.event_card }
       if (!(this.state.iseditevent)) {
         this.props.navigation.navigate('Packages')
       }
       else {
-      
+        console.log('createEvent 3');
         this.CreateEvent()
       }
     }
@@ -300,17 +301,19 @@ export default class CreateEvent extends Component {
   }
 
   async CreateEvent() {
-    console.log(this.state.selectedvaluesarr)
+    console.log("EVENT DATE : "+this.state.eventdate)
+    console.log('createEvent 4');
     var apiname = ''
     var check = this.checkforError()
     if (check) {
       return;
     }
+    console.log('createEvent 5');
     var usersdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(usersdata)
     var formadata = new FormData()
     formadata.append("event_name", this.state.eventname)
-    formadata.append("event_date", this.state.date)
+    formadata.append("event_date", moment(this.state.eventdate).format('YYYY-MM-DD HH:mm:ss')) // 
     formadata.append("event_address", this.state.eventaddress)
     formadata.append("user_id", parsedata.id)
     formadata.append("no_of_receptionists", this.state.recpntistcount)
@@ -324,8 +327,8 @@ export default class CreateEvent extends Component {
     else {
       apiname = "add_event"
     }
-
-    console.log(apiname)
+    console.log('createEvent 6');
+    // console.log(apiname)
     this.logCallback('Creating Event', this.state.isLoading = true);
     ApiCalls.postApicall(formadata, apiname).then(data => {
 
@@ -345,17 +348,23 @@ export default class CreateEvent extends Component {
       }
     }, error => {
       this.logCallback("Something Went Wrong", this.state.isLoading = false);
-      Alert.alert('Error', JSON.stringify(error));
+      // Alert.alert('Error', JSON.stringify(error));
+      if (this.state.paymentstatus == 3)
+        this.props.navigation.replace('Todos')
+      else {
+        this.props.navigation.navigate("Payment", { "event_id": this.state.eventid })
+        // this.props.navigation.replace('Todos')
+      }
     }
     )
   }
 
 
   async getAllReceptionists() {
-    this.logCallback("getProducts :", this.state.contentLoading = true);
+    this.logCallback("getProducts :", this.state.isLoading = true);
 
     ApiCalls.getapicall("receptionists", "").then(data => {
-      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+      this.logCallback("Response came" + JSON.stringify(data), this.state.isLoading = false);
       if (data.status == true) {
         var receptionistsarr = []
         var editreceptionistarr = this.state.editreceptionistarr
@@ -379,7 +388,7 @@ export default class CreateEvent extends Component {
         Alert.alert('Failed', data.message);
       }
     }, error => {
-      this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+      this.logCallback("Something Went Wrong", this.state.isLoading = false);
       Alert.alert('Error', JSON.stringify(error));
     }
     )
@@ -406,6 +415,7 @@ export default class CreateEvent extends Component {
     if (event.type === 'neutralButtonPressed') {
       this.setState({ date: new Date(0) });
     } else {
+      console.log("Selcted date "+ currentDate)
       this.setState({ date: currentDate });
 
     }
@@ -445,13 +455,13 @@ export default class CreateEvent extends Component {
   // }
 
   renderPicker() {
-    console.log("PICKER DATE : "+this.state.date);
+    console.log("PICKER DATE : " + this.state.date);
     return (
       this.state.show && (<View style={{ marginTop: 20 }}>
         <DatePicker
           date={this.state.date}
           mode="datetime"
-          onDateChange={(date) => this.setState({ date: date, eventdate: moment(date).format('ddd MMM DD HH:mm:ss') })}
+          onDateChange={(date) => this.setState({ date: date, eventdate: moment(date).format('ddd MMM DD YYYY HH:mm:ss') }, console.log("DATE : "+date))}
         />
         <View style={{ margin: 20 }}>
           <ButtonComp

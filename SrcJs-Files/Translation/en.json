@@ -142,6 +142,7 @@
     "categories" : "Categories",
     "Download_Pdf" : "Download pdf for non WhatsApp Invitations",
     "add_image": "Add Image",
-    "choose_design_image": "Please choose design image."
+    "choose_design_image": "Please choose design image.",
+    "no_record_found": "No Records Found"
     
 }

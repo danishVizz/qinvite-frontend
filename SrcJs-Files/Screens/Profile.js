@@ -32,7 +32,7 @@ export default class Profile extends Component {
         emailtxt: '',
         idcardtxt: '',
         citytxt: '',
-        phonetxt:'',
+        phonetxt: '',
         countrytxt: '',
         isLoading: false
     }
@@ -40,7 +40,8 @@ export default class Profile extends Component {
     render() {
         return (
             <SafeAreaView style={styles.conatiner}>
-                <HeaderComp selfalign={'flex-end'} titleclick={() => this.changeviews()} textfonts={'bold'} titlepos='right' titleColor={'black'} title={this.state.changetext == true ? Trans.translate('Edit') : Trans.translate('Save')} fromleft={7} lefttintColor={mycolor.darkgray} headerStyle={{ backgroundColor: mycolor.white }} leftBtn={require(iamgepath + '/icon_back.png')}></HeaderComp>
+                <HeaderComp selfalign={'flex-end'} titleclick={() => this.changeviews()} textfonts={'bold'} titlepos='right' titleColor={'black'} title={this.state.changetext == true ? Trans.translate('Edit') : Trans.translate('Save')} fromleft={7} lefttintColor={mycolor.darkgray} headerStyle={{ backgroundColor: mycolor.white }} leftBtn={require(iamgepath + '/icon_back.png')}
+                leftBtnClicked={()=>this.props.navigation.goBack()}></HeaderComp>
                 <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
                     <View style={styles.innercontainer}>
                         <View style={{ justifyContent: 'center', alignSelf: 'center', height: 150 }}>
@@ -105,14 +106,14 @@ export default class Profile extends Component {
 
 
     onProfileUpdate() {
-
-
+        
         var photo = {
             uri: Platform.OS === "android" ? this.state.response : this.state.response.replace("file://", ""),
             type: 'image/jpeg',
             name: 'photo.jpg',
         };
-        console.log("Imageeeeeeee"+JSON.stringify(photo))
+        
+        console.log("Imageeeeeeee" + JSON.stringify(photo))
         var formadata = new FormData()
         formadata.append("firstname", this.state.firstnametxt)
         formadata.append("lastname", this.state.lastnametxt)
@@ -122,14 +123,19 @@ export default class Profile extends Component {
         formadata.append("city", this.state.citytxt)
         formadata.append("phone", this.state.phonetxt)
         formadata.append("country", this.state.countrytxt)
-        formadata.append("user_image ", photo)
+        
+        if (photo.uri == "" || photo.uri == null) {
 
+        } else {
+            formadata.append("user_image ", photo)
+        }
+        
         this.logCallback('Updating Started....', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, "update_user").then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
                 Prefs.save(Keys.userData, JSON.stringify(data.data))
-                console.log("---updatedDaata"+ JSON.stringify(data.data))
+                console.log("---updatedDaata" + JSON.stringify(data.data))
                 // this.getUserData()
             } else {
                 Alert.alert('Failed', data.message);
@@ -139,6 +145,7 @@ export default class Profile extends Component {
             Alert.alert('Error', JSON.stringify(error));
         }
         )
+        return
     }
 
     async DeleteProfile() {
@@ -188,8 +195,11 @@ export default class Profile extends Component {
                 // const pushAction = StackActions.push('LandingScreen');
                 // this.props.navigation.dispatch(pushAction);
             }
+        } else {
+            this.props.navigation.dispatch(
+                StackActions.pop(1)
+            )
         }
-
     }
 
 

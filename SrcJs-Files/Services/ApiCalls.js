@@ -27,6 +27,7 @@ class ApiCalls {
       throw error.message;
     }
   }
+  
   async getapicall(apiname, query) {
     try {
       var fullurl = Base_url + apiname;

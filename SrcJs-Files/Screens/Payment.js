@@ -9,7 +9,7 @@ import { ActivityIndicator } from 'react-native';
 import HeaderComp from '../Components/HeaderComp';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'react-native';
-import { Alert,Text,Image } from 'react-native';
+import { Alert, Text, Image } from 'react-native';
 import ButtonComp from '../Components/ButtonComp';
 import AwesomeAlert from 'react-native-awesome-alerts'
 
@@ -22,7 +22,7 @@ const injectedJs = `
 export class Payment extends Component {
     state = {
         visible: true,
-        showAlert:false
+        showAlert: false
     }
     render() {
 
@@ -44,7 +44,7 @@ export class Payment extends Component {
                     }}
                     // source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${Keys.invitealldata["Eventdata"].event_id}` }} />
                     source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.props.route.params.event_id}` }} />
-                    {/* ></WebView> */}
+                {/* ></WebView> */}
                 {this.state.visible && (
                     <View style={{
                         position: 'absolute',
@@ -62,7 +62,6 @@ export class Payment extends Component {
                     show={this.state.showAlert}
                     contentContainerStyle={{ width: '100%', borderRadius: 4 }}
                     showProgress={false}
-                    onTextchange={() => this.getparentdata()}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
                     customView={this.alertView()}
@@ -73,31 +72,34 @@ export class Payment extends Component {
 
         )
     }
+
     hideSpinner() {
         this.setState({ visible: false });
     }
+
     handleMessage(message) {
         if (message.toLowerCase() == "transaction successful")
-            this.setState({showAlert:true})
+            this.setState({ showAlert: true })
         else {
             Alert("Payment Failed Please Try again")
         }
 
     }
-    onpaymentsuccess()
-    {
-        this.setState({showAlert:false})
+
+    onpaymentsuccess() {
+        this.setState({ showAlert: false })
         this.props.navigation.replace('Todos')
     }
+    
     alertView() {
         return (
             <View style={{ width: '100%' }}>
-                <Text style={{ fontSize: 28, marginTop: 5, textAlign:'center', fontWeight: 'bold', color: mycolor.darkgray }}>{Trans.translate("Paymentsuccess")}</Text>
-                <View style={{ flexDirection: 'row', marginTop: 40, width: '100%',justifyContent:'center'}}>
-                <Image style={{ width: 50, height: 50}} source={require('../../assets/icon_success.png')}></Image>
-               </View>    
-                <View style={{ marginTop:20, justifyContent: 'center', alignContent: 'center' }}>
-                    <ButtonComp onPress={() => this.onpaymentsuccess()} style={{backgroundColor:"#25AE88"}} textstyle={{ color: mycolor.white, fontSize: 14 }} text={Trans.translate('Ok')}></ButtonComp>
+                <Text style={{ fontSize: 28, marginTop: 5, textAlign: 'center', fontWeight: 'bold', color: mycolor.darkgray }}>{Trans.translate("Paymentsuccess")}</Text>
+                <View style={{ flexDirection: 'row', marginTop: 40, width: '100%', justifyContent: 'center' }}>
+                    <Image style={{ width: 50, height: 50 }} source={require('../../assets/icon_success.png')}></Image>
+                </View>
+                <View style={{ marginTop: 20, justifyContent: 'center', alignContent: 'center' }}>
+                    <ButtonComp onPress={() => this.onpaymentsuccess()} style={{ backgroundColor: "#25AE88" }} textstyle={{ color: mycolor.white, fontSize: 14 }} text={Trans.translate('Ok')}></ButtonComp>
                 </View>
             </View>
         );

@@ -144,7 +144,7 @@ export default class SignUp extends Component {
             <ButtonComp
               onPress={() => this.onSignupPress()}
               text={Trans.translate("SignUp")}
-              style={{ backgroundColor: mycolor.pink, marginTop: 20 }}
+              style={{ backgroundColor: mycolor.pink, marginTop: 20 ,marginBottom:20}}
               textcolor={mycolor.white}
               isloading={this.state.signupLoading}
               textstyle={{ color: mycolor.white }} />
@@ -231,9 +231,11 @@ export default class SignUp extends Component {
         this.logCallback(data.status)
 
         this.logCallback(data, this.state.signupLoading = false);
-        Prefs.save(mykeys.userData, JSON.stringify(data.data.userData))
+        // console.log("Data after signup"+JSON.stringify(data.data))
+        // Prefs.save(mykeys.userData, JSON.stringify(data.data))
+        // Prefs.save(Keys.userData, JSON.stringify(data.data))
 
-        this.props.navigation.navigate('CombineComp')
+        this.props.navigation.navigate('LandingScreen')
       } else {
         Alert.alert('Failed', data.message);
       }

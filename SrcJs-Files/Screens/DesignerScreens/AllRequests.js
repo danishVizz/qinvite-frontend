@@ -20,9 +20,9 @@ export default class AllRequests extends Component {
         contentLoading: true,
         showDatePicker: false,
         date: new Date(),
-        isFetching:false,
+        isFetching: false,
         status: '',
-        id:''
+        id: ''
     }
 
     _onPress() {
@@ -34,18 +34,24 @@ export default class AllRequests extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <FlatList
+                    contentContainerStyle={(this.props.type == "All" ? this.getallData().length : this.props.type == "Accepted" ? this.getActiveData().length : this.getCloseData().length) === 0 && {
+                        flexGrow: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
                     data={this.props.type == "All" ? this.getallData() : this.props.type == "Accepted" ? this.getActiveData() : this.getCloseData()}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     onRefresh={() => this.onRefresh()}
                     refreshing={this.state.isFetching}
-                    showsHorizontalScrollIndicator={false} />
-                <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
-                    {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
-                </View>
+                    showsHorizontalScrollIndicator={false}
+                    ListEmptyComponent={this.noItemDisplay} />
+                {this.state.contentLoading && <View style={{ flex: 1, alignSelf: 'center', alignItems: "center" }}>
+                    < ActivityIndicator size="large" color={mycolor.pink} />
+                </View>}
 
-                {this.state.showDatePicker?<View style={{
+                {this.state.showDatePicker ? <View style={{
                     display: this.state.showDatePicker == true ? 'flex' : 'none', width: '100%', backgroundColor: '#FFF', position: 'absolute', bottom: 0, borderTopLeftRadius: 30, borderTopRightRadius: 30, justifyContent: 'center', alignItems: 'center', shadowColor: "#000",
                     shadowOffset: {
                         width: 0,
@@ -60,7 +66,7 @@ export default class AllRequests extends Component {
                     <DatePicker
                         date={this.state.date}
                         mode="datetime"
-                        
+
                         onDateChange={(date) => this.setState({ date: date, eventdate: date })}
                     />
                     <View style={{ margin: 20, width: '70%' }}>
@@ -69,7 +75,7 @@ export default class AllRequests extends Component {
                             textstyle={{ color: 'white' }}
                             text={Trans.translate("set_as_deadline")}></ButtonComp>
                     </View>
-                </View>:null}
+                </View> : null}
             </View>);
     }
 
@@ -77,6 +83,11 @@ export default class AllRequests extends Component {
         this.setState({ isFetching: true, }, () => { this.getAllEvents() });
     }
 
+    noItemDisplay = () => {
+        return (
+            <Text style={{ display: this.state.contentLoading ? 'none' : 'flex' }}>{Trans.translate('no_record_found')}</Text>
+        )
+    }
 
     getallData() {
         try {
@@ -91,7 +102,7 @@ export default class AllRequests extends Component {
     getActiveData() {
         console.log("getActiveData()")
         try {
-            var filterarray = this.state.EventAllData.filter(eventdata => eventdata.design_status == "1")
+            var filterarray = this.state.EventAllData.filter(eventdata => eventdata.design_status == "1" || eventdata.design_status == "3")
             return filterarray
         } catch {
             return this.state.EventAllData
@@ -128,7 +139,7 @@ export default class AllRequests extends Component {
             if (data.status == true) {
                 this.setState({ EventAllData: data.data })
             } else {
-                Alert.alert('Failed', data.message);
+                // Alert.alert('Failed', data.message);
             }
         }, error => {
             this.logCallback("Something Went Wrong", this.state.contentLoading = false, this.state.isFetching = false);
@@ -174,12 +185,12 @@ export default class AllRequests extends Component {
         console.log("value : " + value);
         console.log(item);
         if (value == 'accept') {
-            this.setState({ 
+            this.setState({
                 showDatePicker: true,
                 status: value,
-                id: item.event_id 
+                id: item.event_id
             }, console.log("status : " + this.state.status + ", id : " + this.state.id));
-    
+
         }
         // this.changeDesignerStatus(value, item.event_id);
     }

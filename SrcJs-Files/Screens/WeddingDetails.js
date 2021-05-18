@@ -61,7 +61,7 @@ export default class WeddingDetails extends Component {
                 <View style={{ flexDirection: 'row', width: '100%', height: 60, marginTop: 34, alignItems: 'center' }}>
                     <Image style={{ width: 36, height: 36 }} source={require('../../assets/gentleman.png')}></Image>
                     <View style={{ marginLeft: 17 }}>
-                        <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.event_name}</Text>
+                        <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.host_details.first_name+" "+this.props.route.params.item.host_details.last_name}</Text>
                         <Text style={{ fontSize: 14, color: "#C9C9C9", marginTop: 3 }}>{"Host Name"}</Text>
                     </View>
                 </View>
@@ -75,7 +75,7 @@ export default class WeddingDetails extends Component {
                 <View style={{ flexDirection: 'row', width: '100%', height: 60, marginTop: 0, alignItems: 'center' }}>
                     <Image style={{ width: 36, height: 36 }} source={require('../../assets/pink-phone.png')}></Image>
                     <View style={{ marginLeft: 17 }}>
-                        <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.event_status}</Text>
+                        <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.host_details.phone}</Text>
                         <Text style={{ fontSize: 14, color: "#C9C9C9", marginTop: 3 }}>{"Contact Number"}</Text>
                     </View>
                 </View>

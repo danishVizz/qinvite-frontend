@@ -35,7 +35,7 @@ export default class ChooseCategory extends Component {
             <SafeAreaView style={styles.container}>
                 <View style={{ height: "65%", marginTop: 20 }}>
 
-                <View style={{
+                    <View style={{
                         zIndex: -100,
                         position: 'absolute',
                         left: 0,
@@ -45,7 +45,7 @@ export default class ChooseCategory extends Component {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                        { !this.state.isFetching && this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
+                        {!this.state.isFetching && this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                     </View>
 
                     <FlatList
@@ -107,7 +107,7 @@ export default class ChooseCategory extends Component {
                 this.setState({ showalert: true, currentselected: item.id })
                 break
             case 'edit':
-                console.log("----EddittCat"+JSON.stringify(item))
+                console.log("----EddittCat" + JSON.stringify(item))
                 this.props.navigation.navigate('CreateCategory', { "categorydata": item })
                 break
             default:
@@ -124,7 +124,7 @@ export default class ChooseCategory extends Component {
             invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": { "SelectedCategories": this.state.selectedLists }, "ImageData": invitedata["ImageData"] }
             Keys.invitealldata = invitedata
             console.log(Keys.invitealldata["CategoriesData"])
-            if (invitedata["ImageData"] == undefined)
+            if (invitedata["ImageData"] == undefined || invitedata["ImageData"] == "")
                 this.props.navigation.navigate('Todos')
             else
                 this.props.navigation.navigate('SendEditor')
@@ -134,7 +134,12 @@ export default class ChooseCategory extends Component {
     componentDidMount() {
         // console.log("EVENT DATA")
         // console.log(Keys.invitealldata["Eventdata"])
-        this.getAllCategories()
+        // this.getAllCategories()
+
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            console.log("Screen REFRESHED");
+            this.getAllCategories()
+        });
     }
 
     choosecategory = (item, index) => {
@@ -155,7 +160,7 @@ export default class ChooseCategory extends Component {
         ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
-                let eventCategories =  Keys.invitealldata["Eventdata"].categoriesList;
+                let eventCategories = Keys.invitealldata["Eventdata"].categoriesList;
                 this.setState({ categoriesdata: data.data })
                 for (let i in data.data) {
                     for (let j in eventCategories) {

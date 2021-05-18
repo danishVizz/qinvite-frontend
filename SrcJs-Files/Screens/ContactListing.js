@@ -11,8 +11,6 @@ import StatusBarComp from '../Components/StatusBarComp';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 
-
-
 export default class ContactListing extends Component {
 
     render() {
@@ -36,7 +34,6 @@ export default class ContactListing extends Component {
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
-
 
             </View>
 

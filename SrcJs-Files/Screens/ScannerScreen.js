@@ -201,13 +201,26 @@ export default class ScannerScreen extends Component {
             if (Platform.OS === 'android') {
                 await AsyncStorage.clear();
                 this.props.navigation.dispatch(
-                    StackActions.pop(0)
+                    StackActions.pop(1)
                 )
             }
             if (Platform.OS === 'ios') {
                 await AsyncStorage.multiRemove(asyncStorageKeys);
                 this.props.navigation.dispatch(
-                    StackActions.pop(0)
+                    StackActions.pop(1)
+                )
+            }
+        } else {
+            if (Platform.OS === 'android') {
+                await AsyncStorage.clear();
+                this.props.navigation.dispatch(
+                    StackActions.pop(1)
+                )
+            }
+            if (Platform.OS === 'ios') {
+                await AsyncStorage.multiRemove(asyncStorageKeys);
+                this.props.navigation.dispatch(
+                    StackActions.pop(1)
                 )
             }
         }

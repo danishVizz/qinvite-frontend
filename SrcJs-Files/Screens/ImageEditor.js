@@ -306,13 +306,13 @@ export default class ImageEditor extends Component {
                   style={{ width: WINDOW.width - 20, height: WINDOW.height / 2, backgroundColor: '#fff' }}>
 
 
-                  <Draggable x={WINDOW.width / 2.5} y={WINDOW.height / 4} renderColor='green'>
+                  {/* <Draggable x={WINDOW.width / 2.5} y={WINDOW.height / 4} renderColor='green'>
                     <QRCode
                       style={{ alignSelf: 'flex-end' }}
                       size={40}
                       value="QInvites"
                     />
-                  </Draggable>
+                  </Draggable> */}
 
                   {ADDED_TEXTS}
                 </ImageBackground>
@@ -340,7 +340,7 @@ export default class ImageEditor extends Component {
       Keys.invitealldata = invitedata
 
 
-      if (Keys.invitealldata['CategoriesData'] == undefined) {
+      if (Keys.invitealldata['CategoriesData'] == undefined || Keys.invitealldata['CategoriesData'] == "") {
         this.props.navigation.navigate('Todos');
       }
       else {
