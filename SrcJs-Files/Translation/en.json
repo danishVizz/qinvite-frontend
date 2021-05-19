@@ -134,12 +134,20 @@
     "set_deadline": "Set Deadline",
     "set_as_deadline": "Set as Deadline",
     "logout": "Logout",
-    "scan":"SCAN",
-    "Paymentsuccess":"Payment Successful",
+    "scan": "SCAN",
+    "Paymentsuccess": "Payment Successful",
     "check_all_required_conditions_msg": "Please check all required conditions for design",
     "conditions": "Conditions",
     "Checkedin": "Checked in successfully",
-    "categories" : "Categories",
-    "Download_Pdf" : "Download pdf for non WhatsApp Invitations"
+    "categories": "Categories",
+    "Download_Pdf": "Download pdf for non WhatsApp Invitations",
+    "add_image": "Add Image",
+    "choose_design_image": "Please choose design image.",
+    "no_record_found": "No Records Found",
+    "Verifyphone": "Verify Your Phone Number",
+    "Verificationhint": "Please Enter The 4 Digit Code Sent to ",
+    "Verify": "Verify",
+    "NewPass": "Create New Password",
+    "Newpasshint": "Your New Password Must be Different from Previously Used Password"
     
 }

@@ -44,6 +44,11 @@ export default class Events extends Component {
 
 
         <FlatList
+          contentContainerStyle={(this.props.type == "All" ? this.getallData().length : this.props.type == "Active" ? this.getActiveData().length : this.getCloseData().length) === 0 && {
+            flexGrow: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
           data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
           renderItem={this.renderItem.bind(this)}
           horizontal={false}
@@ -51,21 +56,8 @@ export default class Events extends Component {
           onRefresh={() => this.onRefresh()}
           refreshing={this.state.isFetching}
           showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false} />
-
-        <View style={{
-          zIndex: -100,
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          {!this.state.isFetching && this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
-        </View>
-
+          showsHorizontalScrollIndicator={false}
+          ListEmptyComponent={this.noItemDisplay} />
 
         <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 20, right: 20 }}>
           <FloatingButtonComp imagesrc={require('../../assets/icon_event.png')} floatingclick={() => this.props.navigation.navigate("CreateEvent", { "eventdata": [] })}></FloatingButtonComp>
@@ -74,6 +66,21 @@ export default class Events extends Component {
 
 
         {Deletealert}
+
+        { !this.state.isFetching && this.state.contentLoading && <View style={{
+          position: 'absolute',
+          // left: 0,
+          // right: 0,
+          // top: 0,
+          // bottom: 0,
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(52, 52, 52, 0.2)'
+        }}>
+          < ActivityIndicator size="large" color={mycolor.pink} />
+        </View>}
 
       </View>
 
@@ -106,6 +113,11 @@ export default class Events extends Component {
       return this.state.EventAllData
     }
   }
+  noItemDisplay = () => {
+    return (
+      <Text style={{ display: this.state.contentLoading ? 'none' : 'flex' }}>{Trans.translate('no_record_found')}</Text>
+    )
+  }
   componentDidMount() {
     console.log('Mounted');
 
@@ -123,7 +135,7 @@ export default class Events extends Component {
     this.setState({ isFetching: true, }, () => { this.getAllEvents() });
   }
   async getAllEvents() {
-    this.logCallback("Getting Events....:", this.state.contentLoading = true);
+    this.logCallback("Getting Events....:", this.state.contentLoading = !(this.state.isFetching));
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
     ApiCalls.getapicall("get_events", "?user_id=" + parsedata.id).then(data => {
@@ -131,7 +143,7 @@ export default class Events extends Component {
       if (data.status == true) {
         this.setState({ EventAllData: data.data })
       } else {
-        Alert.alert('Failed', data.message);
+        // Alert.alert('Failed', data.message);
       }
     }, error => {
       this.logCallback("Something Went Wrong", this.state.contentLoading = false, this.state.isFetching = false);
@@ -209,7 +221,7 @@ export default class Events extends Component {
   }
 
   actionOnRow(itemdata, props) {
-    console.log('Selected Item :' + itemdata.event_name);
+    console.log('Selected Item :' + itemdata.event_date);
     this.props.navigation.navigate('EventDetails', {
       "eventdata": itemdata
 

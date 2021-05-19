@@ -112,6 +112,12 @@ export default class SendEditor extends Component {
       categoryid: selectedvalue.value
     }
     var messagesarray = this.state.selectedvaluesarr
+    // const index = messagesarray.findIndex((item) => item.categoryid === selectedvalue.value);
+    //replace element having same category id
+    // if (index != -1) { messagesarray[index] = item }
+    // else {
+    //   messagesarray.push(item)
+    // }
     messagesarray.push(item)
     this.setState({ selectedvaluesarr: messagesarray, message: '' })
     console.log(this.state.selectedvaluesarr)
@@ -122,7 +128,6 @@ export default class SendEditor extends Component {
   componentDidMount() {
     var receptionistsarr = []
     var receptionistdata = Keys.invitealldata["CategoriesData"].SelectedCategories
-    console.log("reececefce" + receptionistdata)
     receptionistdata.map((item, key) => {
       var receptionists = {
         label: item.name,
@@ -137,27 +142,27 @@ export default class SendEditor extends Component {
   logCallback = (log, callback) => {
     console.log(log);
     this.setState({
-        callback
+      callback
     });
-}
-  
+  }
+
   async CreateEvent() {
     if (this.state.sendToAll) {
       var messagesarray = []
       this.state.receptionistsarr.map((item) => {
-        console.log("Message Item is "+item.value+" "+this.state.message)
+        console.log("Message Item is " + item.value + " " + this.state.message)
         var messageitem = {
           message: this.state.message,
           categoryid: item.value
         }
         messagesarray.push(messageitem)
       })
-     await this.setState({ selectedvaluesarr: messagesarray, message: '' })
+      await this.setState({ selectedvaluesarr: messagesarray, message: '' })
 
     }
     console.log(JSON.stringify(this.state.selectedvaluesarr))
     var invitedata = Keys.invitealldata
-    invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": Keys.invitealldata["ImageData"], "CategoriesMessages":  this.state.selectedvaluesarr }
+    invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": Keys.invitealldata["ImageData"], "CategoriesMessages": this.state.selectedvaluesarr }
     Keys.invitealldata = invitedata
     this.props.navigation.navigate("PreviewInvite")
 

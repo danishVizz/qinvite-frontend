@@ -99,7 +99,7 @@ export default class ScannerScreen extends Component {
                     <QRCodeScanner
                         onRead={this.onSuccess}
                         ref={(node) => { this.scanner = node }}
-                        reactivate = {this.state.showAlert}
+                        reactivate={this.state.showAlert}
                         // flashMode={RNCamera.Constants.FlashMode.torch}
                         // topContent={
                         //     <Text style={styles.centerText}>
@@ -141,20 +141,19 @@ export default class ScannerScreen extends Component {
         );
     }
 
-    oncheckedin()
-    {
+    oncheckedin() {
         this.setState({ isLoading: false, showAlert: false, scanner: false });
     }
 
     alertsuccessView() {
         return (
             <View style={{ width: '100%' }}>
-                <Text style={{ fontSize: 28, marginTop: 5, textAlign:'center', fontWeight: 'bold', color: mycolor.darkgray }}>{Trans.translate("Checkedin")}</Text>
-                <View style={{ flexDirection: 'row', marginTop: 40, width: '100%',justifyContent:'center'}}>
-                <Image style={{ width: 50, height: 50}} source={require('../../assets/icon_success.png')}></Image>
-               </View>    
-                <View style={{ marginTop:20, justifyContent: 'center', alignContent: 'center' }}>
-                    <ButtonComp onPress={() => this.oncheckedin()} style={{backgroundColor:"#25AE88"}} textstyle={{ color: mycolor.white, fontSize: 14 }} text={Trans.translate('Ok')}></ButtonComp>
+                <Text style={{ fontSize: 28, marginTop: 5, textAlign: 'center', fontWeight: 'bold', color: mycolor.darkgray }}>{Trans.translate("Checkedin")}</Text>
+                <View style={{ flexDirection: 'row', marginTop: 40, width: '100%', justifyContent: 'center' }}>
+                    <Image style={{ width: 50, height: 50 }} source={require('../../assets/icon_success.png')}></Image>
+                </View>
+                <View style={{ marginTop: 20, justifyContent: 'center', alignContent: 'center' }}>
+                    <ButtonComp onPress={() => this.oncheckedin()} style={{ backgroundColor: "#25AE88" }} textstyle={{ color: mycolor.white, fontSize: 14 }} text={Trans.translate('Ok')}></ButtonComp>
                 </View>
             </View>
         );
@@ -195,8 +194,23 @@ export default class ScannerScreen extends Component {
     }
 
     async logout() {
+        console.log("LOGOUT");
         const asyncStorageKeys = await AsyncStorage.getAllKeys();
+        console.log(asyncStorageKeys.length);
         if (asyncStorageKeys.length > 0) {
+            if (Platform.OS === 'android') {
+                await AsyncStorage.clear();
+                this.props.navigation.dispatch(
+                    StackActions.pop(1)
+                )
+            }
+            if (Platform.OS === 'ios') {
+                await AsyncStorage.multiRemove(asyncStorageKeys);
+                this.props.navigation.dispatch(
+                    StackActions.pop(1)
+                )
+            }
+        } else {
             if (Platform.OS === 'android') {
                 await AsyncStorage.clear();
                 this.props.navigation.dispatch(
@@ -212,14 +226,14 @@ export default class ScannerScreen extends Component {
         }
     }
 
-    
+
 
     async updateCheckInStatus(id) {
         this.setState({ isLoading: true });
         let query = "/" + id
         ApiCalls.getGenericCall("check_in", query).then(data => {
             if (data.status == true) {
-                this.setState({showsuccessAlert:true})
+                this.setState({ showsuccessAlert: true })
             } else {
                 Alert.alert('Failed', data.message);
                 this.setState({ isLoading: false, showAlert: false, scanner: false });

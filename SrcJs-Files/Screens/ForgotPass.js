@@ -22,7 +22,9 @@ import HeaderComp2 from "../Components/HeaderComp2";
 export default class ForgotPass extends Component {
 
     state = {
-
+        phonenumber: '',
+        phoneError: false,
+        setLoading: false
     }
 
     render() {
@@ -31,7 +33,7 @@ export default class ForgotPass extends Component {
                 <View >
                     <HeaderComp2
                         lefttintColor={"#000"}
-                        leftBtnClicked={()=>this.props.navigation.goBack()}
+                        leftBtnClicked={() => this.props.navigation.goBack()}
                         headerStyle={{ backgroundColor: 'white' }}
                         leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
@@ -46,16 +48,19 @@ export default class ForgotPass extends Component {
 
 
                         <TextInputComp
-                            placeholder={Trans.translate('Email')}
-                            leftIcon={require('../../assets/icon_email.png')}
+                            placeholder={Trans.translate('Phonenumber')}
+
+                            leftIcon={require('../../assets/icon_phone2x.png')}
                             placeholderTextColor={mycolor.lightgray}
-                            onChangeText={(email) => this.setState({ emailTxt: email, emailError: false })}
+                            onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
                         />
+                        {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
 
                         <View style={{ width: '100%' }}>
                             <ButtonComp
                                 text={Trans.translate("Send")}
-                                isloading={this.state.setLoginLoading}
+                                isloading={this.state.setLoading}
+                                onPress={()=>this.onForgotPress()}
                                 style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
                                 textcolor={mycolor.white}
                                 textstyle={{ color: mycolor.white, textAlign: 'center' }} />
@@ -79,65 +84,40 @@ export default class ForgotPass extends Component {
 
 
 
-    onLoginPress() {
+    onForgotPress() {
         var check = this.checkEmptyFields()
         if (check) {
             return;
         }
-
-
         var formadata = new FormData()
-        formadata.append("username", this.state.emailtxt)
-        formadata.append("password", this.state.passwordtxt)
-        console.log(formadata)
+        formadata.append("number", this.state.phonenumber)
 
         const data = null
-        this.logCallback('Login Start', this.state.setLoginLoading = true);
-        ApiCalls.postApicall(formadata, "login").then(data => {
-            this.logCallback("Response came", this.state.setLoginLoading = false);
+        this.logCallback('Forgot Pass Call Started', this.state.setLoading = true);
+        ApiCalls.postApicall(formadata, "forget_password").then(data => {
+            this.logCallback("Response came", this.state.setLoading = false);
             if (data.status == true) {
-                // this.setState({
-                //   isLoading: false,
-                // });
-                // this.props.navigation.navigate('Home')
-                // Prefs.save(mykeys.accessToken, data.data.token)
-                // console.log("token " + data.data.token)
-                Prefs.save(Keys.userData, JSON.stringify(data.data))
-
-                // let value =await Prefs.get(Keys.userData)
-                // console.log("My Data " + JSON.parse(value))
-                this.props.navigation.navigate('CreatePackage')
-                //this.props.navigation.navigate('Tab');
-                // this.props.navigation.navigate('StoreCategoryScreen');
+                console.log("successdata "+JSON.stringify(data))
+                this.setState({phonenumber:''})
+                this.props.navigation.navigate('CodeVerification',{"Forgotpassdata": data.data})
             } else {
                 Alert.alert('Failed', data.message);
             }
         }, error => {
-            this.logCallback("Something Went Wrong", this.state.setLoginLoading = false);
+            this.logCallback("Something Went Wrong", this.state.setLoading = false);
             Alert.alert('Error', JSON.stringify(error));
         }
         )
     }
     checkEmptyFields() {
         var anycheckfalse = false;
-        if (this.state.emailtxt == "") {
+        if (this.state.phonenumber == "") {
             this.setState({
-                emailEmpty: true,
-                Emailerrortxt: Trans.translate("EmailisRequired"),
+                phoneerrortxt: Trans.translate("phoneerror"),
+                phoneError: true
             })
             var anycheckfalse = true;
         }
-        if (this.state.passwordtxt == "") {
-            this.setState({
-                passworderrortxt: Trans.translate("Passwordisreq"),
-                passEmpty: true
-            })
-            var anycheckfalse = true;
-        }
-        if (this.state.tusername == "" || this.state.tpassword == "") {
-            return true;
-        }
-
         if (anycheckfalse) {
             return true;
         }

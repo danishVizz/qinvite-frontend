@@ -45,6 +45,8 @@ import DesignerRequests from './SrcJs-Files/Screens/DesignerScreens/DesignerRequ
 import mykeys from './SrcJs-Files/Constants/keys';
 import Prefs from './SrcJs-Files/Prefs/Prefs';
 import Payment from './SrcJs-Files/Screens/Payment';
+import CodeVerification from './SrcJs-Files/Screens/CodeVerification';
+import ChangePassword from './SrcJs-Files/Screens/ChangePassword';
 
 const RootStack = createStackNavigator();
 function handleLocalizationChange() {
@@ -93,6 +95,8 @@ export default class App extends Component {
           <RootStack.Screen name="ViewPort" component={ViewPort} options={{ headerShown: false }} />
           <RootStack.Screen name="SearchScreen" component={SearchScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="ForgotPass" component={ForgotPass} options={{ headerShown: false }} />
+          <RootStack.Screen name="ChangePassword" component={ChangePassword} options={{ headerShown: false }} />
+          <RootStack.Screen name="CodeVerification" component={CodeVerification} options={{ headerShown: false }} />
           <RootStack.Screen name="UploadDesign" component={UploadDesign} options={{ headerShown: false }} />
           <RootStack.Screen name="CategoryContactsSelection" component={CategoryContactsSelection} options={{ headerShown: false }} />
           <RootStack.Screen name="DatetimePickerComp" component={DatetimePickerComp} options={{ headerShown: false }} />

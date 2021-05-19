@@ -131,5 +131,14 @@
     "Checkedin": "تم تسجيل الوصول بنجاح",
     "conditions": "الظروف",
     "categories" : "فئات",
-    "Download_Pdf" : "قم بتنزيل ملف pdf لغير WhatsApp رسالة دعوة"
+    "Download_Pdf" : "قم بتنزيل ملف pdf لغير WhatsApp رسالة دعوة",
+    "add_image": "إضافة صورة",
+    "choose_design_image": "الرجاء اختيار صورة التصميم.",
+    "no_record_found": "لا توجد سجلات",
+    "Verifyphone": "اكد على رقم هاتفك او جوالك",
+    "Verificationhint": "الرجاء إدخال الرمز المكون من 4 أرقام المرسل إلى" ,
+    "Verify":"تحقق",
+    "NewPass": "إنشاء كلمة مرور جديدة",
+    "Newpasshint": "يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور المستخدمة سابقًا"
+    
   }

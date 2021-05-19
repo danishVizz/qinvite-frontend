@@ -49,7 +49,6 @@ export default class AllEvents extends Component {
                     show={this.props.showFilter}
                     contentContainerStyle={{ width: '100%', borderRadius: 4 }}
                     showProgress={false}
-                    onTextchange={() => this.getparentdata()}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
                     onDismiss={() => this.hideAlert()}
@@ -58,7 +57,11 @@ export default class AllEvents extends Component {
 
                 { !this.state.isFetching && this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
                 <FlatList
-                    // data={this.state.list}
+                    contentContainerStyle={(this.props.type == "All" ? this.getallData().length : this.props.type == "Active" ? this.getActiveData().length : this.getCloseData().length) === 0 && {
+                        flexGrow: 1,
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
                     data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
                     getparentdata={this.onparendata}
                     renderItem={this.renderItem.bind(this)}
@@ -66,13 +69,21 @@ export default class AllEvents extends Component {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     onRefresh={() => this.onRefresh()}
-                    refreshing={this.state.isFetching} />
+                    refreshing={this.state.isFetching}
+                    ListEmptyComponent={this.noItemDisplay} />
+                    
             </View>
         );
     }
 
     onRefresh() {
         this.setState({ isFetching: true, }, () => { this.getAllEvents(); });
+    }
+
+    noItemDisplay = () => {
+        return (
+            <Text style={{ display: this.state.isLoading ? 'none' : 'flex' }}>{Trans.translate('no_record_found')}</Text>
+        )
     }
 
     onparendata = (value) => {
@@ -146,7 +157,7 @@ export default class AllEvents extends Component {
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, margin: 14 }}>
                     <Image style={{ width: 24, height: 24 }} source={require('../../assets/icon_calendar.png')}></Image>
                     <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontSize: 15,color:"black" }}>{item.event_name}</Text>
+                        <Text style={{ fontSize: 15, color: "black" }}>{item.event_name}</Text>
                         <Text style={{ fontSize: 12, color: "#C9C9C9" }}>{moment(item.event_date).format('DD/MM/YYYY')}</Text>
                     </View>
                     <Image resizeMode='contain' style={{ width: 15, height: 15, marginLeft: 'auto' }} source={require('../../assets/icon_arrowright.png')}></Image>
@@ -169,23 +180,19 @@ export default class AllEvents extends Component {
         this.getAllEvents();
     }
 
-    getparentdata(value) {
-        // console.log(value)
-    }
-
     async getAllEvents() {
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
-        let query = '?receptionist_id='+parsedata.id
+        let query = '?receptionist_id=' + parsedata.id
         ApiCalls.getGenericCall("get_rp_events", query).then(data => {
             if (data.status == true) {
-                this.setState({ list: data.data, originalList: data.data, isLoading: false, isFetching: false})
+                this.setState({ list: data.data, originalList: data.data, isLoading: false, isFetching: false })
             } else {
-                this.setState({isLoading:false,isFetching:false})
+                this.setState({ isLoading: false, isFetching: false })
                 Alert.alert('Failed', data.message);
             }
         }, error => {
-            this.setState({isLoading:false,isFetching:false})
+            this.setState({ isLoading: false, isFetching: false })
             Alert.alert('Error', JSON.stringify(error));
         }
         )
@@ -193,30 +200,29 @@ export default class AllEvents extends Component {
 
     getallData() {
         try {
-          var filterarray = this.state.list
-          return filterarray
-    
+            var filterarray = this.state.list
+            return filterarray
+
         } catch {
-          return this.state.list
+            return this.state.list
         }
-    
-      }
-      getActiveData() {
+    }
+    getActiveData() {
         try {
-          var filterarray = this.state.list.filter(eventdata => eventdata.event_status == "1")
-          return filterarray
+            var filterarray = this.state.list.filter(eventdata => eventdata.event_status == "1")
+            return filterarray
         } catch {
-          return this.state.list
+            return this.state.list
         }
-      }
-      getCloseData() {
+    }
+    getCloseData() {
         try {
-          var filterarray = this.state.list.filter(eventdata => eventdata.event_status == "2")
-          return filterarray
+            var filterarray = this.state.list.filter(eventdata => eventdata.event_status == "2")
+            return filterarray
         } catch {
-          return this.state.list
+            return this.state.list
         }
-      }
+    }
 }
 
 

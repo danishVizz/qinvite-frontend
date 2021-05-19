@@ -13,13 +13,15 @@ import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
 import ApiCalls from "../Services/ApiCalls";
 import { ScrollView } from 'react-native-gesture-handler';
+// import { StackActions } from 'react-navigation';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import moment from "moment";
 
 export default class PreviewInvite extends Component {
     state = {
         contentLoading: false
     }
-    
+
     render() {
         console.log(Keys.invitealldata["ImageData"])
         return (
@@ -27,11 +29,11 @@ export default class PreviewInvite extends Component {
                 <StatusBarComp backgroundColor={mycolor.pink} />
                 {/* <StatusBar
                     backgroundColor={mycolor.pink} /> */}
-                <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CardPreview')} titlepos='center' leftBtnClicked={()=>this.props.navigation.goBack()}></HeaderComp2>
+                <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CardPreview')} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp2>
                 <ScrollView style={{ flex: 2.5 }}>
                     <View style={{ flex: 2.5, marginTop: 28, marginLeft: 20, marginRight: 20, marginBottom: 20, borderRadius: 2, borderWidth: 5, borderColor: 'white', elevation: 2 }}>
                         <View style={styles.imagecontainer}>
-                            <Image source={{ uri: Keys.invitealldata["ImageData"] }} style={{ height: 298, width: "100%",  backgroundColor: 'white' }} resizeMode="center"></Image>
+                            <Image source={{ uri: Keys.invitealldata["ImageData"] }} style={{ height: 298, width: "100%", backgroundColor: 'white' }} resizeMode="center"></Image>
                         </View>
                         <Text style={{ marginLeft: 20, marginRight: 20, fontSize: 24, fontWeight: 'normal', color: mycolor.darkgray }}>{Keys.invitealldata["Eventdata"].event_name}</Text>
 
@@ -73,7 +75,7 @@ export default class PreviewInvite extends Component {
         // console.log("Event Data KEYS");
         // console.log(Keys.invitealldata["Eventdata"]);
         // console.log(Keys.invitealldata["Eventdata"].event_date);
-        
+
     }
 
     async
@@ -124,11 +126,11 @@ export default class PreviewInvite extends Component {
         };
 
         // formadata.append("event_card", alleventdata["ImageData"])
-        formadata.append("event_card",photo)
-        formadata.append("event_id",alleventdata["Eventdata"].event_id)
-      
-        formadata.append("categories_messages",JSON.stringify(alleventdata["CategoriesMessages"]))
-   
+        formadata.append("event_card", photo)
+        formadata.append("event_id", alleventdata["Eventdata"].event_id)
+
+        formadata.append("categories_messages", JSON.stringify(alleventdata["CategoriesMessages"]))
+
         var categories = alleventdata["CategoriesData"].SelectedCategories
         categories.map((item, index) => {
             formadata.append("categories[" + index + "]", item.id)
@@ -138,7 +140,22 @@ export default class PreviewInvite extends Component {
         ApiCalls.postApicall(formadata, "add_event_details").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                this.props.navigation.push('CombineComp')
+                // this.props.navigation.push('CombineComp')
+                // const resetAction = StackActions.reset({
+                //     index: 0,
+                //     actions: [
+                //         NavigationActions.navigate({ screen: 'CombineComp' })
+                //     ]
+                // })
+                // this.props.navigation.dispatch(resetAction);
+
+
+                const resetAction = CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'CombineComp' }],
+                });
+
+                this.props.navigation.dispatch(resetAction);
             } else {
                 Alert.alert('Failed', data.message);
             }

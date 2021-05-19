@@ -7,9 +7,9 @@ import {
   Text,
   View,
   Image,
-  TextInput,
-  Button,
-  TouchableOpacity,
+  ToastAndroid,
+  Platform,
+  AlertIOS,
   SafeAreaView,
   Alert,
 } from "react-native";
@@ -24,28 +24,11 @@ import mykeys from "../Constants/keys";
 
 export default class SignUp extends Component {
 
-  // constructor(props)
-  // {
-
-  // }
-
-  // const [email, setEmail] = useState("");
-  // const [phone, setPhone] = useState("");
-  // const [idCard, setIdcard] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [confirmpassword, setConfirmPassword] = useState("");
-  // const [hidePass, setHidePass] = useState(true);
-  // const [hideconfirmPass, setHideconfrimPass] = useState(true);
-  // const [isSelectedRB1, setisSelectedRB1] = useState(true)
-  // const [isSelectedRB2, setisSelectedRB2] = useState(false)
-  // const [shouldShow, setShouldShow] = useState(true);
-
-
-
   state = {
     isSecureTextEntry: true,
     isSecureTextEntrycomfirmpass: true,
     phoneTxt: '',
+    phoneTxt2: '',
     emailTxt: '',
     passwordTxt: '',
     idcardTxt: '',
@@ -54,107 +37,123 @@ export default class SignUp extends Component {
     isSelectedRB1: true,
     isSelectedRB2: false,
     shouldShow: false,
-    signupLoading:false
+    signupLoading: false,
+
   }
-
-
-
   render() {
     return (
       <SafeAreaView style={styles.container}>
-      <View style={styles.container} >
-        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-          <View style={styles.logocontainer}>
-            <Image style={styles.image} source={require('../../assets/icon_logo.png')}></Image>
-          </View>
-          <View style={styles.innerview}>
-            <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>{Trans.translate("Signuphint")}</Text>
+        <View style={styles.container} >
+          <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+            <View style={styles.logocontainer}>
+              <Image style={styles.image} source={require('../../assets/icon_logo.png')}></Image>
+            </View>
+            <View style={styles.innerview}>
+              <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>{Trans.translate("Signuphint")}</Text>
 
-            <View style={styles.radioview}>
-              <RadioButtonComp
-                size={12} text={Trans.translate("Phonenumber")}
-                onPress={() => this.changebuttons(1)}
-                isSelected={this.state.isSelectedRB1}
-              >
-              </RadioButtonComp>
-              <View style={{flex:1}}>
-              <Text style={{marginTop:2, alignSelf:'center',flex:1,fontSize:12,alignItems:'center',justifyContent:'center',textAlign:'justify'}}>OR</Text>
-              </View>
-              <View style={{ marginLeft: 20 ,flex:1}}>
+              <View style={styles.radioview}>
                 <RadioButtonComp
-                  size={12} text={Trans.translate('Email')}
-                  onPress={() => this.changebuttons(2)}
-                  isSelected={this.state.isSelectedRB2}
+                  size={12} text={Trans.translate("Phonenumber")}
+                  onPress={() => this.changebuttons(1)}
+                  isSelected={this.state.isSelectedRB1}
                 >
                 </RadioButtonComp>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ marginTop: 2, alignSelf: 'center', flex: 1, fontSize: 12, alignItems: 'center', justifyContent: 'center', textAlign: 'justify' }}>OR</Text>
+                </View>
+                <View style={{ marginLeft: 20, flex: 1 }}>
+                  <RadioButtonComp
+                    size={12} text={Trans.translate('Email')}
+                    onPress={() => this.changebuttons(2)}
+                    isSelected={this.state.isSelectedRB2}
+                  >
+                  </RadioButtonComp>
+                </View>
               </View>
-            </View>
-            {this.state.isSelectedRB2 ? (<TextInputComp
-              placeholder={Trans.translate('Email')}
-              leftIcon={require('../../assets/icon_email.png')}
-              placeholderTextColor={mycolor.lightgray}
-              onChangeText={(email) => this.setState({ emailTxt: email, emailError: false })}
-            />) : null}
+              {this.state.isSelectedRB2 ? (<TextInputComp
+                placeholder={Trans.translate('Email')}
+                leftIcon={require('../../assets/icon_email.png')}
+                placeholderTextColor={mycolor.lightgray}
+                onChangeText={(email) => this.setState({ emailTxt: email, emailError: false })}
+              />) : null}
 
-            {this.state.emailError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.emailEmptytext}</Text> : <View></View>}
-            {this.state.isSelectedRB1 ? (<TextInputComp
-              placeholder={Trans.translate('Phonenumber')}
-              leftIcon={require('../../assets/icon_phone2x.png')}
-              placeholderTextColor={mycolor.lightgray}
-              onChangeText={(phone) => this.setState({ phoneTxt: phone, phoneError: false })}
-            />) : null}
-            {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
+              {this.state.emailError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.emailEmptytext}</Text> : <View></View>}
+              {this.state.isSelectedRB1 ? (<TextInputComp
+                placeholder={Trans.translate('Phonenumber')}
+                leftIcon={require('../../assets/icon_phone2x.png')}
+                placeholderTextColor={mycolor.lightgray}
+                onChangeText={(phone) => this.setState({ phoneTxt: phone, phoneError: false })}
+              />) : null}
+              {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
 
-            <TextInputComp
-              placeholder={Trans.translate('IDCard')}
-              leftIcon={require('../../assets/icon_user.png')}
-              placeholderTextColor={mycolor.lightgray}
-              onChangeText={(idcard) => this.setState({ idcardTxt: idcard, idcardError: false })}
-            />
+              <TextInputComp
+                placeholder={Trans.translate('IDCard')}
+                leftIcon={require('../../assets/icon_user.png')}
+                placeholderTextColor={mycolor.lightgray}
+                onChangeText={(idcard) => this.setState({ idcardTxt: idcard, idcardError: false })}
+              />
               {this.state.idcarderror ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.idcarderrortxt}</Text> : <View></View>}
 
-            <TextInputComp
-              placeholder={Trans.translate('Password')}
-              marginTop='20'
-              leftIcon={require('../../assets/icon_pass.png')}
-              placeholderTextColor={mycolor.lightgray}
-              rightIcon={require('../../assets/icon_visiblity.png')}
-              onPressEyeBtn={() => this.onPressEyeBtn('password')}
-              onChangeText={(password) => this.setState({ passwordTxt: password, passwordError: false })}
-              isSecureTextEntry={this.state.isSecureTextEntry}
+              <TextInputComp
+                placeholder={Trans.translate('Password')}
+                marginTop='20'
+                leftIcon={require('../../assets/icon_pass.png')}
+                placeholderTextColor={mycolor.lightgray}
+                rightIcon={require('../../assets/icon_visiblity.png')}
+                onPressEyeBtn={() => this.onPressEyeBtn('password')}
+                onChangeText={(password) => this.setState({ passwordTxt: password, passwordError: false })}
+                isSecureTextEntry={this.state.isSecureTextEntry}
 
-            />
-            {this.state.passwordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
-
-
-            <TextInputComp
-              placeholder={Trans.translate('CPass')}
-              marginTop='20'
-              leftIcon={require('../../assets/icon_pass.png')}
-              placeholderTextColor={mycolor.lightgray}
-              rightIcon={require('../../assets/icon_visiblity.png')}
-              onPressEyeBtn={() => this.onPressEyeBtn('confirmpass')}
-              isSecureTextEntry={this.state.isSecureTextEntrycomfirmpass}
-              onChangeText={(confirmpassword) => this.setState({ confirmPasswordTxt: confirmpassword, confirmpasswordError: false })}
-            />
-            {this.state.confirmpasswordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.cpassworderrortxt}</Text> : <View></View>}
+              />
+              {this.state.passwordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
 
 
+              {this.state.isSelectedRB2 ? (<TextInputComp
+                placeholder={Trans.translate('Phonenumber')}
+                leftIcon={require('../../assets/icon_phone2x.png')}
+                placeholderTextColor={mycolor.lightgray}
+                onChangeText={(phone2) => this.setState({ phoneTxt2: phone2, phoneError2: false })}
+              />) : null}
+              {this.state.phoneError2 ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt2}</Text> : <View></View>}
 
-            <ButtonComp
-              onPress={() => this.onSignupPress()}
-              text={Trans.translate("SignUp")}
-              style={{ backgroundColor: mycolor.pink, marginTop: 20 }}
-              textcolor={mycolor.white}
-              isloading={this.state.signupLoading}
-              textstyle={{ color: mycolor.white }} />
 
-          </View>
-        </ScrollView>
-      </View>
+              <TextInputComp
+                placeholder={Trans.translate('CPass')}
+                marginTop='20'
+                leftIcon={require('../../assets/icon_pass.png')}
+                placeholderTextColor={mycolor.lightgray}
+                rightIcon={require('../../assets/icon_visiblity.png')}
+                onPressEyeBtn={() => this.onPressEyeBtn('confirmpass')}
+                isSecureTextEntry={this.state.isSecureTextEntrycomfirmpass}
+                onChangeText={(confirmpassword) => this.setState({ confirmPasswordTxt: confirmpassword, confirmpasswordError: false })}
+              />
+              {this.state.confirmpasswordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.cpassworderrortxt}</Text> : <View></View>}
+
+
+
+              <ButtonComp
+                onPress={() => this.onSignupPress()}
+                text={Trans.translate("SignUp")}
+                style={{ backgroundColor: mycolor.pink, marginTop: 20, marginBottom: 20 }}
+                textcolor={mycolor.white}
+                isloading={this.state.signupLoading}
+                textstyle={{ color: mycolor.white }} />
+
+            </View>
+          </ScrollView>
+        </View>
       </SafeAreaView>
     );
 
+  }
+
+
+  notifyMessage(msg) {
+    if (Platform.OS === 'android') {
+      ToastAndroid.show(msg, ToastAndroid.SHORT)
+    } else {
+      AlertIOS.alert(msg);
+    }
   }
 
   onPressEyeBtn(value) {
@@ -216,13 +215,13 @@ export default class SignUp extends Component {
 
       });
     }
-    var  formadata = new FormData()
-        // data.append("email", email)
-        formadata.append("password", this.state.passwordTxt)
-        formadata.append("cnic", this.state.idcardTxt)
-        formadata.append("phone", this.state.phoneTxt)
-        console.log(formadata)
-    
+    var formadata = new FormData()
+    // data.append("email", email)
+    formadata.append("password", this.state.passwordTxt)
+    formadata.append("cnic", this.state.idcardTxt)
+    formadata.append("phone", this.state.phoneTxt)
+    console.log(formadata)
+
 
     ApiCalls.postApicall(formadata, "signup").then(data => {
       this.logCallback("Response came", this.state.signupLoading = false);
@@ -231,9 +230,12 @@ export default class SignUp extends Component {
         this.logCallback(data.status)
 
         this.logCallback(data, this.state.signupLoading = false);
-        Prefs.save(mykeys.userData, JSON.stringify(data.data.userData))
+        // console.log("Data after signup"+JSON.stringify(data.data))
+        // Prefs.save(mykeys.userData, JSON.stringify(data.data))
+        // Prefs.save(Keys.userData, JSON.stringify(data.data))
+        this.notifyMessage(data.message)
 
-        this.props.navigation.navigate('CombineComp')
+        this.props.navigation.navigate('LandingScreen')
       } else {
         Alert.alert('Failed', data.message);
       }
@@ -280,6 +282,13 @@ export default class SignUp extends Component {
       this.setState({
         phoneerrortxt: Trans.translate("phoneerror"),
         phoneError: true
+      })
+      anycheckfalse = true;
+    }
+    if (this.state.phoneTxt2 == "" && this.state.isSelectedRB2) {
+      this.setState({
+        phoneerrortxt2: Trans.translate("phoneerror"),
+        phoneError2: true
       })
       anycheckfalse = true;
     }
@@ -338,8 +347,8 @@ const styles = StyleSheet.create({
   radioview: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:"center",
-    flex:1,
+    justifyContent: "center",
+    flex: 1,
     marginTop: 22
   },
   text: {

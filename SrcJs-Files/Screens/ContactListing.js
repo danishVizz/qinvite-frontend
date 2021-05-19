@@ -11,8 +11,6 @@ import StatusBarComp from '../Components/StatusBarComp';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 
-
-
 export default class ContactListing extends Component {
 
     render() {
@@ -37,14 +35,13 @@ export default class ContactListing extends Component {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false} />
 
-
             </View>
 
         );
     }
 
     renderItem({ item, index, props }) {
-        console.log("inex: " + index);
+        console.log("inex: " + item.invitation_date);
         var status = ''
         if (item.status == "0") { status = "Pending" }
         else if (item.status == "1") { status = " Message Sent" }
@@ -58,10 +55,10 @@ export default class ContactListing extends Component {
             <ConversationComp
                 // toggle={() => this.onToggle(index)}
                 // propsfromparents={onPressButtonChildren.bind()}
-                imagepath={require('../../assets/icon_lady.png')}
+                imagepath={require('../../assets/icon_contact.png')}
                 contactname={item.name}
                 status={item.number + "\n" + status}
-                time={String(moment(item.invitation_date).format("HH:MM A"))}
+                time={String(moment(item.invitation_date).format("hh:mm A"))}
             />
             // </TouchableWithoutFeedback>
         );

@@ -47,7 +47,7 @@ export const CombineComp = (props) => {
             source={require('../../assets/icon_phone.png')} 
             style={{tintColor:'black',marginBottom:0,height:20,width:20}}
           /> */}
-      <Tab.Screen name="Packages" component={Packages} options={{
+      <Tab.Screen name="PackagesTab" component={Packages} options={{
         tabBarLabel: Trans.translate('TabPackages'),
         tabBarIcon: ({ color }) => (
           <Icon

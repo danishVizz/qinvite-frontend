@@ -195,8 +195,9 @@ export default class Designer extends Component {
         this.logCallback("getAllDesigner :", this.state.contentLoading = true, this.state.isFetching = false);
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
+        var alleventdata = Keys.invitealldata
 
-        ApiCalls.getapicall("get_designers", "?user_id=" + parsedata.id).then(data => {
+        ApiCalls.getapicall("get_designers", "?event_id=" + alleventdata["Eventdata"].event_id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
                 this.setState({ designerdata: data.data })

@@ -20,6 +20,7 @@ export default class EventDetails extends Component {
     render() {
 
         var eventdata = this.props.route.params.eventdata ?? []
+        console.log(eventdata.event_date)
 
         return (
             <View style={styles.container}>

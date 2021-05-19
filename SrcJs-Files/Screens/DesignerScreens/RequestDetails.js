@@ -54,7 +54,7 @@ export default class RequestDetails extends Component {
                         <Text style={{ alignSelf: 'center', margin: 5, textAlign: 'center', fontWeight: 'bold' }}>{Trans.translate('PointtoPonder')}</Text>
                         <Text style={{ alignSelf: 'center', marginTop: 20, margin: 50, textAlign: 'center' }}>{Trans.translate('SpaceAdjusted')}</Text>
 
-                        {this.props.route.params.detail.request_status == "1" &&
+                        {this.props.route.params.detail.design_status == "1" &&
                             <View style={{ marginTop: 30, marginBottom: 30, margin: 20 }}>
                                 <ButtonComp text={Trans.translate('SubmitDesign')}
                                     textstyle={{ color: mycolor.white, fontWeight: 'bold' }}

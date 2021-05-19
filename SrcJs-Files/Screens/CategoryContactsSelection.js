@@ -5,7 +5,7 @@ import { FlatList, Image, View, StyleSheet, Alert } from 'react-native'
 import Trans from '../Translation/translation'
 import ConversationComp from '../Components/ConversationComp';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { StackActions } from '@react-navigation/native';
 import HeaderComp2 from '../Components/HeaderComp2';
 import { StatusBar } from 'expo-status-bar';
 import Contacts from 'react-native-contacts';
@@ -20,6 +20,9 @@ import { TouchableOpacity } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import TextInputComp from '../Components/TextInputComp';
 import { Platform } from 'react-native';
+import Geocoder from 'react-native-geocoder';
+import CountryData from 'country-data'
+import GetLocation from 'react-native-get-location'
 
 var contactlist = []
 export default class CategoryContactsSelection extends Component {
@@ -28,6 +31,7 @@ export default class CategoryContactsSelection extends Component {
         isChecked: [],
         selectedLists: [],
         catdata: {},
+        callingcode:"+974",
         isLoading: false,
         isphoneallowed: false
     }
@@ -142,7 +146,10 @@ export default class CategoryContactsSelection extends Component {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
                 console.log("--ServerResponse----" + data)
-                this.props.navigation.push('ChooseCategory')
+                // this.props.navigation.push('ChooseCategory')
+
+                const popAction = StackActions.pop(2);
+                this.props.navigation.dispatch(popAction);
 
             } else {
                 Alert.alert('Failed', data.message);
@@ -150,7 +157,10 @@ export default class CategoryContactsSelection extends Component {
             }
         }, error => {
             this.logCallback("Something Went Wrong", this.state.isLoading = false);
-            this.props.navigation.navigate('ChooseCategory')
+            // this.props.navigation.navigate('ChooseCategory')
+            const popAction = StackActions.pop(2);
+            this.props.navigation.dispatch(popAction);
+
             // Alert.alert('Error', JSON.stringify(error));
         }
         )
@@ -186,7 +196,7 @@ export default class CategoryContactsSelection extends Component {
             <TouchableOpacity style={{ backgroundColor: item.isSelected ? '#DDD' : '#FFF' }} onPress={() => this.isIconCheckedOrNot(item, index)}>
                 <ContactsComp
                     isChecked={this.state.ContactsList[index].isselected}
-                    imagepath={require('../../assets/icon_lady.png')}
+                    imagepath={require('../../assets/icon_contact.png')}
                     contactname={item.name}
                     index={index}
 
@@ -228,6 +238,7 @@ export default class CategoryContactsSelection extends Component {
     }
 
     componentDidMount() {
+        this.getCurrentLocation()
         var categorydataaa = this.props.route.params.categorydata.contactlist;
         console.log("---Carrrrrr" + categorydataaa)
         var isphoneallow = this.props.route.params.categorydata.isphoneallowd
@@ -239,7 +250,7 @@ export default class CategoryContactsSelection extends Component {
             categorydataaa.map((item, index) => {
                 var contactdata = {
                     "name": item.name,
-                    "number": item.number.startsWith("0") ? item.number.replace('0', '+974') : item.number,
+                    "number": item.number.startsWith("0") ? item.number.replace('0', this.state.callingcode) : item.number,
                     "isselected": true,
                     "isphoneallow": item.isphoneallow == "1" ? true : false
                 }
@@ -265,6 +276,8 @@ export default class CategoryContactsSelection extends Component {
             var contactlist = []
             Contacts.getAll()
                 .then((contacts) => {
+                    console.log("Fetched Contacts "+JSON.stringify(contacts))
+                    var callingcode=this.state.callingcode
                     contacts.map(function (obj) {
                         var isselected = false
                         const index = categorydataaa.findIndex((e) => e.name === obj.displayName);
@@ -277,10 +290,10 @@ export default class CategoryContactsSelection extends Component {
                         obj.number = obj.phoneNumbers[0]?.number
 
                         let num = String(obj.phoneNumbers[0]?.number);
-                        console.log("TYPEOF 3: ", typeof (num));
+                        // console.log("TYPEOF 3: ", typeof (num));
 
                         if (num.startsWith("0")) {
-                            obj.number = num.replace('0', '+974');
+                            obj.number = num.replace('0', callingcode);
                         }
                     });
                     contacts = contacts.filter(item => item.phoneNumbers[0]?.number != undefined)
@@ -288,14 +301,51 @@ export default class CategoryContactsSelection extends Component {
                     let uniqueArray = this.getUniqueArray(contacts);
 
 
-                    this.setState({ ContactsList: uniqueArray, ContactListReplicae: this.state.ContactsList.concat(contacts) }, console.log("---Contc" + JSON.stringify(this.state.ContactsList)))
+                    this.setState({ ContactsList: uniqueArray, ContactListReplicae: this.state.ContactsList.concat(contacts) })
                     // this.setState({ ContactsList: contacts, ContactListReplicae: this.state.ContactsList.concat(contacts)},console.log("---Contc"+JSON.stringify(this.state.ContactsList)))
                 })
+
 
         })
             .catch((err) => {
                 console.log(err);
             })
+    }
+   async getCurrentLocation() {
+        GetLocation.getCurrentPosition({
+            enableHighAccuracy: true,
+            timeout: 15000,
+        })
+            .then(location => {
+                console.log("latitude"+location.latitude);
+                var locationvariables = {
+                    lat: location.latitude,
+                    lng: location.longitude
+                };
+        
+                Geocoder.geocodePosition(locationvariables).then(res => {
+                    
+                    var countrycode=res[0].countryCode
+                    // console.log("Codeeeeee..."+countrycode)
+
+                    // var callingcode=CountryData.countries[countrycode].countryCallingCodes;
+                    console.log(CountryData.countries["PK"]);
+
+                    var callingcode= CountryData.countries[countrycode]
+                    // console.log("Calling Code "+JSON.stringify(callingcode.countryCallingCodes[0]))
+
+                    this.setState({callingcode:callingcode.countryCallingCodes[0]},console.log(this.state.callingcode))
+                })
+                    .catch(err => console.log(err))
+                
+            })
+            .catch(error => {
+                const { code, message } = error;
+                console.warn(code, message);
+            })
+
+   
+
     }
     // }
 
@@ -321,6 +371,7 @@ export default class CategoryContactsSelection extends Component {
         }
         return uniqueArray;
     }
+
 }
 
 
