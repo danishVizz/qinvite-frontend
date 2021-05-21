@@ -3,7 +3,6 @@ import { Component } from "react";
 import { StyleSheet, View, Image, Text, StatusBar, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RNImageToPdf from 'react-native-image-to-pdf';
-import CameraRollExtended from 'react-native-store-photos-album'
 import ButtonComp from '../Components/ButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';

@@ -107,18 +107,19 @@ export default class SendEditor extends Component {
 
   }
   updateUser = (selectedvalue, index) => {
+    this.setState
     var item = {
       message: this.state.message,
       categoryid: selectedvalue.value
     }
     var messagesarray = this.state.selectedvaluesarr
-    // const index = messagesarray.findIndex((item) => item.categoryid === selectedvalue.value);
-    //replace element having same category id
-    // if (index != -1) { messagesarray[index] = item }
-    // else {
-    //   messagesarray.push(item)
-    // }
-    messagesarray.push(item)
+    let ind = messagesarray.findIndex((item) => item.categoryid === selectedvalue.value);
+    // replace element having same category id
+    if (ind != -1) { messagesarray[ind] = item }
+    else {
+      messagesarray.push(item)
+    }
+    // messagesarray.push(item)
     this.setState({ selectedvaluesarr: messagesarray, message: '' })
     console.log(this.state.selectedvaluesarr)
   }
@@ -147,6 +148,7 @@ export default class SendEditor extends Component {
   }
 
   async CreateEvent() {
+    
     if (this.state.sendToAll) {
       var messagesarray = []
       this.state.receptionistsarr.map((item) => {
@@ -158,6 +160,7 @@ export default class SendEditor extends Component {
         messagesarray.push(messageitem)
       })
       await this.setState({ selectedvaluesarr: messagesarray, message: '' })
+      console.log(messagesarray)
 
     }
     console.log(JSON.stringify(this.state.selectedvaluesarr))
@@ -165,47 +168,6 @@ export default class SendEditor extends Component {
     invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": Keys.invitealldata["ImageData"], "CategoriesMessages": this.state.selectedvaluesarr }
     Keys.invitealldata = invitedata
     this.props.navigation.navigate("PreviewInvite")
-
-
-
-
-    //   this.logCallback("Creating Event :", this.state.contentLoading = true);
-    //   var userdata = await Prefs.get(Keys.userData);
-    //   var parsedata = JSON.parse(userdata);
-    //   var alleventdata = Keys.invitealldata
-    //   var formadata = new FormData()
-    //   formadata.append("event_card", this.props.route.params.imagedata)
-    //   formadata.append("event_name", alleventdata["Eventdata"].event_name)
-    //   formadata.append("event_date", alleventdata["Eventdata"].event_date)
-    //   formadata.append("event_address", alleventdata["Eventdata"].event_address)
-    //   formadata.append("user_id", parsedata.id)
-    //   formadata.append("package_id", alleventdata["PackageData"])
-
-    //   var receptionists = alleventdata["Eventdata"].receptionists
-
-    //   var categories = alleventdata["CategoriesData"].SelectedCategories
-
-    //   receptionists.map((item, index) => {
-    //     formadata.append("receptionists[" + index + "]", item.id)
-    //   })
-    //   categories.map((item, index) => {
-    //     formadata.append("Categories[" + index + "]", item.id)
-    //   })
-    //   console.log("Formdataaaaa?????" + JSON.stringify(formadata))
-
-    //   ApiCalls.postApicall(formadata, "add_event").then(data => {
-    //     this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
-    //     if (data.status == true) {
-    //       this.props.navigation.navigate('CombineComp')
-    //     } else {
-    //       Alert.alert('Failed', data.message);
-    //     }
-    //   }, error => {
-    //     this.logCallback("Something Went Wrong", this.state.contentLoading = false);
-    //     Alert.alert('Error', JSON.stringify(error));
-    //     this.props.navigation.navigate('CombineComp')
-    //   }
-    //   )
   }
 
 }

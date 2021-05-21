@@ -238,6 +238,8 @@ PODS:
     - React-Core
   - react-native-date-picker (3.2.10):
     - React-Core
+  - react-native-geocoder (0.5.0):
+    - React
   - react-native-image-picker (3.3.2):
     - React-Core
   - react-native-safe-area-context (3.1.9):
@@ -310,6 +312,8 @@ PODS:
     - React-Core (= 0.63.4)
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
+  - ReactNativeGetLocation (2.1.0):
+    - React
   - rn-fetch-blob (0.12.0):
     - React-Core
   - RNCAsyncStorage (1.14.1):
@@ -320,7 +324,7 @@ PODS:
     - React
   - RNImageToPdf (1.2.0):
     - React
-  - RNLocalize (2.0.2):
+  - RNLocalize (2.0.3):
     - React-Core
   - RNPermissions (2.2.2):
     - React-Core
@@ -389,6 +393,7 @@ DEPENDENCIES:
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
+  - react-native-geocoder (from `../node_modules/react-native-geocoder`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
@@ -405,6 +410,7 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeGetLocation (from `../node_modules/react-native-get-location`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
@@ -503,6 +509,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-contacts"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
+  react-native-geocoder:
+    :path: "../node_modules/react-native-geocoder"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-safe-area-context:
@@ -535,6 +543,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeGetLocation:
+    :path: "../node_modules/react-native-get-location"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
   RNCAsyncStorage:
@@ -623,6 +633,7 @@ SPEC CHECKSUMS:
   react-native-camera: 04a9a85b63d169094db5fd13a0c786101238e925
   react-native-contacts: 931baebf460125c5a7bbce1c4521a96c69795123
   react-native-date-picker: 242eec7af56cea5fb2706d5db5d3837060b3884b
+  react-native-geocoder: 757427682892bb256f3b3745858cc90eba148a8e
   react-native-image-picker: b42940647478bf106ad3c491d6f5d9d40916d865
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
@@ -639,12 +650,13 @@ SPEC CHECKSUMS:
   React-RCTText: 5c51df3f08cb9dedc6e790161195d12bac06101c
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
+  ReactNativeGetLocation: b3749bd268b1d9cb913ed1ca40d952854eaf9b1b
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCAsyncStorage: fe58eec522885718d6b297b7b658bf87d7ca557b
   RNDateTimePicker: 100c248ff9d5d584694da602957140b20aa15223
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNImageToPdf: 43fd91d019b3ee8ae6aba7f2d8c40ca4a55088ff
-  RNLocalize: 43f6c30d8e19ad92282ae434d310fb463b31f419
+  RNLocalize: 99e59cad311ca1b6872b1764514009416ccba03d
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
   RNScreens: 3d682bcaba69a4f8e55543d90818704f34338db1
@@ -666,6 +678,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 4c60b43eaf3cb05a164bc9113258a171c18b7bf7
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
-PODFILE CHECKSUM: 413520c347b3a8f8eeee9602fa871e4291f236d4
+PODFILE CHECKSUM: 36789dbf287a5b5cf41c0f2818e6b20e64a28a27
 
 COCOAPODS: 1.10.1

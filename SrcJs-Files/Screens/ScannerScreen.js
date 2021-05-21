@@ -1,7 +1,8 @@
 import { Component } from "react";
 import React from 'react'
 import { Button, Image, Alert, TouchableOpacity, StyleSheet } from "react-native";
-import { Dimensions, View, Text } from "react-native";
+import { Dimensions, View, Text, ToastAndroid,
+    Platform, } from "react-native";
 import Draggable from 'react-native-draggable';
 import ViewShot from "react-native-view-shot";
 import { SafeAreaView } from "react-native";
@@ -126,14 +127,15 @@ export default class ScannerScreen extends Component {
                 }
 
 
-                <AwesomeAlert
+               {this.state.showsuccessAlert? <AwesomeAlert
                     show={this.state.showsuccessAlert}
                     contentContainerStyle={{ width: '100%', borderRadius: 4 }}
                     showProgress={false}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
                     customView={this.alertsuccessView()}
-                />
+                
+                />:null}
 
             </View>
 
@@ -142,7 +144,7 @@ export default class ScannerScreen extends Component {
     }
 
     oncheckedin() {
-        this.setState({ isLoading: false, showAlert: false, scanner: false });
+        this.setState({ isLoading: false,showAlert:false, showsuccessAlert: false, scanner: false });
     }
 
     alertsuccessView() {
@@ -226,23 +228,35 @@ export default class ScannerScreen extends Component {
         }
     }
 
-
-
     async updateCheckInStatus(id) {
         this.setState({ isLoading: true });
         let query = "/" + id
+        console.log("updateCheckInStatus()")
         ApiCalls.getGenericCall("check_in", query).then(data => {
+            console.log("DATA")
+            console.log(data)
             if (data.status == true) {
-                this.setState({ showsuccessAlert: true })
+                this.setState({isLoading: false, showAlert: false, scanner: false })
+                this.notifyMessage(data.message)
+                // Alert.alert(data.message);
             } else {
                 Alert.alert('Failed', data.message);
                 this.setState({ isLoading: false, showAlert: false, scanner: false });
             }
         }, error => {
-            Alert.alert('Error', JSON.stringify(error));
+            // Alert.alert('Error', JSON.stringify(error));
+            console.log(JSON.stringify(error))
         }
         )
     }
+    notifyMessage(msg) {
+        if (Platform.OS === 'android') {
+          ToastAndroid.show(msg, ToastAndroid.SHORT)
+        } else {
+
+          Alert.alert(msg);
+        }
+      }
 }
 
 const styles = StyleSheet.create({

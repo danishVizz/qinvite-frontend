@@ -9,7 +9,7 @@ import {
     Image,
     Alert,
 } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import TextInputComp from "../Components/TextInputComp";
 import ButtonComp from "../Components/ButtonComp";
 import Trans from "../Translation/translation"
@@ -18,6 +18,7 @@ import Prefs from "../Prefs/Prefs";
 import Keys from "../Constants/keys";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComp2 from "../Components/HeaderComp2";
+import { KeyboardAvoidingView } from "react-native";
 
 export default class ForgotPass extends Component {
 
@@ -30,45 +31,47 @@ export default class ForgotPass extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                <View >
-                    <HeaderComp2
-                        lefttintColor={"#000"}
-                        leftBtnClicked={() => this.props.navigation.goBack()}
-                        headerStyle={{ backgroundColor: 'white' }}
-                        leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
+                <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={20}>
+                    <ScrollView style={{ width: '100%' }}>
+                        <HeaderComp2
+                            lefttintColor={"#000"}
+                            leftBtnClicked={() => this.props.navigation.goBack()}
+                            headerStyle={{ backgroundColor: 'white' }}
+                            leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
-                    <Image style={styles.image} source={require("../../assets/icon_unlock.png")} />
+                        <Image style={styles.image} source={require("../../assets/icon_unlock.png")} />
 
-                    <StatusBar style="auto" />
+                        <StatusBar style="auto" />
 
-                    <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, fontSize: 25, fontWeight: 'bold' }}>{Trans.translate('Forgotpass')}</Text>
-                    <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, marginLeft: 50, marginRight: 50, fontSize: 15 }}>{Trans.translate('Forgotpasshint')}</Text>
+                        <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, fontSize: 25, fontWeight: 'bold' }}>{Trans.translate('Forgotpass')}</Text>
+                        <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, marginLeft: 50, marginRight: 50, fontSize: 15 }}>{Trans.translate('Forgotpasshint')}</Text>
 
-                    <View style={styles.innerview}>
+                        <View style={styles.innerview}>
 
 
-                        <TextInputComp
-                            placeholder={Trans.translate('Phonenumber')}
+                            <TextInputComp
+                                placeholder={Trans.translate('Phonenumber')}
 
-                            leftIcon={require('../../assets/icon_phone2x.png')}
-                            placeholderTextColor={mycolor.lightgray}
-                            onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
-                        />
-                        {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
+                                leftIcon={require('../../assets/icon_phone2x.png')}
+                                placeholderTextColor={mycolor.lightgray}
+                                onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
+                            />
+                            {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
 
-                        <View style={{ width: '100%' }}>
-                            <ButtonComp
-                                text={Trans.translate("Send")}
-                                isloading={this.state.setLoading}
-                                onPress={()=>this.onForgotPress()}
-                                style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
-                                textcolor={mycolor.white}
-                                textstyle={{ color: mycolor.white, textAlign: 'center' }} />
+                            <View style={{ width: '100%' }}>
+                                <ButtonComp
+                                    text={Trans.translate("Send")}
+                                    isloading={this.state.setLoading}
+                                    onPress={() => this.onForgotPress()}
+                                    style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
+                                    textcolor={mycolor.white}
+                                    textstyle={{ color: mycolor.white, textAlign: 'center' }} />
 
+                            </View>
                         </View>
-                    </View>
 
-                </View>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </SafeAreaView>
 
         );
@@ -97,9 +100,9 @@ export default class ForgotPass extends Component {
         ApiCalls.postApicall(formadata, "forget_password").then(data => {
             this.logCallback("Response came", this.state.setLoading = false);
             if (data.status == true) {
-                console.log("successdata "+JSON.stringify(data))
-                this.setState({phonenumber:''})
-                this.props.navigation.navigate('CodeVerification',{"Forgotpassdata": data.data})
+                console.log("successdata " + JSON.stringify(data))
+                this.setState({ phonenumber: '' })
+                this.props.navigation.navigate('CodeVerification', { "Forgotpassdata": data.data })
             } else {
                 Alert.alert('Failed', data.message);
             }

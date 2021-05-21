@@ -10,7 +10,6 @@ import {
     Alert,
     ToastAndroid,
     Platform,
-    AlertIOS,
 } from "react-native";
 import TextInputComp from "../Components/TextInputComp";
 import ButtonComp from "../Components/ButtonComp";
@@ -21,6 +20,8 @@ import Keys from "../Constants/keys";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComp2 from "../Components/HeaderComp2";
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
+import { Keyboard } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 export default class ForgotPass extends Component {
 
     state = {
@@ -30,7 +31,7 @@ export default class ForgotPass extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                <View >
+                <ScrollView>
                     <HeaderComp2
                         lefttintColor={"#000"}
                         leftBtnClicked={() => this.props.navigation.goBack()}
@@ -52,8 +53,9 @@ export default class ForgotPass extends Component {
                             value={this.state.code}
                             onTextChange={code => this.setState({ code: code })}
                             // onFulfill={this._checkCode}
-                            // onBackspace={this._focusePrevInput}
-                            onBackspace={() => console.log('No more back.')}
+                            onBackspace={this._focusePrevInput}
+                            
+                            onBackspace={Keyboard.dismiss()}
                         />
 
                         <View style={{ width: '100%' }}>
@@ -68,7 +70,7 @@ export default class ForgotPass extends Component {
                         </View>
                     </View>
 
-                </View>
+                </ScrollView>
             </SafeAreaView>
 
         );
@@ -87,7 +89,7 @@ export default class ForgotPass extends Component {
         if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT)
         } else {
-            AlertIOS.alert(msg);
+            Alert.alert(msg);
         }
     }
 }

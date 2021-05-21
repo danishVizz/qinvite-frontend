@@ -29,7 +29,7 @@ class Event_items extends Component {
                                 {this.props.description}
                             </Text> */}
                         </View>
-                        {/* <Image source={require('../../assets/icon_option.png')}style={styles.leftphoto}/> */}
+                        {/* <Image source={require('../../assets/icon_option.png')}style={styles.leftphoto}/> */}   
 
                     </View>
                 </View>

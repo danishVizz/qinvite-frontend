@@ -27,8 +27,8 @@ class CategoryComp extends Component {
                             button={require('../../assets/icon_option.png')}
                             buttonStyle={{ width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'center', alignSelf: 'center' }}
                             destructiveIndex={2}
-                            options={[Trans.translate('view'), Trans.translate('Edit'), Trans.translate('Delete')]}
-                            actions={[() => this.onPressButtonChildren("view", this.props.item), () => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item)]} />
+                            options={[Trans.translate('Edit'), Trans.translate('Delete'), Trans.translate('cancel')]}
+                            actions={[() => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item)]} />
 
                     </View>
                 </View>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Trans from '../Translation/translation'
-import { StyleSheet, View, Image, TextInput, Text, ToastAndroid, Platform,AlertIOS} from 'react-native';
+import { StyleSheet, View, Image, TextInput, Text, ToastAndroid, Platform} from 'react-native';
 import mycolor from "../Constants/Colors";
 import EditTextComp from "../Components/EditTextComp";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -206,7 +206,7 @@ export default class Profile extends Component {
         if (Platform.OS === 'android') {
           ToastAndroid.show(msg, ToastAndroid.SHORT)
         } else {
-          AlertIOS.alert(msg);
+          Alert.alert(msg);
         }
       }
     

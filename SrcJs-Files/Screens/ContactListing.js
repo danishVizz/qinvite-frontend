@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
-import { FlatList, Image, View, StyleSheet } from 'react-native'
-
+import { FlatList, Alert, View, StyleSheet } from 'react-native'
 import Trans from '../Translation/translation'
 import ConversationComp from '../Components/ConversationComp';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
-import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
+import ApiCalls from '../Services/ApiCalls';
 
 export default class ContactListing extends Component {
 
     render() {
-        var participants = this.props.route.params.Participants ?? []
+        var participants = this.props.route.params.Eventdata.participants ?? []
         return (
             <View style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
@@ -24,6 +21,7 @@ export default class ContactListing extends Component {
                 <HeaderComp2 textfonts={'bold'}
                     righttitle={Trans.translate('Resend')}
                     titlepos='center'
+                    rightBtnClicked={() => this.resendMessage(this.props.route.params.Eventdata.id)}
                     leftBtnClicked={() => this.props.navigation.goBack()}
                     title={Trans.translate('InvitedPeoples')}
                     leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
@@ -82,6 +80,39 @@ export default class ContactListing extends Component {
         console.log('Selected Item :' + itemdata.title);
         // navigation.navigate('EventDetails')
         alert(itemdata.title)
+    }
+
+    async resendMessage(id) {
+        console.log(id)
+        console.log(this.props.route.params.Eventdata)
+        this.setState({ isLoading: true });
+        let query = "/" + id
+        console.log("resendMessage()")
+        ApiCalls.getGenericCall("resend_message", query).then(data => {
+            console.log("DATA")
+            console.log(data)
+            if (data.status == true) {
+                this.setState({ isLoading: false, showAlert: false, scanner: false })
+                this.notifyMessage(data.messsage)
+                // Alert.alert(data.message);
+            } else {
+                Alert.alert('Failed', data.message);
+                this.setState({ isLoading: false, showAlert: false, scanner: false });
+            }
+        }, error => {
+            // Alert.alert('Error', JSON.stringify(error));
+            console.log(JSON.stringify(error))
+        }
+        )
+    }
+
+    notifyMessage(msg) {
+        if (Platform.OS === 'android') {
+            ToastAndroid.show(msg, ToastAndroid.SHORT)
+        } else {
+
+            Alert.alert(msg);
+        }
     }
 }
 const successCallBackData = (data) => {

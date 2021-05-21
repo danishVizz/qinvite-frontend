@@ -193,7 +193,7 @@ export default class AllEvents extends Component {
             }
         }, error => {
             this.setState({ isLoading: false, isFetching: false })
-            Alert.alert('Error', JSON.stringify(error));
+            console.log('Error', JSON.stringify(error));
         }
         )
     }

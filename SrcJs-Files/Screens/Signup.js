@@ -9,7 +9,6 @@ import {
   Image,
   ToastAndroid,
   Platform,
-  AlertIOS,
   SafeAreaView,
   Alert,
 } from "react-native";
@@ -18,9 +17,6 @@ import RadioButtonComp from "../Components/RadioComp";
 import ButtonComp from "../Components/ButtonComp";
 import Trans from "../Translation/translation"
 import ApiCalls from "../Services/ApiCalls";
-import Prefs from "../Prefs/Prefs";
-import mykeys from "../Constants/keys";
-
 
 export default class SignUp extends Component {
 
@@ -152,7 +148,7 @@ export default class SignUp extends Component {
     if (Platform.OS === 'android') {
       ToastAndroid.show(msg, ToastAndroid.SHORT)
     } else {
-      AlertIOS.alert(msg);
+      Alert.alert(msg);
     }
   }
 

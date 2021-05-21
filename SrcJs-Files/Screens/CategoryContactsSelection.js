@@ -31,7 +31,7 @@ export default class CategoryContactsSelection extends Component {
         isChecked: [],
         selectedLists: [],
         catdata: {},
-        callingcode:"+974",
+        callingcode: "+974",
         isLoading: false,
         isphoneallowed: false
     }
@@ -139,8 +139,6 @@ export default class CategoryContactsSelection extends Component {
         //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
         // });
 
-
-
         this.logCallback('Creating Package Start', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, apiname).then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
@@ -239,11 +237,15 @@ export default class CategoryContactsSelection extends Component {
 
     componentDidMount() {
         this.getCurrentLocation()
+
+
+
+    }
+
+    getContactList() {
         var categorydataaa = this.props.route.params.categorydata.contactlist;
         console.log("---Carrrrrr" + categorydataaa)
         var isphoneallow = this.props.route.params.categorydata.isphoneallowd
-        // console.log("dsfsadfsadfs" + JSON.stringify(categorydataaa))
-        // console.log("catdaaaaaa" + categorydataaa)
         var contactlist = []
         if (categorydataaa.length !== 0) {
 
@@ -254,9 +256,6 @@ export default class CategoryContactsSelection extends Component {
                     "isselected": true,
                     "isphoneallow": item.isphoneallow == "1" ? true : false
                 }
-                // let { isChecked } = this.state;
-                // isChecked[index] = true;
-                // this.setState({ isChecked: isChecked })
                 contactlist.push(contactdata)
                 this.state.selectedLists.push(contactdata)
 
@@ -276,8 +275,8 @@ export default class CategoryContactsSelection extends Component {
             var contactlist = []
             Contacts.getAll()
                 .then((contacts) => {
-                    console.log("Fetched Contacts "+JSON.stringify(contacts))
-                    var callingcode=this.state.callingcode
+                    console.log("Fetched Contacts " + JSON.stringify(contacts))
+                    var callingcode = this.state.callingcode
                     contacts.map(function (obj) {
                         var isselected = false
                         const index = categorydataaa.findIndex((e) => e.name === obj.displayName);
@@ -311,40 +310,43 @@ export default class CategoryContactsSelection extends Component {
                 console.log(err);
             })
     }
-   async getCurrentLocation() {
+
+    async getCurrentLocation() {
         GetLocation.getCurrentPosition({
             enableHighAccuracy: true,
             timeout: 15000,
         })
             .then(location => {
-                console.log("latitude"+location.latitude);
+                console.log("latitude" + location.latitude);
                 var locationvariables = {
                     lat: location.latitude,
                     lng: location.longitude
                 };
-        
+
                 Geocoder.geocodePosition(locationvariables).then(res => {
-                    
-                    var countrycode=res[0].countryCode
+
+                    var countrycode = res[0].countryCode
                     // console.log("Codeeeeee..."+countrycode)
 
                     // var callingcode=CountryData.countries[countrycode].countryCallingCodes;
                     console.log(CountryData.countries["PK"]);
 
-                    var callingcode= CountryData.countries[countrycode]
+                    var callingcode = CountryData.countries[countrycode]
                     // console.log("Calling Code "+JSON.stringify(callingcode.countryCallingCodes[0]))
 
-                    this.setState({callingcode:callingcode.countryCallingCodes[0]},console.log(this.state.callingcode))
+                    this.setState({ callingcode: callingcode.countryCallingCodes[0] }, () => this.getContactList())
+                    
                 })
                     .catch(err => console.log(err))
-                
+
             })
             .catch(error => {
                 const { code, message } = error;
                 console.warn(code, message);
+                this.getContactList()
             })
 
-   
+
 
     }
     // }

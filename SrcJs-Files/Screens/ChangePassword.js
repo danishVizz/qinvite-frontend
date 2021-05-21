@@ -10,9 +10,8 @@ import {
     Alert,
     ToastAndroid,
     Platform,
-    AlertIOS,
 } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import TextInputComp from "../Components/TextInputComp";
 import ButtonComp from "../Components/ButtonComp";
 import Trans from "../Translation/translation"
@@ -35,61 +34,63 @@ export default class ChangePassword extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                <View >
-                    <HeaderComp2
-                        lefttintColor={"#000"}
-                        leftBtnClicked={() => this.props.navigation.goBack()}
-                        headerStyle={{ backgroundColor: 'white' }}
-                        leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
+                <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={20}>
+                    <ScrollView style={{ width: '100%' }}>
+                        <HeaderComp2
+                            lefttintColor={"#000"}
+                            leftBtnClicked={() => this.props.navigation.goBack()}
+                            headerStyle={{ backgroundColor: 'white' }}
+                            leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
-                    <Image style={styles.image} source={require("../../assets/icon_changepass.png")} />
+                        <Image style={styles.image} source={require("../../assets/icon_changepass.png")} />
 
-                    <StatusBar style="auto" />
+                        <StatusBar style="auto" />
 
-                    <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, fontSize: 25, fontWeight: 'bold' }}>{Trans.translate('NewPass')}</Text>
-                    <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, marginLeft: 50, marginRight: 50, fontSize: 15 }}>{Trans.translate('Newpasshint')}</Text>
+                        <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, fontSize: 25, fontWeight: 'bold' }}>{Trans.translate('NewPass')}</Text>
+                        <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, marginLeft: 50, marginRight: 50, fontSize: 15 }}>{Trans.translate('Newpasshint')}</Text>
 
-                    <View style={styles.innerview}>
+                        <View style={styles.innerview}>
 
 
-                        <TextInputComp
-                            placeholder={Trans.translate('Password')}
-                            marginTop='20'
-                            leftIcon={require('../../assets/icon_pass.png')}
-                            placeholderTextColor={mycolor.lightgray}
-                            rightIcon={require('../../assets/icon_visiblity.png')}
-                            onPressEyeBtn={() => this.onPressEyeBtn('password')}
-                            onChangeText={(password) => this.setState({ passwordTxt: password, passwordError: false })}
-                            isSecureTextEntry={this.state.isSecureTextEntry}
+                            <TextInputComp
+                                placeholder={Trans.translate('Password')}
+                                marginTop='20'
+                                leftIcon={require('../../assets/icon_pass.png')}
+                                placeholderTextColor={mycolor.lightgray}
+                                rightIcon={require('../../assets/icon_visiblity.png')}
+                                onPressEyeBtn={() => this.onPressEyeBtn('password')}
+                                onChangeText={(password) => this.setState({ passwordTxt: password, passwordError: false })}
+                                isSecureTextEntry={this.state.isSecureTextEntry}
 
-                        />
-                        {this.state.passwordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
+                            />
+                            {this.state.passwordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
 
-                        <TextInputComp
-                            placeholder={Trans.translate('CPass')}
-                            marginTop='20'
-                            leftIcon={require('../../assets/icon_pass.png')}
-                            placeholderTextColor={mycolor.lightgray}
-                            rightIcon={require('../../assets/icon_visiblity.png')}
-                            onPressEyeBtn={() => this.onPressEyeBtn('confirmpass')}
-                            isSecureTextEntry={this.state.isSecureTextEntrycomfirmpass}
-                            onChangeText={(confirmpassword) => this.setState({ confirmPasswordTxt: confirmpassword, confirmpasswordError: false })}
-                        />
-                        {this.state.confirmpasswordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.cpassworderrortxt}</Text> : <View></View>}
+                            <TextInputComp
+                                placeholder={Trans.translate('CPass')}
+                                marginTop='20'
+                                leftIcon={require('../../assets/icon_pass.png')}
+                                placeholderTextColor={mycolor.lightgray}
+                                rightIcon={require('../../assets/icon_visiblity.png')}
+                                onPressEyeBtn={() => this.onPressEyeBtn('confirmpass')}
+                                isSecureTextEntry={this.state.isSecureTextEntrycomfirmpass}
+                                onChangeText={(confirmpassword) => this.setState({ confirmPasswordTxt: confirmpassword, confirmpasswordError: false })}
+                            />
+                            {this.state.confirmpasswordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.cpassworderrortxt}</Text> : <View></View>}
 
-                        <View style={{ width: '100%' }}>
-                            <ButtonComp
-                                text={Trans.translate("Save")}
-                                isloading={this.state.setLoading}
-                                onPress={() => this.onChangePass()}
-                                style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
-                                textcolor={mycolor.white}
-                                textstyle={{ color: mycolor.white, textAlign: 'center' }} />
+                            <View style={{ width: '100%' }}>
+                                <ButtonComp
+                                    text={Trans.translate("Save")}
+                                    isloading={this.state.setLoading}
+                                    onPress={() => this.onChangePass()}
+                                    style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
+                                    textcolor={mycolor.white}
+                                    textstyle={{ color: mycolor.white, textAlign: 'center' }} />
 
+                            </View>
                         </View>
-                    </View>
 
-                </View>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </SafeAreaView>
 
         );
@@ -98,7 +99,7 @@ export default class ChangePassword extends Component {
         if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT)
         } else {
-            AlertIOS.alert(msg);
+            Alert.alert(msg);
         }
     }
 

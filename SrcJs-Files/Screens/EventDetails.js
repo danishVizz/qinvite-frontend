@@ -86,7 +86,8 @@ export default class EventDetails extends Component {
 
     Participantsdetail(eventdata) {
         console.log(eventdata.receptionists)
-        this.props.navigation.navigate('ContactListing', { 'Participants': eventdata.participants })
+        // this.props.navigation.navigate('ContactListing', { 'Participants': eventdata.participants })
+        this.props.navigation.navigate('ContactListing', { 'Eventdata': eventdata })
     }
 }
 
