@@ -126,14 +126,15 @@ export default class ScannerScreen extends Component {
                 }
 
 
-                <AwesomeAlert
+               {this.state.showsuccessAlert? <AwesomeAlert
                     show={this.state.showsuccessAlert}
                     contentContainerStyle={{ width: '100%', borderRadius: 4 }}
                     showProgress={false}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
                     customView={this.alertsuccessView()}
-                />
+                
+                />:null}
 
             </View>
 
@@ -142,7 +143,7 @@ export default class ScannerScreen extends Component {
     }
 
     oncheckedin() {
-        this.setState({ isLoading: false, showAlert: false, scanner: false });
+        this.setState({ isLoading: false,showAlert:false, showsuccessAlert: false, scanner: false });
     }
 
     alertsuccessView() {
@@ -234,6 +235,7 @@ export default class ScannerScreen extends Component {
         ApiCalls.getGenericCall("check_in", query).then(data => {
             if (data.status == true) {
                 this.setState({ showsuccessAlert: true })
+                // Alert.alert(data.message);
             } else {
                 Alert.alert('Failed', data.message);
                 this.setState({ isLoading: false, showAlert: false, scanner: false });

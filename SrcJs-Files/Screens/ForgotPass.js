@@ -49,7 +49,6 @@ export default class ForgotPass extends Component {
 
                         <TextInputComp
                             placeholder={Trans.translate('Phonenumber')}
-
                             leftIcon={require('../../assets/icon_phone2x.png')}
                             placeholderTextColor={mycolor.lightgray}
                             onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
@@ -60,7 +59,7 @@ export default class ForgotPass extends Component {
                             <ButtonComp
                                 text={Trans.translate("Send")}
                                 isloading={this.state.setLoading}
-                                onPress={()=>this.onForgotPress()}
+                                onPress={() => this.onForgotPress()}
                                 style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
                                 textcolor={mycolor.white}
                                 textstyle={{ color: mycolor.white, textAlign: 'center' }} />
@@ -97,9 +96,9 @@ export default class ForgotPass extends Component {
         ApiCalls.postApicall(formadata, "forget_password").then(data => {
             this.logCallback("Response came", this.state.setLoading = false);
             if (data.status == true) {
-                console.log("successdata "+JSON.stringify(data))
-                this.setState({phonenumber:''})
-                this.props.navigation.navigate('CodeVerification',{"Forgotpassdata": data.data})
+                console.log("successdata " + JSON.stringify(data))
+                this.setState({ phonenumber: '' })
+                this.props.navigation.navigate('CodeVerification', { "Forgotpassdata": data.data })
             } else {
                 Alert.alert('Failed', data.message);
             }

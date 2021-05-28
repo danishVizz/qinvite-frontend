@@ -12,6 +12,8 @@ import { StatusBar } from 'react-native';
 import { Alert, Text, Image } from 'react-native';
 import ButtonComp from '../Components/ButtonComp';
 import AwesomeAlert from 'react-native-awesome-alerts'
+import Prefs from '../Prefs/Prefs';
+import Global from '../Constants/Global';
 
 // const jsCode = `window.postMessage(document.getElementById('gb-main').innerHTML)`
 const jsCode = "window.postMessage(document.getElementsByClassName(payment-response))"
@@ -25,10 +27,12 @@ export class Payment extends Component {
         showAlert: false
     }
     render() {
-
+        let type = this.props.route.params.Type
+        let evendata = this.props.route.params.event_data
+        let people = this.props.route.params.People
+        console.log("GLOBAL: ")
+        console.log(`https://qinvite.vizzwebsolutions.com/payments/upgrade_package?event_id=${this.props.route.params.event_data.event_id}&package_id=${evendata.package_details.id}&people=${people}&user_id=${Global.userData.id}`)
         return (
-
-
             <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Payment')} textfonts={'bold'} textsize={18} titlepos="center" />
@@ -43,7 +47,7 @@ export class Payment extends Component {
                         this.handleMessage(event.nativeEvent.data)
                     }}
                     // source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${Keys.invitealldata["Eventdata"].event_id}` }} />
-                    source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.props.route.params.event_id}` }} />
+                    source={{ uri: type == "new" ? `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.props.route.params.event_data.event_id}` : `https://qinvite.vizzwebsolutions.com/payments/upgrade_package?event_id=${this.props.route.params.event_data.event_id}&package_id=${evendata.package_details.id}&people=${people}&user_id=${Global.userData.id}` }} />
                 {/* ></WebView> */}
                 {this.state.visible && (
                     <View style={{
@@ -88,9 +92,16 @@ export class Payment extends Component {
 
     onpaymentsuccess() {
         this.setState({ showAlert: false })
-        this.props.navigation.replace('Todos')
+        if (this.props.route.params.Type == "upgrade") {
+            //    let newpeople= Keys.invitealldata["EventData"]
+            //    console.log(newpeople)
+            this.props.navigation.replace("CombineComp")
+        }
+        else {
+            this.props.navigation.replace('Todos')
+        }
     }
-    
+
     alertView() {
         return (
             <View style={{ width: '100%' }}>

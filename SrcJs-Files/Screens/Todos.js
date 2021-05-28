@@ -62,8 +62,7 @@ export default class Todos extends Component {
         console.log("IMAGE DATA");
         console.log(Keys.invitealldata["ImageData"]);
         if (Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined) {
-            this.props.navigation.navigate('Designer');
-
+            this.props.navigation.navigate('Designer', { "Type": "invitedesign" })
         } else {
             this.props.navigation.navigate('ImageEditor');
         }

@@ -32,7 +32,7 @@ export default class UploadMedia extends Component {
 
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 2, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Image style={{width: 300, height: 300}} source={require('../../assets/icon_uploadhint.png')} resizeMode='center'></Image>
+                        <Image style={{ width: 300, height: 300 }} source={this.state.imageuri == '' ? require('../../assets/icon_uploadhint.png') : { uri:this.state.imageuri} } resizeMode='center'></Image>
                     </View>
                     <View style={{ flex: 2, alignSelf: 'center', justifyContent: 'flex-start', alignSelf: 'center' }}>
                         <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center' }}>{Trans.translate('UploadMedia')}</Text>
@@ -58,7 +58,7 @@ export default class UploadMedia extends Component {
 
     createDesign() {
         if (this.state.imageuri != '') {
-            
+
             this.props.navigation.navigate('ImageEditor', { "imagedata": this.state.imageuri })
         }
         else {

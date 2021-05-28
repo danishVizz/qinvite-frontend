@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { StyleSheet, Text, Image, ActivityIndicator, View } from 'react-native';
+import { StyleSheet, Text, Image, View } from 'react-native';
 import mycolor from "../Constants/Colors";
 export default class HeaderComp2 extends Component {
   render() {

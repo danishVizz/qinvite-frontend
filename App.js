@@ -47,6 +47,10 @@ import Prefs from './SrcJs-Files/Prefs/Prefs';
 import Payment from './SrcJs-Files/Screens/Payment';
 import CodeVerification from './SrcJs-Files/Screens/CodeVerification';
 import ChangePassword from './SrcJs-Files/Screens/ChangePassword';
+import UpgradePackage from './SrcJs-Files/Screens/UpgradePackage';
+import Global from './SrcJs-Files/Constants/Global';
+
+ 
 
 const RootStack = createStackNavigator();
 function handleLocalizationChange() {
@@ -78,6 +82,7 @@ export default class App extends Component {
           <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="RequestDetails" component={RequestDetails} options={{ headerShown: false }} />
           <RootStack.Screen name="ImageEditor" component={ImageEditor} options={{ headerShown: false }} />
+          <RootStack.Screen name="UpgradePackage" component={UpgradePackage} options={{ headerShown: false }} />
           <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="Event_items" component={Event_items} options={{ headerShown: false }} />
@@ -120,19 +125,17 @@ export default class App extends Component {
     );
   }
 
-  // componentDidMount() {
-  //   this.getUserData();
-  // }
+  componentDidMount() {
+    this.getUserData();
+  }
 
-  // async getUserData() {
-  //   var userData = await Prefs.get(mykeys.userData);
-  //   console.log("userData 1");
-  //   var parsedData = JSON.parse(userData);
-  //   console.log(parsedData);
-  //   this.setState({
-  //     userRole: parsedData.role,
-  //   }, () => this.redirectPage());
-  // }
+  async getUserData() {
+    var userData = await Prefs.get(mykeys.userData) || {};
+    console.log("userData 1");
+    var parsedData = JSON.parse(userData);
+    console.log(parsedData);
+    Global.userData = parsedData
+  }
 
   // redirectPage() {
   //   var screen = '';
