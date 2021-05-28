@@ -1,4 +1,4 @@
-import { StatusBar } from "expo-status-bar";
+
 import React, { Component, useState } from "react";
 import TextInputComp from '../Components/TextInputComp'
 import mycolor from '../Constants/Colors'
@@ -161,7 +161,6 @@ export default class SignUp extends Component {
     }
   }
 
-
   changebuttons(button) {
     switch (button) {
       case 1:
@@ -178,14 +177,12 @@ export default class SignUp extends Component {
     }
   }
 
-
   logCallback = (log, callback) => {
     console.log(log);
     this.setState({
       callback
     });
   }
-
 
   onSignupPress() {
     var check = this.checkforError()
@@ -307,9 +304,6 @@ export default class SignUp extends Component {
     })
     return false;
   }
-
-
-
 }
 
 

@@ -8,17 +8,16 @@ import TopTabNav from '../Components/TabNavComp'
 import mycolor from '../Constants/Colors'
 import { Icon } from "react-native-elements";
 import Trans from '../Translation/translation'
-import { useLinkProps } from '@react-navigation/native';
-
-
-
+import { SafeAreaView } from 'react-native';
 
 const Tab = createMaterialBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
 const BottomNavigator = (props) => {
   return (
-    <TopTabNav navigation={props.navigation}></TopTabNav>
+    <SafeAreaView style={{flex: 1, backgroundColor: mycolor.pink}}>
+      <TopTabNav navigation={props.navigation}></TopTabNav>
+    </SafeAreaView>
   );
 }
 
@@ -30,7 +29,7 @@ export const CombineComp = (props) => {
       inactiveColor="#D9D9D9"
       barStyle={{ backgroundColor: mycolor.white, elevation: 10 }}>
       <Tab.Screen name="Home" component={BottomNavigator} options={{
-        
+
         tabBarLabel: Trans.translate('Home'),
         tabBarIcon: ({ color }) => (
           <Icon

@@ -36,9 +36,9 @@ class Request_items extends Component {
                     
                         button={require('../../assets/icon_option.png')}
                         buttonStyle={{ width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'flex-end' }}
-                        destructiveIndex={1}
+                        destructiveIndex={2}
                         options={[Trans.translate('accept'), Trans.translate('reject'), Trans.translate('cancel')]}
-                        actions={[() => this.onPressButtonChildren("accept", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item)]} />
+                        actions={[() => this.onPressButtonChildren("accept", this.props.item), () => this.onPressButtonChildren("reject", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item)]} />
 
                 </View>
 

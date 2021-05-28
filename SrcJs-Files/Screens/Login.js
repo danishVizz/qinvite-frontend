@@ -120,13 +120,13 @@ export default class Login extends Component {
         switch (data.data.role) {
           case "0":
           case "2":
-            this.props.navigation.navigate('CombineComp');
+            this.props.navigation.replace('CombineComp');
             break;
           case "4":
-            this.props.navigation.navigate('Reception');
+            this.props.navigation.replace('Reception');
             break;
           case "5":
-            this.props.navigation.navigate('DesignerRequests');
+            this.props.navigation.replace('DesignerRequests');
             break;
             default:
               Alert.alert("", Trans.translate('not_auth_msg'));

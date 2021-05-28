@@ -43,7 +43,7 @@ export class Packages extends Component {
         /> */}
         <View style={{ flex: 8 }}>
 
-          <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')} textfonts={'bold'} textsize={18} titlepos="center" />
+          <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')} textfonts={'bold'} textsize={18} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()}/>
 
           {/* <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}

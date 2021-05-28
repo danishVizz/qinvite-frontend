@@ -13,7 +13,6 @@ import AlertComp from '../Components/AlertComp';
 
 export default class Events extends Component {
 
-  
   state = {
     EventAllData: [],
     contentLoading: false,
@@ -25,8 +24,6 @@ export default class Events extends Component {
   _onPress() {
     this.props.onPressButtonChildren(this.props.item); //Change: passing prop onPressItem and calling _onPressItem
   }
-
-
 
   render() {
 
@@ -62,8 +59,6 @@ export default class Events extends Component {
         <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 20, right: 20 }}>
           <FloatingButtonComp imagesrc={require('../../assets/icon_event.png')} floatingclick={() => this.props.navigation.navigate("CreateEvent", { "eventdata": [] })}></FloatingButtonComp>
         </View>
-
-
 
         {Deletealert}
 

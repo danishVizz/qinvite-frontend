@@ -65,24 +65,42 @@ export default class DesignerRequests extends Component {
     if (asyncStorageKeys.length > 0) {
       if (Platform.OS === 'android') {
         await AsyncStorage.clear();
-        this.props.navigation.dispatch(
-          StackActions.pop(1)
-        )
 
-        // const pushAction = StackActions.push('LandingScreen');
-        // this.props.navigation.dispatch(pushAction);
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'LandingScreen' }],
+        });
       }
       if (Platform.OS === 'ios') {
         await AsyncStorage.multiRemove(asyncStorageKeys);
-        this.props.navigation.dispatch(
-          StackActions.pop(1)
-        )
 
-        // const pushAction = StackActions.push('LandingScreen');
-        // this.props.navigation.dispatch(pushAction);
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'LandingScreen' }],
+        });
+      }
+    } else {
+      // this.props.navigation.dispatch(
+      //     StackActions.pop(1)
+      // )
+
+      if (Platform.OS === 'android') {
+        await AsyncStorage.clear();
+
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'LandingScreen' }],
+        });
+      }
+      if (Platform.OS === 'ios') {
+        await AsyncStorage.multiRemove(asyncStorageKeys);
+
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'LandingScreen' }],
+        });
       }
     }
-
   }
 
 }

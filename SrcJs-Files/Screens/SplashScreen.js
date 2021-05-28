@@ -56,9 +56,9 @@ export default class SplashScreen extends Component {
 
     redirectScreen() {
         if (this.state.isSignedIn) {
-            this.props.navigation.navigate('CombineComp')
+            this.props.navigation.replace('CombineComp')
         } else {
-            this.props.navigation.navigate('LandingScreen')
+            this.props.navigation.replace('LandingScreen')
         }
     }
 

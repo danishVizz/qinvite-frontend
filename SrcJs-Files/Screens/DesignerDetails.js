@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Alert, StatusBar } from 'react-native';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import ButtonComp from '../Components/ButtonComp';
+import HeaderComp from '../Components/HeaderComp';
 import StatusBarComp from '../Components/StatusBarComp';
 import mycolor from '../Constants/Colors';
 import Trans from '../Translation/translation';
@@ -9,6 +10,8 @@ import ApiCalls from '../Services/ApiCalls';
 import Keys from '../Constants/keys';
 import Prefs from '../Prefs/Prefs';
 import { ScrollView } from 'react-native-gesture-handler';
+
+const iamgepath = '../../assets';
 
 export default class DesignerDetails extends Component {
     state = {
@@ -19,8 +22,10 @@ export default class DesignerDetails extends Component {
     render() {
         const desingertdata = this.props.route.params.DesingerData || 'none'
         return (
-            <View style={{ flex: 1, backgroundColor: 'white'}}>
+            <View style={{ flex: 1, backgroundColor: 'white' }}>
                 <StatusBarComp backgroundColor={'white'} />
+                <HeaderComp selfalign={'flex-end'} titleclick={() => this.changeviews()} textfonts={'bold'} titlepos='right' titleColor={'black'} fromleft={7} lefttintColor={mycolor.darkgray} headerStyle={{ backgroundColor: mycolor.white }} leftBtn={require(iamgepath + '/icon_back.png')}
+                    leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp>
                 <ScrollView>
                     <View style={styles.container}>
                         {/* <StatusBar
@@ -43,9 +48,9 @@ export default class DesignerDetails extends Component {
                             {!(this.state.isresponded)
                                 ? <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 10, alignSelf: 'center' }}>
                                     <Image style={{ height: 300, width: 200 }} resizeMode='contain' source={require('../../assets/icon_designprocedure.png')} />
-                                    <ButtonComp 
-                                    isloading={this.state.contentLoading}
-                                    textstyle={{ color: 'white' }} style={{ marginTop: 10 }} text={Trans.translate('RequestDesign')} onPress={() => this.SendRequestDesigners(this.props.route.params.DesignerData.id)}> </ButtonComp>
+                                    <ButtonComp
+                                        isloading={this.state.contentLoading}
+                                        textstyle={{ color: 'white' }} style={{ marginTop: 10 }} text={Trans.translate('RequestDesign')} onPress={() => this.SendRequestDesigners(this.props.route.params.DesignerData.id)}> </ButtonComp>
 
                                 </View> : null}
                             {/* after Acceptview */}
@@ -90,11 +95,7 @@ export default class DesignerDetails extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.route.params.DesignerData.request_status);
-        console.log(this.props.route.params.DesignerData.design_status);
-        console.log(this.props.route.params.DesignerData.designer_id);
-        // if ((this.props.route.params.DesignerData.request_status == '1' || this.props.route.params.DesignerData.design_status == '0') || (this.props.route.params.DesignerData.request_status == '1' && this.props.route.params.DesignerData.design_status == '1')) {
-        if ((this.props.route.params.DesignerData.request_status == '1')||this.props.route.params.DesignerData.design_status == '1') {
+        if ((this.props.route.params.DesignerData.request_status == '1') || this.props.route.params.DesignerData.design_status == '1') {
             this.setState({
                 isresponded: true
             });
@@ -121,7 +122,7 @@ export default class DesignerDetails extends Component {
         ApiCalls.postApicall(formadata, "request_designer").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                this.setState({ designerdata: data.data ,isresponded:true})
+                this.setState({ designerdata: data.data, isresponded: true })
             } else {
                 Alert.alert('Failed', data.message);
             }

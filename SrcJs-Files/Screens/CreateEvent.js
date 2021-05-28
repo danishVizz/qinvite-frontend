@@ -20,6 +20,7 @@ import DatePicker from 'react-native-date-picker'
 // import Snackbar from 'react-native-snackbar';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
+import { SafeAreaView } from 'react-native';
 
 export default class CreateEvent extends Component {
 
@@ -29,6 +30,7 @@ export default class CreateEvent extends Component {
     recpntistcount: 0,
     eventaddress: '',
     user: [],
+    assignedReceptionists: [],
     editreceptionistarr: [],
     recdefdata: [],
     selelectedvalue: '',
@@ -54,6 +56,13 @@ export default class CreateEvent extends Component {
 
 
   render() {
+    var dropdownList = [];
+    let dec = this.state.recpntistcount;
+    for (let i = 0; i < this.state.recpntistcount; i++) {
+      dropdownList.push(this.receptionistDropdown(dec * 1000, i))
+      dec = dec - 1
+    }
+
     return (
       <View style={styles.container}>
         {/* <StatusBar
@@ -114,54 +123,42 @@ export default class CreateEvent extends Component {
               onChangeText={(count) => this.setState({ recpntistcount: count, selectedvaluesarr: [] })}
             />
 
-            <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("ReceptionistName")}</Text>
-
-            {/* <View style={{ marginTop: 10, borderColor: mycolor.lightgray, borderRadius: 5, borderWidth: 1 }}>
-              <Picker
-                selectedValue={this.state.selelectedvalue}
-                style={{ height: 60, width: "100%" }}
-                // onValueChange={(modeValue, modeIndex) => this.setState({ mode: modeValue })}>
-                onValueChange={(modeValue, modeIndex) => this.updateUser(modeValue, modeIndex)}>
-
-                {this.state.user.map((item, key) => (
-                  <Picker.Item label={item.first_name} value={item.first_name} key={key} />)
-                )}
-
-              </Picker>
+            {/* <View style={{zIndex: 2000}}>
+              <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("ReceptionistName")}</Text>
+              {this.state.loadDropDown ?
+                <DropDownPicker
+                  zIndex={2000}
+                  items={this.state.user}
+                  containerStyle={{ height: 60, marginTop: 10 }}
+                  style={{ backgroundColor: '#fff', borderColor: mycolor.lightgray }}
+                  itemStyle={{
+                    justifyContent: 'flex-start',
+                  }}
+                  close={() => this.props.close}
+                  defaultValue={""}
+                  multiple={true}
+                  disabledropdown={(this.state.iseditevent)}
+                  disabled={(this.state.iseditevent)}
+                  placeholderStyle={{ color: mycolor.lightgray }}
+                  placeholder={Trans.translate('select_receptionists')}
+                  dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
+                  removeItem={(value => this.removeItem(value))}
+                  onChangeItemMultiple={item => this.setState({
+                  }, console.log("Multi......" + this.state.selectedCountries))}
+                  onChangeItem={(item, index) => this.updateUser(item, index)} />
+                :
+                null
+              }
             </View> */}
 
-            {this.state.loadDropDown ?
+            {
+              dropdownList
 
-              // <View style={{zIndex: 100}}>
-              <DropDownPicker
-                items={this.state.user}
-                containerStyle={{ height: 60, marginTop: 10 }}
-                style={{ backgroundColor: '#fff', borderColor: mycolor.lightgray }}
-                itemStyle={{
-                  justifyContent: 'flex-start',
-                }}
-                close={() => this.props.close}
-                defaultValue={""}
-                // disabled={this.state.disabledropdown}
-                multiple={true}
-                disabledropdown={(this.state.iseditevent)}
-                disabled={(this.state.iseditevent)}
-                // multipleText={"%d items have been selected."}
-                placeholderStyle={{ color: mycolor.lightgray }}
-                placeholder={Trans.translate('select_receptionists')}
-                dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
-                removeItem={(value => this.removeItem(value))}
-                onChangeItemMultiple={item => this.setState({
-                }, console.log("Multi......" + this.state.selectedCountries))}
-                onChangeItem={(item, index) => this.updateUser(item, index)} />
-              // </View>
-              :
-              null
+              // this.receptionistDropdown(2000)
+
             }
 
             {this.state.eventAddressError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.selectedvaluesErrortxt}</Text> : <View></View>}
-
-
             <View style={{ width: '100%', marginTop: 30, marginBottom: 30 }}>
               <ButtonComp textstyle={{ color: 'white' }} text={this.state.buttontxt}
                 isloading={this.state.isLoading}
@@ -172,7 +169,9 @@ export default class CreateEvent extends Component {
             </View>
           </View>
         </ScrollView>
+        <SafeAreaView></SafeAreaView>
       </View>
+      
     );
 
   }
@@ -210,7 +209,34 @@ export default class CreateEvent extends Component {
       })
       this.setState({ editreceptionistarr: receptionistdata })
     }
+  }
 
+  receptionistDropdown(key, dropdownIndex) {
+    return (
+      <View style={{ zIndex: key }} key={key}>
+        <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("ReceptionistName")}</Text>
+        <DropDownPicker
+          zIndex={key}
+          items={this.state.user}
+          containerStyle={{ height: 60, marginTop: 10 }}
+          style={{ backgroundColor: '#fff', borderColor: mycolor.lightgray }}
+          itemStyle={{
+            justifyContent: 'flex-start',
+          }}
+          close={() => this.props.close}
+          defaultValue={""}
+          multiple={false}
+          disabledropdown={(this.state.iseditevent)}
+          disabled={(this.state.iseditevent)}
+          placeholderStyle={{ color: mycolor.lightgray }}
+          placeholder={Trans.translate('select_receptionists')}
+          dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
+          removeItem={(value => this.removeItem(value))}
+          onChangeItemMultiple={item => this.setState({
+          }, console.log("Multi......" + this.state.selectedCountries))}
+          onChangeItem={(item, index) => this.updateUser(item, index, dropdownIndex)} />
+      </View>
+    )
   }
 
   logCallback = (log, callback) => {
@@ -222,6 +248,11 @@ export default class CreateEvent extends Component {
 
   async onSignupPress() {
     console.log('createEvent 1');
+    // let hasDuplicate = this.state.selectedvaluesarr.some((val, i) => this.state.selectedvaluesarr.indexOf(val) !== i);
+    if (!this.checkIfArrayIsUnique(this.state.selectedvaluesarr)) {
+      Alert.alert("Warning", "You have selected same Receptionist more than one time.")
+      return
+    }
     var check = this.checkforError()
     console.log("check : " + check);
     if (check) {
@@ -251,7 +282,10 @@ export default class CreateEvent extends Component {
         this.CreateEvent()
       }
     }
+  }
 
+  checkIfArrayIsUnique(myArray) {
+    return myArray.length === new Set(myArray).size;
   }
 
   checkforError() {
@@ -301,7 +335,7 @@ export default class CreateEvent extends Component {
   }
 
   async CreateEvent() {
-    console.log("EVENT DATE : "+this.state.eventdate)
+    console.log("EVENT DATE : " + this.state.eventdate)
     console.log('createEvent 4');
     var apiname = ''
     var check = this.checkforError()
@@ -395,16 +429,40 @@ export default class CreateEvent extends Component {
     )
   }
 
-  updateUser = (selectedvalue, index) => {
+  updateUser = (selectedvalue, selecedIndex, dropdownIndex) => {
 
-    if (this.state.recpntistcount < selectedvalue.length) {
-      Alert.alert("You can select only " + this.state.recpntistcount + " receptionist")
-    }
-    else {
-      this.setState({ selectedvaluesarr: selectedvalue }, () => console.log(this.state.selectedvaluesarr))
-    }
+    // if (this.state.recpntistcount < selectedvalue.length) {
+    //   Alert.alert("You can select only " + this.state.recpntistcount + " receptionist")
+    // }
+    // else {
+    //   this.setState({ selectedvaluesarr: selectedvalue }, () => console.log(this.state.selectedvaluesarr))
+    // }
+    console.log("SELECTED INDEX : ", selecedIndex)
+    console.log("INDEX : ", dropdownIndex)
+    console.log("Selected Value : ", selectedvalue.value.id)
+    let tmp = this.state.selectedvaluesarr
 
+    // if (!(this.state.selectedvaluesarr.includes(selectedvalue.value.id))) {
+      // let user = this.state.user
+      // console.log("BEFORE")
+      // console.log(user)
+      // user.map(item => item.selected = false)
+      // console.log("After")
+      // user[selecedIndex].selected = true
+      // console.log(user)
+
+      tmp[dropdownIndex] = selectedvalue.value.id
+      this.setState({
+        selectedvaluesarr: tmp,
+        // user: user
+      }, () => console.log(this.state.selectedvaluesarr))
+    // } 
+    // else {
+    //   Alert.alert("", selectedvalue.label + " is already assigned.")
+    // }
+    tmp = null
   }
+
   removeItem = (values) => {
     console.log(values + "Hereeeee")
   }
@@ -416,44 +474,11 @@ export default class CreateEvent extends Component {
     if (event.type === 'neutralButtonPressed') {
       this.setState({ date: new Date(0) });
     } else {
-      console.log("Selcted date "+ currentDate)
+      console.log("Selcted date " + currentDate)
       this.setState({ date: currentDate });
 
     }
   }
-
-  // onChange = (event, selectedValue) => {
-
-  //   this.setState({ show: (Platform.OS === 'ios') })
-  //   const currentDate = selectedValue || new Date();
-
-  //   if (this.state.mode == 'date') {
-  //     const currentDate = selectedValue || new Date();
-  //     this.setState({ date: moment(currentDate).format("YYYY-MM-D") })
-  //     // setDate(currentDate);
-  //     // this.setState({ mode: 'time' })
-  //     // setMode('time');
-  //     this.setState({ show: (Platform.OS !== 'ios') })
-  //     // setShow(Platform.OS !== 'ios'); // to show the picker again in time mode
-  //     console.log("" + this.state.date)
-  //     this.setState({ eventDateError: false })
-  //     this.setState({ eventdate: currentDate })
-
-  //   } else {
-  //     const selectedTime = selectedValue || new Date();
-  //     var selecteddatetime = new Date(selectedTime)
-  //     this.setState({ time: selecteddatetime.getHours() + ":" + selecteddatetime.getMinutes() })
-  //     this.setState({ date: this.state.date + ":" + this.state.time })
-  //     // setTime(selectedTime);
-  //     this.setState({ show: (Platform.OS === 'ios') })
-  //     // setShow(Platform.OS === 'ios');
-  //     // setMode('date');
-  //     this.setState({ mode: 'date' })
-  //     console.log("Time " + this.state.time)
-  //     this.setState({ eventdate: selecteddatetime })
-  //     this.setState({ eventDateError: false })
-  //   }
-  // }
 
   renderPicker() {
     console.log("PICKER DATE : " + this.state.date);
@@ -462,7 +487,7 @@ export default class CreateEvent extends Component {
         <DatePicker
           date={this.state.date}
           mode="datetime"
-          onDateChange={(date) => this.setState({ date: date, eventdate: moment(date).format('ddd MMM DD YYYY HH:mm:ss') }, console.log("DATE : "+date))}
+          onDateChange={(date) => this.setState({ date: date, eventdate: moment(date).format('ddd MMM DD YYYY HH:mm:ss') }, console.log("DATE : " + date))}
         />
         <View style={{ margin: 20 }}>
           <ButtonComp

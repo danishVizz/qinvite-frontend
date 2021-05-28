@@ -175,7 +175,7 @@ export default class AllRequests extends Component {
                     image={item.image_url}
                     title={item.event_name}
                     description={item.event_date}
-                    showMenu={item.design_status != "3" ? true : false}
+                    showMenu={item.design_status == "1" || item.design_status == "2"  ? false : true}
                 />
             </TouchableOpacity>
         );
@@ -191,6 +191,12 @@ export default class AllRequests extends Component {
                 id: item.event_id
             }, console.log("status : " + this.state.status + ", id : " + this.state.id));
 
+        } else if (value == 'reject') {
+            this.setState({
+                status: value,
+                id: item.event_id
+            }, () => this.changeDesignerStatus());
+            
         }
         // this.changeDesignerStatus(value, item.event_id);
     }
@@ -200,6 +206,7 @@ export default class AllRequests extends Component {
         this.logCallback("getAllDesigner :", this.state.contentLoading = true);
 
         var formadata = new FormData()
+        console.log("status : " + this.state.status);
         formadata.append("design_status", this.state.status);
         formadata.append("event_id", this.state.id);
         formadata.append("deadline", moment(this.state.date).format("YYYY-MM-DD HH:mm:ss"));
@@ -207,18 +214,18 @@ export default class AllRequests extends Component {
         ApiCalls.postApicall(formadata, "accept_design").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                // var arr = this.state.EventAllData;
-                // for ( let obj of arr) {
-                //     if (obj.event_id == id) {
-                //         if (status == "accept") {
-                //             obj.design_status = "1"
-                //         }else {
-                //             obj.design_status = "2"
-                //         }
-                //         console.log("changed event id: "+obj.event_id)
-                //     }
-                // }
-                // this.setState({EventAllData: arr});
+                var arr = this.state.EventAllData;
+                for ( let obj of arr) {
+                    if (obj.event_id == this.state.id) {
+                        if (status == "accept") {
+                            obj.design_status = "1"
+                        }else {
+                            obj.design_status = "2"
+                        }
+                        console.log("changed event id: "+obj.event_id)
+                    }
+                }
+                this.setState({EventAllData: arr});
             } else {
                 Alert.alert('Failed', data.message);
             }

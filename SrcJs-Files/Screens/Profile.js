@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Trans from '../Translation/translation'
-import { StyleSheet, View, Image, TextInput, Text, ToastAndroid, Platform} from 'react-native';
+import { StyleSheet, View, Image, TextInput, Text, ToastAndroid, Platform } from 'react-native';
 import mycolor from "../Constants/Colors";
 import EditTextComp from "../Components/EditTextComp";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -41,7 +41,7 @@ export default class Profile extends Component {
         return (
             <SafeAreaView style={styles.conatiner}>
                 <HeaderComp selfalign={'flex-end'} titleclick={() => this.changeviews()} textfonts={'bold'} titlepos='right' titleColor={'black'} title={this.state.changetext == true ? Trans.translate('Edit') : Trans.translate('Save')} fromleft={7} lefttintColor={mycolor.darkgray} headerStyle={{ backgroundColor: mycolor.white }} leftBtn={require(iamgepath + '/icon_back.png')}
-                leftBtnClicked={()=>this.props.navigation.goBack()}></HeaderComp>
+                    leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp>
                 <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
                     <View style={styles.innercontainer}>
                         <View style={{ justifyContent: 'center', alignSelf: 'center', height: 150 }}>
@@ -106,13 +106,13 @@ export default class Profile extends Component {
 
 
     onProfileUpdate() {
-        
+
         var photo = {
             uri: Platform.OS === "android" ? this.state.response : this.state.response.replace("file://", ""),
             type: 'image/jpeg',
             name: 'photo.jpg',
         };
-        
+
         console.log("Imageeeeeeee" + JSON.stringify(photo))
         var formadata = new FormData()
         formadata.append("firstname", this.state.firstnametxt)
@@ -123,13 +123,13 @@ export default class Profile extends Component {
         formadata.append("city", this.state.citytxt)
         formadata.append("phone", this.state.phonetxt)
         formadata.append("country", this.state.countrytxt)
-        
+
         if (photo.uri == "" || photo.uri == null) {
 
         } else {
             formadata.append("user_image ", photo)
         }
-        
+
         this.logCallback('Updating Started....', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, "update_user").then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
@@ -180,36 +180,51 @@ export default class Profile extends Component {
         if (asyncStorageKeys.length > 0) {
             if (Platform.OS === 'android') {
                 await AsyncStorage.clear();
-                this.props.navigation.dispatch(
-                    StackActions.pop(1)
-                )
 
-                // const pushAction = StackActions.push('LandingScreen');
-                // this.props.navigation.dispatch(pushAction);
+                this.props.navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'LandingScreen' }],
+                });
             }
             if (Platform.OS === 'ios') {
                 await AsyncStorage.multiRemove(asyncStorageKeys);
-                this.props.navigation.dispatch(
-                    StackActions.pop(1)
-                )
 
-                // const pushAction = StackActions.push('LandingScreen');
-                // this.props.navigation.dispatch(pushAction);
+                this.props.navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'LandingScreen' }],
+                });
             }
         } else {
-            this.props.navigation.dispatch(
-                StackActions.pop(1)
-            )
+            // this.props.navigation.dispatch(
+            //     StackActions.pop(1)
+            // )
+
+            if (Platform.OS === 'android') {
+                await AsyncStorage.clear();
+
+                this.props.navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'LandingScreen' }],
+                });
+            }
+            if (Platform.OS === 'ios') {
+                await AsyncStorage.multiRemove(asyncStorageKeys);
+
+                this.props.navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'LandingScreen' }],
+                });
+            }
         }
     }
     notifyMessage(msg) {
         if (Platform.OS === 'android') {
-          ToastAndroid.show(msg, ToastAndroid.SHORT)
+            ToastAndroid.show(msg, ToastAndroid.SHORT)
         } else {
-          Alert.alert(msg);
+            Alert.alert(msg);
         }
-      }
-    
+    }
+
 
     logCallback = (log, callback) => {
         console.log(log);

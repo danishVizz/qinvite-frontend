@@ -9,7 +9,6 @@ import Trans from '../Translation/translation';
 
 export default class TabNavComp extends Component {
 
-
   Tab = createMaterialTopTabNavigator();
   tabBarOptions = {
     activeTintColor: 'white',
@@ -25,34 +24,25 @@ export default class TabNavComp extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
-        <HeaderComp style={{}} title={Trans.translate('events')} textsize={20} textfonts='bold' rightBtn={require('../../assets/icon_search.png')} tintColor='white'rightBtnClicked={()=>this.props.navigation.navigate('SearchScreen')} />
+      <View style={{ flex: 1, backgroundColor: mycolor.pink }}>
+        <HeaderComp style={{}} title={Trans.translate('events')} textsize={20} textfonts='bold' rightBtn={require('../../assets/icon_search.png')} tintColor='white' rightBtnClicked={() => this.props.navigation.navigate('SearchScreen')} />
         <this.Tab.Navigator
           tabBarOptions={this.tabBarOptions}>
           <this.Tab.Screen name={Trans.translate('all')}
-            //  component={Events}
-            children={() => <Events type="All" navigation={this.props.navigation}/>}
-            >
+            children={() => <Events type="All" navigation={this.props.navigation} />}
+          >
           </this.Tab.Screen>
-
           <this.Tab.Screen
-          
-         
-          name={Trans.translate('active')}
-              // component={Events}
-        
-            children={() => <Events type="Active"  navigation={this.props.navigation}/>}
-            >
+            name={Trans.translate('active')}
+            children={() => <Events type="Active" navigation={this.props.navigation} />}
+          >
           </this.Tab.Screen>
           <this.Tab.Screen name={Trans.translate('closed')}
-              // component={Events}
             children={() => <Events type="Closed" navigation={this.props.navigation} />}
-            >
+          >
           </this.Tab.Screen>
-
         </this.Tab.Navigator>
-      </SafeAreaView>
-
+      </View>
     );
   }
 

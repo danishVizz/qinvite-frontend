@@ -70,10 +70,9 @@ export default class App extends Component {
 
   render() {
 
-
     return (
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName={"SplashScreen"}>
+        <RootStack.Navigator initialRouteName={"UploadMedia"}>
           {/* <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}} /> */}
           <RootStack.Screen name="LandingScreen" component={LandingScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="RequestDetails" component={RequestDetails} options={{ headerShown: false }} />
