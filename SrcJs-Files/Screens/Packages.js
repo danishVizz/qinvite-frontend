@@ -11,7 +11,6 @@ import ApiCalls from '../Services/ApiCalls';
 import HeaderComp from '../Components/HeaderComp';
 import StatusBarComp from '../Components/StatusBarComp';
 import Prefs from '../Prefs/Prefs';
-import Keys from '../Constants/keys';
 import mykeys from '../Constants/keys';
 import { TouchableOpacity } from 'react-native';
 import moment from "moment";
@@ -78,7 +77,7 @@ export class Packages extends Component {
           ></ButtonComp>
         </View>
         { this.state.showLoaderView && <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(52, 52, 52, 0.8)', justifyContent: 'center' }}>
-          <ActivityIndicator size="large" color={mycolor.pink}  />
+          <ActivityIndicator size="large" color={mycolor.pink} />
         </View>}
       </View>
     );
@@ -132,7 +131,7 @@ export class Packages extends Component {
 
   async getAllPackages() {
     this.logCallback("getProducts :", this.state.contentLoading = !(this.state.isFetching));
-    var userdata = await Prefs.get(Keys.userData);
+    var userdata = await Prefs.get(mykeys.userData);
     var parsedata = JSON.parse(userdata)
 
     ApiCalls.getapicall("get_packages", "?user_id=" + parsedata.id).then(data => {
@@ -141,7 +140,6 @@ export class Packages extends Component {
         this.setState({ packagesdata: data.data })
         this.setState({ isLoading: false })
         // this.setState({ productData: data.data });
-        console.log('productDataaaaaaaaaaaaaa');
         // this.logCallback(this.state.productData, this.state.contentLoading = false);
         //   Alert.alert('Success', data.message);
       } else {
@@ -155,14 +153,14 @@ export class Packages extends Component {
   }
 
   async CreateEvent() {
-    
+
     var invitedata = mykeys.invitealldata
     var apiname = 'add_event'
-    var usersdata = await Prefs.get(Keys.userData);
+    var usersdata = await Prefs.get(mykeys.userData);
 
     var parsedata = JSON.parse(usersdata)
-console.log("UserData")
-console.log(parsedata)
+    console.log("UserData")
+    console.log(invitedata)
     var formadata = new FormData()
     formadata.append("event_name", invitedata["Eventdata"].event_name)
     formadata.append("event_date", String(moment(invitedata["Eventdata"].event_date).format("YYYY-MM-DD HH:mm:ss")))
@@ -173,7 +171,7 @@ console.log(parsedata)
 
     formadata.append("no_of_receptionists", invitedata["Eventdata"].no_of_receptionists)
     invitedata["Eventdata"].receptionists.map((item, index) => {
-      formadata.append("receptionists[" + index + "]", invitedata["Eventdata"].receptionists[index].id)
+      formadata.append("receptionists[" + index + "]", invitedata["Eventdata"].receptionists[index])
     });
 
     console.log(formadata)
@@ -183,22 +181,50 @@ console.log(parsedata)
 
       this.logCallback("Response came", this.state.showLoaderView = false);
       if (data.status == true) {
+        console.log(JSON.stringify(data))
 
         var invitedata = mykeys.invitealldata
         var eventdata = invitedata["Eventdata"]
-        eventdata.event_id = data.data.event_id
-        console.log(eventdata)
+        eventdata.event_id = data.data.id
+        eventdata.package_details = data.data.package_details
+    
         invitedata = { "Eventdata": eventdata, "PackageData": this.state.selectedItem }
         mykeys.invitealldata = invitedata
-        this.props.navigation.navigate('Payment', { "event_id": data.data.event_id })
+        this.SendRequestDesigners()
 
       } else {
         Alert.alert('Failed', data.message);
       }
     }, error => {
       this.logCallback("Something Went Wrong", this.state.contentLoading = false);
-      this.props.navigation.navigate('Payment', { "event_id": data.data.event_id })
+      this.props.navigation.navigate('Payment', { "event_id": data.data.id })
       // Alert.alert('Error', JSON.stringify(error));
+    }
+    )
+  }
+
+  async SendRequestDesigners() {
+    this.logCallback("getAllDesigner :", this.state.contentLoading = true);
+    var userdata = await Prefs.get(mykeys.userData);
+    var parsedata = JSON.parse(userdata);
+
+    var formadata = new FormData()
+    formadata.append("user_id", parsedata.id)
+    formadata.append("designer_id", this.props.route.params.designer_id)
+    formadata.append("event_id", mykeys.invitealldata["Eventdata"].event_id)
+
+    ApiCalls.postApicall(formadata, "request_designer").then(data => {
+      this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
+      if (data.status == true) {
+        console.log("Response Came " + JSON.stringify(data))
+        // this.props.navigation.navigate('Packages')
+        this.props.navigation.navigate('Payment', { "event_data": mykeys.invitealldata["Eventdata"],"Type":"new" })
+      } else {
+        Alert.alert('Failed', data.message);
+      }
+    }, error => {
+      this.logCallback("Something Went Wrong", this.state.contentLoading = false);
+      Alert.alert('Error', JSON.stringify(error));
     }
     )
   }

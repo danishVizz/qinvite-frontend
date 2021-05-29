@@ -148,6 +148,16 @@
     "Verificationhint": "Please Enter The 4 Digit Code Sent to ",
     "Verify": "Verify",
     "NewPass": "Create New Password",
-    "Newpasshint": "Your New Password Must be Different from Previously Used Password"
+    "Newpasshint": "Your New Password Must be Different from Previously Used Password",
+    "packagedetails": "Package Details",
+    "selectedpackage": "Your Selected Package",
+    "upgrade": "Upgrade",
+    "alert": "Alert",
+     "designerhint": "Do you want Designer to design your event card/video.",
+     "restricttochoosedesigner": "You can't select/change your designer right now."
+     
+    
+   
+    
     
 }

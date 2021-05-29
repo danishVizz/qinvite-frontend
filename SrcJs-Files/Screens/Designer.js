@@ -15,6 +15,7 @@ import StatusBarComp from '../Components/StatusBarComp';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native';
+import t from '../Translation/translation';
 
 export default class Designer extends Component {
 
@@ -23,6 +24,7 @@ export default class Designer extends Component {
         modalVisible: false,
         checked: false,
         contentLoading: false,
+        showuploadbtn: false,
         isFetching: false
     }
     render() {
@@ -83,10 +85,10 @@ export default class Designer extends Component {
                     {this.state.contentLoading && < ActivityIndicator size="large" color={mycolor.pink} />}
                 </View>
 
-                <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 20, right: 20 }}>
+                {this.state.showuploadbtn ? <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 20, right: 20 }}>
                     <FloatingButtonComp containerStyle={{ marginRight: 10 }} imagesrc={require('../../assets/icon_upload.png')} floatingclick={() => this.props.navigation.navigate("UploadMedia")}></FloatingButtonComp>
                     {/* <FloatingButtonComp imagesrc={require('../../assets/icon_selection.png')} ></FloatingButtonComp> */}
-                </View>
+                </View> : null}
 
             </View>
         );
@@ -134,8 +136,9 @@ export default class Designer extends Component {
                     // toggle={() => this.onToggle(index)}
                     // propsfromparents={onPressButtonChildren.bind()}
                     imagesrc={item.user_image}
+                    isavailable={item.availability == 0 ? true : false}
                     designername={item.first_name + ' ' + item.last_name}
-                    designercontact={item.phone}
+                    designerprice={item.user_price}
                 />
             </TouchableOpacity>
         );
@@ -163,9 +166,20 @@ export default class Designer extends Component {
         );
     }
     componentDidMount() {
+        this.setTypeTrigger()
         this.getAllDesigners()
     }
 
+    async setTypeTrigger() {
+        let type = this.props.route.params.Type
+        console.log("TYPE IS " + type)
+        if (type == 'selection') {
+            await this.setState({ showuploadbtn: false })
+        }
+        else {
+            await this.setState({ showuploadbtn: true })
+        }
+    }
     logCallback = (log, callback) => {
         console.log(log);
         this.setState({
@@ -174,20 +188,31 @@ export default class Designer extends Component {
     }
 
     actionOnRow(itemdata, index) {
-
-        let requestStatus = itemdata.request_status;
-        let designStatus = itemdata.design_status;
-        console.log(itemdata)
-        // if ((requestStatus == '0' && designStatus == '0') || (requestStatus == '1' && designStatus == '2') || (requestStatus == '0' && designStatus == '2')) {
-        if (requestStatus == '0' || requestStatus == "1"&& designStatus != "3") {
-            this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
-        } else if (designStatus == '1' || designStatus == "0") {
-            this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
-        } else if (designStatus == "3") {
-            this.props.navigation.navigate('ReceivedDesign', { "DesignerData": itemdata })
+        let type = this.props.route.params.Type
+        if (type == "selection") {
+            this.props.navigation.navigate("Packages", { "designer_id": itemdata.id })
         }
         else {
-            this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
+            console.log("Other-Selection")
+            let requestStatus = itemdata.request_status;
+            let designStatus = itemdata.design_status;
+            console.log(itemdata)
+            // if ((requestStatus == '0' && designStatus == '0') || (requestStatus == '1' && designStatus == '2') || (requestStatus == '0' && designStatus == '2')) {
+            if (requestStatus == undefined || designStatus == undefined) { 
+                Alert.alert(Trans.translate("alert"),Trans.translate('restricttochoosedesigner'))
+                return;
+            }
+
+            if (requestStatus == '0' || requestStatus == "1" && designStatus != "3") {
+                this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
+            } else if (designStatus == '1' || designStatus == "0") {
+                this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
+            } else if (designStatus == "3") {
+                this.props.navigation.navigate('ReceivedDesign', { "DesignerData": itemdata })
+            }
+            else {
+                this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
+            }
         }
     }
 
@@ -200,6 +225,7 @@ export default class Designer extends Component {
         ApiCalls.getapicall("get_designers", "?event_id=" + alleventdata["Eventdata"].event_id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
+                console.log("DesignerData" + JSON.stringify(data.data))
                 this.setState({ designerdata: data.data })
             } else {
                 Alert.alert('Failed', data.message);

@@ -24,7 +24,8 @@ export default class UploadDesign extends Component {
         spaceadjustcheck: false,
         qualitycheck: false,
         attachmentUrl: '',
-        isLoading: false
+        isLoading: false,
+        mediaType: 'photo'
     }
 
     render() {
@@ -39,7 +40,7 @@ export default class UploadDesign extends Component {
                 {/* <ScrollView> */}
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Image style={{ width: 300, height: 300 }} source={require('../../../assets/icon_uploadhint.png')} resizeMode='center'></Image>
+                        <Image resizeMode={ this.state.imageuri == '' ? 'contain' : 'contain'} style={{ width: 300, height: 300, borderRadius: 15 }} source={(this.state.imageuri == '' || this.state.mediaType == 'video') ? require('../../../assets/icon_uploadhint.png') : { uri: this.state.imageuri }}></Image>
                     </View>
                     <View style={{ flex: 2, alignSelf: 'center', justifyContent: 'flex-start', alignSelf: 'center' }}>
                         <Text style={{ color: 'black', fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>{Trans.translate('UploadDesign')}</Text>
@@ -162,20 +163,38 @@ export default class UploadDesign extends Component {
     }
 
     chooseImage = () => {
+        this.mediaOptionAlert()
+    }
+
+    popImagePicker = (mediaType) => {
         ImagePicker.launchImageLibrary(
             {
-                mediaType: 'photo',
+                mediaType: mediaType, // 'photo', 'video
                 includeBase64: false,
                 maxHeight: WINDOW.height / 2,
                 maxWidth: WINDOW.width - 20,
             },
             (responses) => {
-                this.setState({ response: responses, imageuri: responses.uri, progress: 1 });
+                this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType });
                 console.log(responses.uri)
-                this.setState({
-                    attachmentUrl: responses.uri
-                })
             },
         )
+    }
+
+    mediaOptionAlert = () => {
+        Alert.alert(
+            "Choose from",
+            "",
+            [
+                {
+                    text: "Photo",
+                    onPress: () => this.popImagePicker('photo'),
+                    style: "cancel"
+                },
+                {
+                    text: "Video", onPress: () => this.popImagePicker('video')
+                }
+            ]
+        );
     }
 }

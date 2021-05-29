@@ -30,6 +30,10 @@ export default class TextInputComp extends Component {
           value={(this.props.value)}
           onFocus={() => this.onFocus()}
           selectionColor={mycolor.pink}
+          blurOnSubmit={false}
+          ref={this.props.inputref}
+          onSubmitEditing={this.props.OnsubmitEditing}
+          returnKeyType={this.props.returnKeytype}
           keyboardType={this.props.inputtype}
           onChangeText={this.props.onChangeText}
           editable={(this.props.isEnable === undefined || this.props.isEnable === true) ? true : false}

@@ -1,8 +1,8 @@
 
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import { View, Text, StyleSheet, Image, StatusBar, Picker, Alert } from 'react-native';
-import { ScrollView, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Alert, Keyboard } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import Prefs from '../Prefs/Prefs';
 import Keys from '../Constants/keys';
@@ -22,6 +22,7 @@ import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
 import { SafeAreaView } from 'react-native';
 
+// const lastNameRef = useRef();
 export default class CreateEvent extends Component {
 
   state = {
@@ -78,6 +79,8 @@ export default class CreateEvent extends Component {
               placeholder={Trans.translate("Eventname")}
               placeholderTextColor={mycolor.lightgray}
               textinstyle={{ width: "100%" }}
+              returnKeytype="next"
+              OnsubmitEditing={() => this.eventaddress.focus()}
               value={this.state.eventname}
               onChangeText={(name) => this.setState({ eventname: name, eventnameError: false })}
             />
@@ -90,6 +93,10 @@ export default class CreateEvent extends Component {
                 placeholder={Trans.translate("Eventdatetime")}
                 placeholderTextColor={mycolor.lightgray}
                 textinstyle={{ paddingLeft: 0 }}
+                inputref={(inputref) => { this.eventdateinput = inputref }}
+                returnKeytype="next"
+                OnsubmitEditing={() => this.eventaddress.focus()}
+                blurOnSubmit={false}
                 value={String(this.state.eventdate)}
                 keyboardType={'numeric'}
                 isEnable={false}
@@ -107,6 +114,10 @@ export default class CreateEvent extends Component {
               placeholder={Trans.translate("Eventaddress")}
               placeholderTextColor={mycolor.lightgray}
               textinstyle={{ width: "100%" }}
+              returnKeytype="next"
+              inputref={(inputref) => { this.eventaddress = inputref }}
+              OnsubmitEditing={() => { this.eventreceptionist.focus() }}
+              blurOnSubmit={false}
               value={this.state.eventaddress}
               onChangeText={(eventaddress) => this.setState({ eventaddress: eventaddress, eventAddressError: false })}
             />
@@ -115,7 +126,10 @@ export default class CreateEvent extends Component {
             <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("Recepionist")}</Text>
 
             <TextInputComp
+              inputref={(input) => { this.eventreceptionist = input }}
               inputtype={'numeric'}
+              returnKeytype="done"
+              OnsubmitEditing={() => { Keyboard.dismiss() }}
               placeholderTextColor={mycolor.lightgray}
               textinstyle={{ width: "100%" }}
               isEnable={!(this.state.iseditevent)}
@@ -260,7 +274,7 @@ export default class CreateEvent extends Component {
     }
     else {
       console.log('createEvent 2');
-      var usersdata = await Prefs.get(Keys.userData);
+      var usersdata = await Prefs.get(mykeys.userData);
       var parsedata = JSON.parse(usersdata)
       var data = {
         "event_name": this.state.eventname,
@@ -270,12 +284,14 @@ export default class CreateEvent extends Component {
         "no_of_receptionists": this.state.recpntistcount,
         "receptionists": this.state.selectedvaluesarr,
         "event_card": this.props.route.params.eventdata.event_card,
+        "package_details": this.props.route.params.eventdata.package_details,
         "event_id": this.state.eventid,
         "categoriesList": this.props.route.params.eventdata.categories
       }
       mykeys.invitealldata = { "Eventdata": data, "ImageData": data.event_card }
       if (!(this.state.iseditevent)) {
-        this.props.navigation.navigate('Packages')
+        // this.props.navigation.navigate('Packages')
+        this.createTwoButtonAlert(Trans.translate('designerhint'))
       }
       else {
         console.log('createEvent 3');
@@ -287,6 +303,21 @@ export default class CreateEvent extends Component {
   checkIfArrayIsUnique(myArray) {
     return myArray.length === new Set(myArray).size;
   }
+
+  createTwoButtonAlert = (message) =>
+    Alert.alert(
+      Trans.translate("alert"),
+      message,
+      [
+        {
+          text: "No",
+          onPress: () => this.props.navigation.navigate('Packages'),
+          style: "cancel"
+        },
+        { text: "Yes", onPress: () => this.props.navigation.navigate('Designer', { "Type": "selection" }) }
+      ]
+    );
+
 
   checkforError() {
     var anycheckfalse = false;
@@ -311,13 +342,7 @@ export default class CreateEvent extends Component {
       })
       anycheckfalse = true;
     }
-    // if (this.state.selectedvaluesarr.length == 0) {
-    //   this.setState({
-    //     selectedvaluesErrortxt: Trans.translate("Receptionistisreq"),
-    //     selectedvaluesError: true
-    //   })
-    //   anycheckfalse = true;
-    // }
+
     if (this.state.phoneTxt == "" && this.state.isSelectedRB1) {
       this.setState({
         phoneerrortxt: Trans.translate("phoneerror"),
@@ -372,7 +397,8 @@ export default class CreateEvent extends Component {
         if (this.state.paymentstatus == 3)
           this.props.navigation.replace('Todos')
         else {
-          this.props.navigation.navigate("Payment", { "event_id": this.state.eventid })
+          console.log("Eventttt"+mykeys.invitealldata["Eventdata"])
+          this.props.navigation.navigate("Payment", { "event_data": mykeys.invitealldata["Eventdata"],"Type":"new" })
           // this.props.navigation.replace('Todos')
         }
 
@@ -387,7 +413,7 @@ export default class CreateEvent extends Component {
       if (this.state.paymentstatus == 3)
         this.props.navigation.replace('Todos')
       else {
-        this.props.navigation.navigate("Payment", { "event_id": this.state.eventid })
+        this.props.navigation.navigate("Payment", { "event_data": mykeys.invitealldata["Eventdata"],"Type":"new" })
         // this.props.navigation.replace('Todos')
       }
     }
@@ -455,7 +481,7 @@ export default class CreateEvent extends Component {
       this.setState({
         selectedvaluesarr: tmp,
         // user: user
-      }, () => console.log(this.state.selectedvaluesarr))
+      }, () => console.log("SELECTED RECEPTIONIST"+this.state.selectedvaluesarr))
     // } 
     // else {
     //   Alert.alert("", selectedvalue.label + " is already assigned.")
@@ -513,7 +539,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 33,
     marginRight: 33,
-    marginTop: 33
+    marginTop: 33,
+
   }
 
 });

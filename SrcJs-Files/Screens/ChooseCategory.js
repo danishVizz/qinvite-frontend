@@ -34,7 +34,6 @@ export default class ChooseCategory extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={{ height: "65%", marginTop: 20 }}>
-
                     <View style={{
                         zIndex: -100,
                         position: 'absolute',
@@ -80,11 +79,13 @@ export default class ChooseCategory extends Component {
     }
 
     renderItem({ item, index }) {
+
         return (
 
             <TouchableOpacity onPress={() => this.choosecategory(item, index)}>
                 <CategoryComp lefticon={require('../../assets/icon_category.png')}
                     title={item.name}
+                    count={item.participants.length}
                     innerright={null}
                     item={item}
                     containerstyle={this.state.isChecked[index] ? { backgroundColor: mycolor.lightPink } : {}}
@@ -113,14 +114,39 @@ export default class ChooseCategory extends Component {
             default:
         }
     }
-
+    createTwoButtonAlert = (message) =>
+    Alert.alert(
+      Trans.translate("packagedetails"),
+     message,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => this.props.navigation.navigate('UpgradePackage') }
+      ]
+    );
 
     onNextScreen() {
+        var invitedata = Keys.invitealldata
+        console.log("EventDataaaaa" + JSON.stringify(invitedata["Eventdata"]))
+        let SelectedCategories = this.state.selectedLists;
+        let count = 0;
+        for (let i in SelectedCategories) {
+            count = count + SelectedCategories[i].participants.length
+        }
+
         if (this.state.selectedLists.length == 0)
             Alert.alert("No category selected")
+
+        else if (count > invitedata["Eventdata"].package_details.package_people) {
+            // Alert.alert("Alert", )
+           this.createTwoButtonAlert("You have selected package with " + invitedata["Eventdata"].package_details.package_people + " invitation now your invitation limit exceed please upgrade your package")
+        }
         else {
             console.log('??selected categories?? ' + JSON.stringify(this.state.selectedLists))
-            var invitedata = Keys.invitealldata
+
             invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": { "SelectedCategories": this.state.selectedLists }, "ImageData": invitedata["ImageData"] }
             Keys.invitealldata = invitedata
             console.log(Keys.invitealldata["CategoriesData"])
@@ -145,7 +171,8 @@ export default class ChooseCategory extends Component {
     choosecategory = (item, index) => {
         let { isChecked } = this.state;
         isChecked[index] = !this.state.isChecked[index];
-        this.setState({ isChecked: isChecked });
+        console.log("BEFORE" + this.state.isChecked)
+        this.setState({ isChecked: isChecked }, () => console.log("AFTER" + this.state.isChecked));
         if (isChecked[index] == true) {
             this.state.selectedLists.push(item)
         } else {
@@ -160,6 +187,7 @@ export default class ChooseCategory extends Component {
         ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
+                this.setState({ isChecked: [],selectedLists:[] })
                 let eventCategories = Keys.invitealldata["Eventdata"].categoriesList;
                 this.setState({ categoriesdata: data.data })
                 for (let i in data.data) {

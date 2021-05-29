@@ -240,8 +240,7 @@ export default class ScannerScreen extends Component {
             console.log("DATA")
             console.log(data)
             if (data.status == true) {
-                this.setState({isLoading: false, showAlert: false, scanner: false })
-                this.notifyMessage(data.message)
+                this.setState({ showsuccessAlert: true })
                 // Alert.alert(data.message);
             } else {
                 Alert.alert('Failed', data.message);

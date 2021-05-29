@@ -19,7 +19,8 @@ export default class CreateCategory extends Component {
         categorydata: [],
         contactlist: [],
         iseditcategory: false,
-        isEnabled: false
+        isEnabled: false,
+        editable:true
     }
 
     render() {
@@ -32,6 +33,7 @@ export default class CreateCategory extends Component {
                             placeholderTextColor={mycolor.lightgray}
                             textinstyle={{ paddingLeft: 5, width: '100%' }}
                             value={this.state.categorynametxt}
+                            isEnable={this.state.editable}
                             onChangeText={(name) => this.setState({ categorynametxt: name, categoryError: false })}
                         />
                         {this.state.categoryError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.categoryerrortxt}</Text> : <View></View>}
@@ -43,6 +45,7 @@ export default class CreateCategory extends Component {
                                 trackColor={{ false: mycolor.lightgray, true: mycolor.lightPink }}
                                 thumbColor={this.state.isEnabled ? mycolor.pink : mycolor.white}
                                 ios_backgroundColor={mycolor.white}
+                                disabled={!(this.state.editable)}
                                 onValueChange={() => this.ontogglechange()}
                                 value={this.state.isEnabled}
                             />
@@ -54,6 +57,7 @@ export default class CreateCategory extends Component {
                                 max={10}
                                 min={1}
                                 step={1}
+                                editable={this.state.editable}
                                 colorMax={"#f04048"}
                                 colorMin={mycolor.pink}
                                 color={mycolor.pink}
@@ -91,6 +95,7 @@ export default class CreateCategory extends Component {
                 invitationcount: this.state.categorydata.people_per_qr,
                 iseditcategory:true,
                 contactlist: this.state.categorydata.participants,
+                editable:false
             })
         }
     }

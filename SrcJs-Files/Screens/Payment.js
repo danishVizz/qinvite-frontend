@@ -12,6 +12,9 @@ import { StatusBar } from 'react-native';
 import { Alert, Text, Image } from 'react-native';
 import ButtonComp from '../Components/ButtonComp';
 import AwesomeAlert from 'react-native-awesome-alerts'
+import Prefs from '../Prefs/Prefs';
+import Global from '../Constants/Global';
+import mykeys from '../Constants/keys';
 
 // const jsCode = `window.postMessage(document.getElementById('gb-main').innerHTML)`
 const jsCode = "window.postMessage(document.getElementsByClassName(payment-response))"
@@ -20,31 +23,38 @@ const injectedJs = `
   window.postMessage("Your message");
 `;
 export class Payment extends Component {
+
+    constructor(props) {
+        super(props)
+        console.log("CONSTRUCTOR")
+        // this.getEventData()
+    }
+
     state = {
         visible: true,
-        showAlert: false
+        showAlert: false,
+        eventData: undefined
     }
     render() {
-
+        let type = this.props.route.params.Type
+        let people = this.props.route.params.People || {} 
         return (
-
-
             <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
                 <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Payment')} textfonts={'bold'} textsize={18} titlepos="center" />
+                {
+                    this.state.eventData != undefined &&
+                    <WebView
+                        onLoad={() => this.hideSpinner()}
+                        automaticallyAdjustContentInsets={false}
+                        javaScriptEnabled={true}
+                        onMessage={event => {
+                            this.handleMessage(event.nativeEvent.data)
+                        }}
+                        source={{ uri: type == "new" ? `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.state.eventData.event_id}` : `https://qinvite.vizzwebsolutions.com/payments/upgrade_package?event_id=${this.state.eventData.event_id}&package_id=${this.state.eventData.package_details.id}&people=${people}&user_id=${Global.userData.id}` }} />
 
-                <WebView
-                    onLoad={() => this.hideSpinner()}
-                    automaticallyAdjustContentInsets={false}
-                    javaScriptEnabled={true}
-                    // injectedJavaScript="window.ReactNativeWebView.postMessage(document.body)"
-                    // injectedJavaScript="window.ReactNativeWebView.postMessage(document.getElementsByClassName(payment-response))"
-                    onMessage={event => {
-                        this.handleMessage(event.nativeEvent.data)
-                    }}
-                    // source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${Keys.invitealldata["Eventdata"].event_id}` }} />
-                    source={{ uri: `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.props.route.params.event_id}` }} />
-                {/* ></WebView> */}
+                }
+
                 {this.state.visible && (
                     <View style={{
                         position: 'absolute',
@@ -73,6 +83,26 @@ export class Payment extends Component {
         )
     }
 
+    componentDidMount() {
+        console.log("ddddddddd")
+        this.getEventData()
+
+    }
+
+    async getEventData() {
+        let eventdata = await mykeys.invitealldata["Eventdata"] || {}
+        console.log("EVENT DATA STR")
+        console.log(eventdata)
+        console.log(eventdata.package_details.id)
+        // console.log(typeof this.state.eventData.package_details)
+        // let pas = JSON.parse(eventdata)
+        // console.log("EVENT DATA")
+        // console.log(pas)
+        this.setState({
+            eventData: eventdata
+        }, () => console.log(typeof this.state.eventData.package_details))
+    }
+
     hideSpinner() {
         this.setState({ visible: false });
     }
@@ -83,14 +113,18 @@ export class Payment extends Component {
         else {
             Alert("Payment Failed Please Try again")
         }
-
     }
 
     onpaymentsuccess() {
         this.setState({ showAlert: false })
-        this.props.navigation.replace('Todos')
+        if (this.props.route.params.Type == "upgrade") {
+            this.props.navigation.replace("CombineComp")
+        }
+        else {
+            this.props.navigation.replace('Todos')
+        }
     }
-    
+
     alertView() {
         return (
             <View style={{ width: '100%' }}>

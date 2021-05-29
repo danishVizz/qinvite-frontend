@@ -49,23 +49,22 @@ export default class ForgotPass extends Component {
                         <View style={styles.innerview}>
 
 
-                            <TextInputComp
-                                placeholder={Trans.translate('Phonenumber')}
+                        <TextInputComp
+                            placeholder={Trans.translate('Phonenumber')}
+                            leftIcon={require('../../assets/icon_phone2x.png')}
+                            placeholderTextColor={mycolor.lightgray}
+                            onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
+                        />
+                        {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
 
-                                leftIcon={require('../../assets/icon_phone2x.png')}
-                                placeholderTextColor={mycolor.lightgray}
-                                onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
-                            />
-                            {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
-
-                            <View style={{ width: '100%' }}>
-                                <ButtonComp
-                                    text={Trans.translate("Send")}
-                                    isloading={this.state.setLoading}
-                                    onPress={() => this.onForgotPress()}
-                                    style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
-                                    textcolor={mycolor.white}
-                                    textstyle={{ color: mycolor.white, textAlign: 'center' }} />
+                        <View style={{ width: '100%' }}>
+                            <ButtonComp
+                                text={Trans.translate("Send")}
+                                isloading={this.state.setLoading}
+                                onPress={() => this.onForgotPress()}
+                                style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
+                                textcolor={mycolor.white}
+                                textstyle={{ color: mycolor.white, textAlign: 'center' }} />
 
                             </View>
                         </View>

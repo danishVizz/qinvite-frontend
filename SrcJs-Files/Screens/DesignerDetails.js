@@ -38,12 +38,12 @@ export default class DesignerDetails extends Component {
 
                             <Text style={[styles.textstyle, { color: '#474645', fontWeight: 'bold', fontSize: 24, textAlign: 'center' } || {}]}> {this.props.route.params.DesignerData.first_name + " " + this.props.route.params.DesignerData.last_name}</Text>
 
-                            <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 5 }}>
+                            {this.state.isresponded ? <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 5 }}>
                                 <Image
                                     imagestyle={{ height: 15, width: 9 }} style={{ height: 15, width: 9, borderColor: mycolor.pink }} source={require('../../assets/icon_phone.png')} ></Image>
                                 <Text style={[styles.textstyle, { color: '#474645', fontWeight: 'bold', fontSize: 14, textAlign: 'center', marginLeft: 5 } || {}]}>{this.props.route.params.DesignerData.phone}</Text>
 
-                            </View>
+                            </View> : null}
 
                             {!(this.state.isresponded)
                                 ? <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 10, alignSelf: 'center' }}>
@@ -63,7 +63,7 @@ export default class DesignerDetails extends Component {
                                 </View>
 
                                 <View style={{ flexDirection: 'row', width: '100%', marginTop: 20 }}>
-                                    <View style={{ flex: 1, marginLeft: 20, margin: 10 }}>
+                                    {/* <View style={{ flex: 1, marginLeft: 20, margin: 10 }}>
                                         <ButtonComp
                                             // onPress={() => this.props.navigation.goBack()}
                                             onPress={() => this.props.navigation.push('Designer')}
@@ -71,7 +71,7 @@ export default class DesignerDetails extends Component {
                                             style={{ backgroundColor: mycolor.white, marginTop: 20 }}
                                             textcolor={mycolor.darkgray}
                                             textstyle={{ color: mycolor.pink }} />
-                                    </View>
+                                    </View> */}
 
                                     <View style={{ flex: 1, marginRight: 20, margin: 10 }}>
 
@@ -96,41 +96,27 @@ export default class DesignerDetails extends Component {
 
     componentDidMount() {
         if ((this.props.route.params.DesignerData.request_status == '1') || this.props.route.params.DesignerData.design_status == '1') {
+            console.log(this.props.route.params.DesignerData.request_status);
+            console.log(this.props.route.params.DesignerData.design_status);
+            console.log(this.props.route.params.DesignerData.designer_id);
+            // if ((this.props.route.params.DesignerData.request_status == '1' || this.props.route.params.DesignerData.design_status == '0') || (this.props.route.params.DesignerData.request_status == '1' && this.props.route.params.DesignerData.design_status == '1')) {
+            if (this.props.route.params.DesignerData.request_status == undefined || this.props.route.params.DesignerData.design_status == undefined) {
+                this.setState({ isresponded: false })
+            }
+
+            else if ((this.props.route.params.DesignerData.request_status == '1') || this.props.route.params.DesignerData.design_status == '1') {
+                this.setState({
+                    isresponded: true
+                });
+            }
+        }
+
+        logCallback = (log, callback) => {
+            console.log(log);
             this.setState({
-                isresponded: true
+                callback
             });
         }
-    }
-
-    logCallback = (log, callback) => {
-        console.log(log);
-        this.setState({
-            callback
-        });
-    }
-
-    async SendRequestDesigners(designerid) {
-        this.logCallback("getAllDesigner :", this.state.contentLoading = true);
-        var userdata = await Prefs.get(Keys.userData);
-        var parsedata = JSON.parse(userdata);
-
-        var formadata = new FormData()
-        formadata.append("user_id", parsedata.id)
-        formadata.append("designer_id", designerid)
-        formadata.append("event_id", Keys.invitealldata["Eventdata"].event_id)
-
-        ApiCalls.postApicall(formadata, "request_designer").then(data => {
-            this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
-            if (data.status == true) {
-                this.setState({ designerdata: data.data, isresponded: true })
-            } else {
-                Alert.alert('Failed', data.message);
-            }
-        }, error => {
-            this.logCallback("Something Went Wrong", this.state.contentLoading = false);
-            Alert.alert('Error', JSON.stringify(error));
-        }
-        )
     }
 }
 const styles = StyleSheet.create({

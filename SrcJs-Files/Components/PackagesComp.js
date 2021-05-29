@@ -17,7 +17,7 @@ class  PackagesComp extends Component {
                     {this.props.invitationcount+' Invitations'}
                 </Text>
                 <Text style={{marginTop:4,fontSize:12}}>
-                    {this.props.price+" QR Cost"}
+                    {"Cost " +this.props.price +" QR"}
                 </Text>
             </View>
         

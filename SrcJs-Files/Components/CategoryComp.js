@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import mycolor from '../Constants/Colors';
 import OptionsMenu from "react-native-options-menu";
 import Trans from '../Translation/translation';
@@ -17,7 +17,7 @@ class CategoryComp extends Component {
                     <Image source={this.props.lefticon} style={[styles.photo, this.props.imagestyle || {}]} />
                     <View style={[styles.container_text, this.props.containerStyle || {}]}>
                         <Text style={[styles.title, this.props.titlestyle || {}]}>
-                            {this.props.title}
+                            {this.props.title}{this.props.count==undefined? " ":"("+ this.props.count +")"}
                         </Text>
                     </View>
                     {/* <Image source={this.props.innerright} style={[styles.checkboxphoto,this.props.innerrightimagestyle || {}]} />

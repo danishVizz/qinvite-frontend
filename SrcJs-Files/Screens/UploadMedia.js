@@ -56,7 +56,7 @@ export default class UploadMedia extends Component {
 
     createDesign() {
         if (this.state.imageuri != '') {
-            if ( mediaType == 'photo') {
+            if ( this.state.mediaType == 'photo') {
                 this.props.navigation.navigate('ImageEditor', { "imagedata": this.state.imageuri })
             } else {
                 this.props.navigation.navigate('Todos', { "imagedata": this.state.imageuri })
