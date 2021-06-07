@@ -145,6 +145,10 @@
     "upgrade": "رفع مستوى",
     "alert": "يحذر",
     "designerhint": "هل تريد من المصمم تصميم بطاقة / فيديو الحدث الخاص بك",
-    "restricttochoosedesigner": "لا يمكنك تحديد / تغيير المصمم الخاص بك الآن"
+    "restricttochoosedesigner": "لا يمكنك تحديد / تغيير المصمم الخاص بك الآن",
+    "please_select_receptionist_msg": "الرجاء تحديد موظف استقبال",
+    "please_select_receptionistcount_msg": "الرجاء تحديد جميع موظفي الاستقبال",
+    "availablity":"التوفر",
+    "earnings":"الأرباح"
     
   }

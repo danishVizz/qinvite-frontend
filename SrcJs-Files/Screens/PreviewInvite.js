@@ -3,6 +3,7 @@ import { Component } from "react";
 import { StyleSheet, View, Image, Text, StatusBar, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RNImageToPdf from 'react-native-image-to-pdf';
+import Video from 'react-native-video';
 import ButtonComp from '../Components/ButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
@@ -17,8 +18,28 @@ import { CommonActions, useNavigation } from '@react-navigation/native';
 import moment from "moment";
 
 export default class PreviewInvite extends Component {
+    constructor(props) {
+        super(props)
+        console.log("RUNNNN")
+        this.uriArr = Keys.invitealldata["ImageData"].split('.')
+        this.ext = this.uriArr[this.uriArr.length - 1].toLowerCase()
+        this.type = 'photo'
+        if (this.ext == 'mp4' || this.ext == 'mov') {
+            this.type = 'video'
+        }
+    }
+
     state = {
         contentLoading: false
+    }
+
+    onBuffer() {
+        console.log("BUFFERING")
+    }
+
+    videoError(error) {
+        console.log("VIDEO ERRROR")
+        console.log(error)
     }
 
     render() {
@@ -32,7 +53,14 @@ export default class PreviewInvite extends Component {
                 <ScrollView style={{ flex: 2.5 }}>
                     <View style={{ flex: 2.5, marginTop: 28, marginLeft: 20, marginRight: 20, marginBottom: 20, borderRadius: 2, borderWidth: 5, borderColor: 'white', elevation: 2 }}>
                         <View style={styles.imagecontainer}>
-                            <Image source={{ uri: Keys.invitealldata["ImageData"] }} style={{ height: 298, width: "100%", backgroundColor: 'white' }} resizeMode="center"></Image>
+                            {/* <Image source={{ uri: Keys.invitealldata["ImageData"] }} style={{ height: 298, width: "100%", backgroundColor: 'white' }} resizeMode="center"></Image> */}
+                            {this.type == 'photo' && <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6, backgroundColor: 'white', borderWidth: 1, borderColor: mycolor.lightgray }} source={{ uri: Keys.invitealldata["ImageData"] }}></Image>}
+                            {this.type == 'video' && <Video source={{ uri: Keys.invitealldata["ImageData"] }}   // Can be a URL or a local file.
+                                ref={(ref) => { this.player = ref }}     // Store reference
+                                onBuffer={this.onBuffer}                // Callback when remote video is buffering
+                                onError={this.videoError}
+                                controls={true}                   // Callback when video cannot be loaded
+                                style={styles.backgroundVideo} />}
                         </View>
                         <Text style={{ marginLeft: 20, marginRight: 20, fontSize: 24, fontWeight: 'normal', color: mycolor.darkgray }}>{Keys.invitealldata["Eventdata"].event_name}</Text>
 
@@ -117,13 +145,16 @@ export default class PreviewInvite extends Component {
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata);
         var alleventdata = Keys.invitealldata
+        var uriArr = alleventdata["ImageData"].split('.')
+        let ext = uriArr[uriArr.length - 1].toLowerCase()
         var formadata = new FormData()
         var photo = {
             uri: Platform.OS === "android" ? alleventdata["ImageData"] : alleventdata["ImageData"].replace("file://", ""),
-            type: 'image/jpeg',
-            name: 'photo.jpg',
+            type: 'video/*',
+            name: 'media.' + ext,
         };
-
+        console.log("PHOTO : ")
+        console.log(photo)
         // formadata.append("event_card", alleventdata["ImageData"])
         formadata.append("event_card", photo)
         formadata.append("event_id", alleventdata["Eventdata"].event_id)
@@ -134,7 +165,6 @@ export default class PreviewInvite extends Component {
         categories.map((item, index) => {
             formadata.append("categories[" + index + "]", item.id)
         })
-        console.log("Formdataaaaa?????" + JSON.stringify(formadata.categories_messages))
 
         ApiCalls.postApicall(formadata, "add_event_details").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
@@ -153,7 +183,6 @@ export default class PreviewInvite extends Component {
                     index: 0,
                     routes: [{ name: 'CombineComp' }],
                 });
-
                 this.props.navigation.dispatch(resetAction);
             } else {
                 Alert.alert('Failed', data.message);
@@ -161,8 +190,12 @@ export default class PreviewInvite extends Component {
         }, error => {
             console.log(error);
             this.logCallback("Something Went Wrong", this.state.contentLoading = false);
-            Alert.alert('Error', JSON.stringify(error));
-            // this.props.navigation.navigate('CombineComp')
+            // Alert.alert('Error', JSON.stringify(error));
+            const resetAction = CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'CombineComp' }],
+            });
+            this.props.navigation.dispatch(resetAction);
         }
         )
     }
@@ -179,14 +212,13 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         height: 300,
         width: "100%",
-        alignItems: 'center',
         marginRight: 20,
         marginBottom: 20,
         borderWidth: 1,
         alignSelf: 'center',
         borderColor: mycolor.lightgray,
         borderRadius: 5,
-        flexDirection: 'column'
+     
     },
     textstyle: {
         marginLeft: 20,
@@ -194,5 +226,16 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 'normal',
         color: mycolor.lightgray
-    }
+    },
+    backgroundVideo: {
+        // position: 'absolute',
+        height: 300,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: mycolor.lightgray,
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+    },
 });

@@ -66,7 +66,7 @@ export default class AllRequests extends Component {
                     <DatePicker
                         date={this.state.date}
                         mode="datetime"
-
+                        minimumDate={moment().toDate()}
                         onDateChange={(date) => this.setState({ date: date, eventdate: date })}
                     />
                     <View style={{ margin: 20, width: '70%' }}>

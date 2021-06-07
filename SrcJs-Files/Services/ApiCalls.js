@@ -12,11 +12,11 @@ class ApiCalls {
 
       let logindata = await fetch(fullurl, {
         method: 'POST',
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "multipart/form-data",
-      // },
-        body:formadata
+        headers: {
+          // Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+        body: formadata
       });
 
       let result = await logindata
@@ -27,7 +27,7 @@ class ApiCalls {
       throw error.message;
     }
   }
-  
+
   async getapicall(apiname, query) {
     try {
       var fullurl = Base_url + apiname;
@@ -54,7 +54,7 @@ class ApiCalls {
       var fullurl = Base_url + apiname;
       let codeData = await fetch(`${fullurl}?keyword=${query}`, {
         method: 'GET',
-      
+
       });
 
       let result = await codeData

@@ -190,7 +190,14 @@ export class Packages extends Component {
     
         invitedata = { "Eventdata": eventdata, "PackageData": this.state.selectedItem }
         mykeys.invitealldata = invitedata
-        this.SendRequestDesigners()
+        console.log("DESIGNER ID "+"this.props.route.params.designer_id")
+        console.log(this.props.route.params.designer_id)
+        if(this.props.route.params.designer_id == null) {
+          this.props.navigation.navigate('Payment', { "event_data": mykeys.invitealldata["Eventdata"],"Type":"new" })
+        } else {
+          this.SendRequestDesigners()
+        }
+        
 
       } else {
         Alert.alert('Failed', data.message);

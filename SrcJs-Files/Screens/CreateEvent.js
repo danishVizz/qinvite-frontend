@@ -58,9 +58,12 @@ export default class CreateEvent extends Component {
 
   render() {
     var dropdownList = [];
+    console.log('start')
+    debugger
+    console.log('stop')
     let dec = this.state.recpntistcount;
     for (let i = 0; i < this.state.recpntistcount; i++) {
-      dropdownList.push(this.receptionistDropdown(dec * 1000, i))
+      dropdownList.push(this.receptionistDropdown(dec * 1000, i, this.props.route.params.eventdata.receptionists))
       dec = dec - 1
     }
 
@@ -134,7 +137,7 @@ export default class CreateEvent extends Component {
               textinstyle={{ width: "100%" }}
               isEnable={!(this.state.iseditevent)}
               value={String(this.state.recpntistcount)}
-              onChangeText={(count) => this.setState({ recpntistcount: count, selectedvaluesarr: [] })}
+              onChangeText={(count) => this.setState({ recpntistcount: count, selectedvaluesarr: [] }, () => console.log("COUNT : " + count))}
             />
 
             {/* <View style={{zIndex: 2000}}>
@@ -167,9 +170,7 @@ export default class CreateEvent extends Component {
 
             {
               dropdownList
-
               // this.receptionistDropdown(2000)
-
             }
 
             {this.state.eventAddressError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.selectedvaluesErrortxt}</Text> : <View></View>}
@@ -185,16 +186,18 @@ export default class CreateEvent extends Component {
         </ScrollView>
         <SafeAreaView></SafeAreaView>
       </View>
-      
+
     );
 
   }
 
   componentDidMount() {
+    // console.log("ROUTE")
+    // console.log(this.props.route.param.eventdata)
     this.state.eventdata = this.props.route.params.eventdata ?? []
-    console.log(moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss'))
     if (this.state.eventdata.length != 0) {
-      let event_Date = moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss');// 2021-05-07 01:51:29
+      let event_Date = this.state.eventdata.event_date// 2021-05-07 01:51:29
+      // let event_Date = moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss');// 2021-05-07 01:51:29
       this.setState({
         eventid: this.state.eventdata.id,
         eventname: this.state.eventdata.event_name,
@@ -210,22 +213,26 @@ export default class CreateEvent extends Component {
       mykeys.invitealldata = { "ImageData": this.props.route.params.eventdata.event_card }
 
     }
-    this.getAllReceptionists()
+    !(this.state.iseditevent) && this.getAllReceptionists()
   }
 
   updateSelectedVal(receptionistdata) {
     console.log("this.state.user")
     console.log(receptionistdata)
     if (receptionistdata != undefined) {
+      let arr = []
       receptionistdata.map((item, index) => {
-        this.setState({ selectedvaluesarr: this.state.selectedvaluesarr.concat(item.id) })
-        // receptionistsarr.push(receptionists
+        arr.push(item.id)
       })
       this.setState({ editreceptionistarr: receptionistdata })
+      this.setState({ selectedvaluesarr: arr }, () => console.log(this.state.selectedvaluesarr))
     }
+    console.log("updateSelectedVal END")
   }
 
-  receptionistDropdown(key, dropdownIndex) {
+  receptionistDropdown(key, dropdownIndex, receptionists) {
+    console.log("RECEPTIONIST " + dropdownIndex)
+    console.log(receptionists)
     return (
       <View style={{ zIndex: key }} key={key}>
         <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("ReceptionistName")}</Text>
@@ -243,7 +250,7 @@ export default class CreateEvent extends Component {
           disabledropdown={(this.state.iseditevent)}
           disabled={(this.state.iseditevent)}
           placeholderStyle={{ color: mycolor.lightgray }}
-          placeholder={Trans.translate('select_receptionists')}
+          placeholder={receptionists != undefined ? receptionists[dropdownIndex].first_name : Trans.translate('select_receptionists')} //{Trans.translate('select_receptionists')}
           dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
           removeItem={(value => this.removeItem(value))}
           onChangeItemMultiple={item => this.setState({
@@ -261,8 +268,7 @@ export default class CreateEvent extends Component {
   }
 
   async onSignupPress() {
-    console.log('createEvent 1');
-    // let hasDuplicate = this.state.selectedvaluesarr.some((val, i) => this.state.selectedvaluesarr.indexOf(val) !== i);
+    
     if (!this.checkIfArrayIsUnique(this.state.selectedvaluesarr)) {
       Alert.alert("Warning", "You have selected same Receptionist more than one time.")
       return
@@ -290,7 +296,6 @@ export default class CreateEvent extends Component {
       }
       mykeys.invitealldata = { "Eventdata": data, "ImageData": data.event_card }
       if (!(this.state.iseditevent)) {
-        // this.props.navigation.navigate('Packages')
         this.createTwoButtonAlert(Trans.translate('designerhint'))
       }
       else {
@@ -311,13 +316,12 @@ export default class CreateEvent extends Component {
       [
         {
           text: "No",
-          onPress: () => this.props.navigation.navigate('Packages'),
+          onPress: () => this.props.navigation.navigate('Packages', { "designer_id": null }),
           style: "cancel"
         },
         { text: "Yes", onPress: () => this.props.navigation.navigate('Designer', { "Type": "selection" }) }
       ]
     );
-
 
   checkforError() {
     var anycheckfalse = false;
@@ -351,6 +355,15 @@ export default class CreateEvent extends Component {
       anycheckfalse = true;
     }
 
+    if (this.state.selectedvaluesarr.length == 0) {
+      Alert.alert(Trans.translate("alert"), Trans.translate('please_select_receptionist_msg'))
+      anycheckfalse = true;
+    }
+    if (!(this.state.iseditevent) && this.state.selectedvaluesarr.length != this.state.recpntistcount) {
+      Alert.alert(Trans.translate("alert"), Trans.translate('please_select_receptionistcount_msg'))
+      anycheckfalse = true;
+    }
+
 
     if (anycheckfalse) {
       return true;
@@ -376,9 +389,13 @@ export default class CreateEvent extends Component {
     formadata.append("event_address", this.state.eventaddress)
     formadata.append("user_id", parsedata.id)
     formadata.append("no_of_receptionists", this.state.recpntistcount)
+    console.log("SELECTEDVALUESARR")
+    console.log(this.state.selectedvaluesarr)
     this.state.selectedvaluesarr.map((item, index) => {
       formadata.append("receptionists[" + index + "]", this.state.selectedvaluesarr[index])
     });
+    console.log("FORMDATA")
+    console.log(formadata)
     if (this.state.iseditevent) {
       formadata.append("event_id", this.state.eventid)
       apiname = "edit_event"
@@ -397,8 +414,8 @@ export default class CreateEvent extends Component {
         if (this.state.paymentstatus == 3)
           this.props.navigation.replace('Todos')
         else {
-          console.log("Eventttt"+mykeys.invitealldata["Eventdata"])
-          this.props.navigation.navigate("Payment", { "event_data": mykeys.invitealldata["Eventdata"],"Type":"new" })
+          console.log("Eventttt" + mykeys.invitealldata["Eventdata"])
+          this.props.navigation.navigate("Payment", { "event_data": mykeys.invitealldata["Eventdata"], "Type": "new" })
           // this.props.navigation.replace('Todos')
         }
 
@@ -413,13 +430,12 @@ export default class CreateEvent extends Component {
       if (this.state.paymentstatus == 3)
         this.props.navigation.replace('Todos')
       else {
-        this.props.navigation.navigate("Payment", { "event_data": mykeys.invitealldata["Eventdata"],"Type":"new" })
+        this.props.navigation.navigate("Payment", { "event_data": mykeys.invitealldata["Eventdata"], "Type": "new" })
         // this.props.navigation.replace('Todos')
       }
     }
     )
   }
-
 
   async getAllReceptionists() {
     this.logCallback("getProducts :", this.state.isLoading = true);
@@ -469,19 +485,19 @@ export default class CreateEvent extends Component {
     let tmp = this.state.selectedvaluesarr
 
     // if (!(this.state.selectedvaluesarr.includes(selectedvalue.value.id))) {
-      // let user = this.state.user
-      // console.log("BEFORE")
-      // console.log(user)
-      // user.map(item => item.selected = false)
-      // console.log("After")
-      // user[selecedIndex].selected = true
-      // console.log(user)
+    // let user = this.state.user
+    // console.log("BEFORE")
+    // console.log(user)
+    // user.map(item => item.selected = false)
+    // console.log("After")
+    // user[selecedIndex].selected = true
+    // console.log(user)
 
-      tmp[dropdownIndex] = selectedvalue.value.id
-      this.setState({
-        selectedvaluesarr: tmp,
-        // user: user
-      }, () => console.log("SELECTED RECEPTIONIST"+this.state.selectedvaluesarr))
+    tmp[dropdownIndex] = selectedvalue.value.id
+    this.setState({
+      selectedvaluesarr: tmp,
+      // user: user
+    }, () => console.log("SELECTED RECEPTIONIST" + this.state.selectedvaluesarr))
     // } 
     // else {
     //   Alert.alert("", selectedvalue.label + " is already assigned.")
@@ -513,6 +529,7 @@ export default class CreateEvent extends Component {
         <DatePicker
           date={this.state.date}
           mode="datetime"
+          minimumDate={moment().toDate()}
           onDateChange={(date) => this.setState({ date: date, eventdate: moment(date).format('ddd MMM DD YYYY HH:mm:ss') }, console.log("DATE : " + date))}
         />
         <View style={{ margin: 20 }}>

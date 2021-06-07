@@ -11,6 +11,7 @@ import {
   Platform,
   SafeAreaView,
   Alert,
+  Keyboard
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import RadioButtonComp from "../Components/RadioComp";
@@ -52,6 +53,7 @@ export default class SignUp extends Component {
                   size={12} text={Trans.translate("Phonenumber")}
                   onPress={() => this.changebuttons(1)}
                   isSelected={this.state.isSelectedRB1}
+                  
                 >
                 </RadioButtonComp>
                 <View style={{ flex: 1 }}>
@@ -70,6 +72,7 @@ export default class SignUp extends Component {
                 placeholder={Trans.translate('Email')}
                 leftIcon={require('../../assets/icon_email.png')}
                 placeholderTextColor={mycolor.lightgray}
+                OnsubmitEditing={Keyboard.dismiss}
                 onChangeText={(email) => this.setState({ emailTxt: email, emailError: false })}
               />) : null}
 
@@ -78,6 +81,7 @@ export default class SignUp extends Component {
                 placeholder={Trans.translate('Phonenumber')}
                 leftIcon={require('../../assets/icon_phone2x.png')}
                 placeholderTextColor={mycolor.lightgray}
+                OnsubmitEditing={Keyboard.dismiss}
                 onChangeText={(phone) => this.setState({ phoneTxt: phone, phoneError: false })}
               />) : null}
               {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
@@ -87,6 +91,7 @@ export default class SignUp extends Component {
                 leftIcon={require('../../assets/icon_user.png')}
                 placeholderTextColor={mycolor.lightgray}
                 onChangeText={(idcard) => this.setState({ idcardTxt: idcard, idcardError: false })}
+                OnsubmitEditing={Keyboard.dismiss}
               />
               {this.state.idcarderror ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.idcarderrortxt}</Text> : <View></View>}
 
@@ -98,6 +103,7 @@ export default class SignUp extends Component {
                 rightIcon={require('../../assets/icon_visiblity.png')}
                 onPressEyeBtn={() => this.onPressEyeBtn('password')}
                 onChangeText={(password) => this.setState({ passwordTxt: password, passwordError: false })}
+                OnsubmitEditing={Keyboard.dismiss}
                 isSecureTextEntry={this.state.isSecureTextEntry}
 
               />
@@ -108,6 +114,7 @@ export default class SignUp extends Component {
                 placeholder={Trans.translate('Phonenumber')}
                 leftIcon={require('../../assets/icon_phone2x.png')}
                 placeholderTextColor={mycolor.lightgray}
+                OnsubmitEditing={Keyboard.dismiss}
                 onChangeText={(phone2) => this.setState({ phoneTxt2: phone2, phoneError2: false })}
               />) : null}
               {this.state.phoneError2 ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt2}</Text> : <View></View>}
@@ -122,10 +129,9 @@ export default class SignUp extends Component {
                 onPressEyeBtn={() => this.onPressEyeBtn('confirmpass')}
                 isSecureTextEntry={this.state.isSecureTextEntrycomfirmpass}
                 onChangeText={(confirmpassword) => this.setState({ confirmPasswordTxt: confirmpassword, confirmpasswordError: false })}
+                OnsubmitEditing={Keyboard.dismiss}
               />
               {this.state.confirmpasswordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.cpassworderrortxt}</Text> : <View></View>}
-
-
 
               <ButtonComp
                 onPress={() => this.onSignupPress()}

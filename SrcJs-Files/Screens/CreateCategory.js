@@ -57,6 +57,7 @@ export default class CreateCategory extends Component {
                                 max={10}
                                 min={1}
                                 step={1}
+                                disabled={!(this.state.editable)}
                                 editable={this.state.editable}
                                 colorMax={"#f04048"}
                                 colorMin={mycolor.pink}

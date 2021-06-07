@@ -1,6 +1,7 @@
 import { View } from 'react-native'
 import React, { Component } from 'react';
 import { WebView } from 'react-native-webview'
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import Keys from "../Constants/keys"
 import mycolor from "../Constants/Colors"
 import Trans from "../Translation/translation"
@@ -15,6 +16,7 @@ import AwesomeAlert from 'react-native-awesome-alerts'
 import Prefs from '../Prefs/Prefs';
 import Global from '../Constants/Global';
 import mykeys from '../Constants/keys';
+import ApiCalls from '../Services/ApiCalls';
 
 // const jsCode = `window.postMessage(document.getElementById('gb-main').innerHTML)`
 const jsCode = "window.postMessage(document.getElementsByClassName(payment-response))"
@@ -37,11 +39,11 @@ export class Payment extends Component {
     }
     render() {
         let type = this.props.route.params.Type
-        let people = this.props.route.params.People || {} 
+        let people = this.props.route.params.People || {}
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
-                <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Payment')} textfonts={'bold'} textsize={18} titlepos="center" />
+                <HeaderComp leftBtn={require('../../assets/icon_back.png')} leftBtnClicked={() => this.props.navigation.goBack()} textfonts={'bold'} fromleft={10} title={Trans.translate('Payment')} textfonts={'bold'} textsize={18} titlepos="center" />
                 {
                     this.state.eventData != undefined &&
                     <WebView
@@ -51,7 +53,8 @@ export class Payment extends Component {
                         onMessage={event => {
                             this.handleMessage(event.nativeEvent.data)
                         }}
-                        source={{ uri: type == "new" ? `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.state.eventData.event_id}` : `https://qinvite.vizzwebsolutions.com/payments/upgrade_package?event_id=${this.state.eventData.event_id}&package_id=${this.state.eventData.package_details.id}&people=${people}&user_id=${Global.userData.id}` }} />
+
+                        source={{ uri: type == "new" ? `https://qinvite.vizzwebsolutions.com/payments?event_id=${this.state.eventData.event_id}` : this.myalert(people) }} />
 
                 }
 
@@ -88,6 +91,10 @@ export class Payment extends Component {
         this.getEventData()
 
     }
+    myalert(people) {
+        // Alert.alert("ALert", `https://qinvite.vizzwebsolutions.com/payments/upgrade_package?event_id=${this.state.eventData.event_id}&package_id=${this.state.eventData.package_details.id}&people=${people}&user_id=${Global.userData.id}`)
+        return `https://qinvite.vizzwebsolutions.com/payments/upgrade_package?event_id=${this.state.eventData.event_id}&package_id=${this.state.eventData.package_details.id}&people=${people}&user_id=${Global.userData.id}`
+    }
 
     async getEventData() {
         let eventdata = await mykeys.invitealldata["Eventdata"] || {}
@@ -118,7 +125,7 @@ export class Payment extends Component {
     onpaymentsuccess() {
         this.setState({ showAlert: false })
         if (this.props.route.params.Type == "upgrade") {
-            this.props.navigation.replace("CombineComp")
+            this.upgradePackage()
         }
         else {
             this.props.navigation.replace('Todos')
@@ -139,6 +146,29 @@ export class Payment extends Component {
         );
     }
 
+    async upgradePackage() {
+        let people = this.props.route.params.People || {}
+        var formadata = new FormData()
+        formadata.append("package_id", this.state.eventData.package_details.id)
+        formadata.append("people", people)
+        formadata.append("event_id", this.state.eventData.event_id)
+        formadata.append("user_id", Global.userData.id)
+        ApiCalls.postApicall(formadata, 'upgrade_package').then(data => {
+            if (data.status == true) {
+                const resetAction = CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'CombineComp' }],
+                });
+                this.props.navigation.dispatch(resetAction);
+            } else {
+                Alert.alert('Failed', data.message);
+            }
+        }, error => {
+            console.log(error)
+            Alert.alert('Failed', error);
+        }
+        )
+    }
 
 }
 export default Payment;

@@ -19,7 +19,9 @@ export default class DesignerComp extends Component {
                             <Text style={[styles.textstyle, { color: '#474645', fontWeight: 'bold', fontSize: 14 } || {}]}> {this.props.designername}</Text>
                             <Text style={[styles.textstyle]}> {"Cost "+this.props.designerprice + " QR"}</Text>
                         </View>
+                        <Image resizeMode="contain" style={{ width: 15, alignSelf: 'center', height: 15, backgroundColor: this.props.isavailable ? 'green' : 'orange', borderRadius: 7.5 }}></Image>
                     </View>
+                    
                 </View>
             </View> : null
         );

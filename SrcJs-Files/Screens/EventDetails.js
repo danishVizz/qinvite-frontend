@@ -10,8 +10,21 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import HeaderComp2 from '../Components/HeaderComp2';
 import ButtonComp from '../Components/ButtonComp';
 import Trans from '../Translation/translation';
-
+import Video from 'react-native-video';
 export default class EventDetails extends Component {
+
+    constructor(props) {
+        super(props)
+        console.log("RUNNNN")
+        let eventdata = this.props.route.params.eventdata ?? []
+        this.uriArr = eventdata.event_card.split('.')
+        this.ext = this.uriArr[this.uriArr.length - 1].toLowerCase()
+        this.type = 'photo'
+        if (this.ext == 'mp4' || this.ext == 'mov') {
+            this.type = 'video'
+        }
+    }
+
 
     state = {
         eventdata: []
@@ -20,7 +33,7 @@ export default class EventDetails extends Component {
     render() {
 
         var eventdata = this.props.route.params.eventdata ?? []
-        console.log(eventdata.event_date)
+        console.log("Url" + eventdata.event_card)
 
         return (
             <View style={styles.container}>
@@ -30,12 +43,17 @@ export default class EventDetails extends Component {
                     backgroundColor='#F54260'
                 /> */}
                 <ScrollView>
-
-
-
                     <View style={styles.imagecontainer}>
-                        <Image style={{ height: 200, width: 300 }} source={eventdata.event_card == "" ? require('../../assets/logo.png') : { uri: eventdata.event_card }} resizeMode='contain'></Image>
+                        {this.type == 'photo' && <Image style={{ height: 200, width: 300 }} source={eventdata.event_card == "" ? require('../../assets/logo.png') : { uri: eventdata.event_card }} resizeMode='contain'></Image>}
+                        {this.type == 'video' && <Video source={{ uri: eventdata.event_card }}   // Can be a URL or a local file.
+                            ref={(ref) => { this.player = ref }}     // Store reference
+                            onBuffer={this.onBuffer}                // Callback when remote video is buffering
+                            onError={this.videoError}
+                            controls={true}                   // Callback when video cannot be loaded
+                            style={styles.backgroundVideo} />}
                     </View>
+
+
 
                     <Text style={{ marginLeft: 20, marginRight: 20, fontSize: 24, fontWeight: 'normal', color: mycolor.darkgray }}>{eventdata.event_name}</Text>
 
@@ -68,15 +86,25 @@ export default class EventDetails extends Component {
 
                     <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
                         <ButtonComp
-                            style={{width: '70%'}}
+                            style={{ width: '70%' }}
                             textstyle={{ color: 'white' }}
                             text={Trans.translate('Savepdf')}
-                            onPress={() => this.props.navigation.navigate('CategoryList', {categories : this.props.route.params.eventdata.categories})}
+                            onPress={() => this.props.navigation.navigate('CategoryList', { categories: this.props.route.params.eventdata.categories })}
                         ></ButtonComp>
                     </View>
                 </ScrollView>
             </View>
         );
+    }
+
+
+    onBuffer() {
+        console.log("BUFFERING")
+    }
+
+    videoError(error) {
+        console.log("VIDEO ERRROR")
+        console.log(error)
     }
 
     componentDidMount() {
@@ -104,8 +132,8 @@ const styles = StyleSheet.create({
 
         borderColor: mycolor.lightgray,
         borderRadius: 5,
-        alignSelf: 'center',
-        flexDirection: 'column'
+        // alignSelf: 'center',
+        // flexDirection: 'column'
     },
     innercontainer: {
         marginTop: 24,
@@ -116,5 +144,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         height: 60, marginTop: 10, marginBottom: 30, marginLeft: 35, marginRight: 35, borderColor: mycolor.lightgray, borderRadius: 5, borderWidth: 0.5, backgroundColor: '#FCFCFC'
+    },
+    backgroundVideo: {
+        // position: 'absolute',
+        height: 300,
+        width: '100%',
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: mycolor.lightgray,
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
     },
 });

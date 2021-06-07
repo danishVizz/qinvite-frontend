@@ -136,7 +136,7 @@ export default class Designer extends Component {
                     // toggle={() => this.onToggle(index)}
                     // propsfromparents={onPressButtonChildren.bind()}
                     imagesrc={item.user_image}
-                    isavailable={item.availability == 0 ? true : false}
+                    isavailable={item.availability == "0" ? true : false}
                     designername={item.first_name + ' ' + item.last_name}
                     designerprice={item.user_price}
                 />
@@ -222,7 +222,8 @@ export default class Designer extends Component {
         var parsedata = JSON.parse(userdata)
         var alleventdata = Keys.invitealldata
 
-        ApiCalls.getapicall("get_designers", "?event_id=" + alleventdata["Eventdata"].event_id).then(data => {
+        // ApiCalls.getapicall("get_designers", "?event_id=" + alleventdata["Eventdata"].event_id).then(data => {
+        ApiCalls.getapicall("get_designers", "").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
                 console.log("DesignerData" + JSON.stringify(data.data))

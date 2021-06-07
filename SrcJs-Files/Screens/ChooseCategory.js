@@ -189,6 +189,7 @@ export default class ChooseCategory extends Component {
             if (data.status == true) {
                 this.setState({ isChecked: [],selectedLists:[] })
                 let eventCategories = Keys.invitealldata["Eventdata"].categoriesList;
+                console.log("tttttt"+Keys.invitealldata["Eventdata"].categoriesList);
                 this.setState({ categoriesdata: data.data })
                 for (let i in data.data) {
                     for (let j in eventCategories) {

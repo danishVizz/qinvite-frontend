@@ -127,7 +127,7 @@ export default class CategoryContactsSelection extends Component {
         //   });
         if (this.props.route.params.categorydata.iseditcategory) {
             formadata.append("id", this.props.route.params.categorydata.categoryid)
-            apiname = "edit_category "
+            apiname = "edit_category"
         }
         else {
             apiname = "add_category"
@@ -144,8 +144,6 @@ export default class CategoryContactsSelection extends Component {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
                 console.log("--ServerResponse----" + data)
-                // this.props.navigation.push('ChooseCategory')
-
                 const popAction = StackActions.pop(2);
                 this.props.navigation.dispatch(popAction);
 
@@ -158,8 +156,8 @@ export default class CategoryContactsSelection extends Component {
             // this.props.navigation.navigate('ChooseCategory')
             const popAction = StackActions.pop(2);
             this.props.navigation.dispatch(popAction);
-
-            // Alert.alert('Error', JSON.stringify(error));
+            console.log(error)
+            Alert.alert('Error', JSON.stringify(error));
         }
         )
 

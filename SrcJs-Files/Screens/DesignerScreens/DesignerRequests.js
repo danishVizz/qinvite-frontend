@@ -15,6 +15,7 @@ import Prefs from '../../Prefs/Prefs'
 import Keys from '../../Constants/keys'
 import ApiCalls from '../../Services/ApiCalls'
 import { Alert } from 'react-native';
+import Global from '../../Constants/Global';
 
 
 export default class DesignerRequests extends Component {
@@ -44,19 +45,22 @@ export default class DesignerRequests extends Component {
       <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
         <HeaderComp style={{}} title={Trans.translate('requests')} titlepos='center' textsize={20} textfonts='bold' tintColor="#fff" rightBtn={require('../../../assets/logout.png')} rightBtnClicked={() => this.logout()} />
 
-        <View style={{ backgroundColor: mycolor.pink, height: 40, flexDirection: 'row', alignItems: 'center', alignContent: 'center' }}>
+        <View style={{ backgroundColor: mycolor.pink, height: 40, flexDirection: 'row', alignItems: 'center' }}>
 
-          <Text style={{ marginLeft: 20, color: 'white', fontWeight: 'bold' }}>Availablity</Text>
+          <Text style={{ marginLeft: 20, color: 'white', fontWeight: 'bold' }}>{Trans.translate("availablity")}</Text>
 
           <Switch
-            style={{ position: 'absolute', right: 10 }}
-            trackColor={{ false: mycolor.lightgray, true: mycolor.lightgreen }}
-            thumbColor={this.state.isEnabled ? mycolor.green : mycolor.txtGray}
+            style={{ marginLeft: 50 }}
+            trackColor={{ false: mycolor.lightgray, true: mycolor.offwhite }}
+            thumbColor={this.state.isEnabled ? mycolor.pink : mycolor.txtGray}
             ios_backgroundColor={mycolor.white}
-
             onValueChange={() => this.ontogglechange()}
             value={this.state.isEnabled}
           />
+
+          <Text style={{ marginLeft: 'auto', color: 'white', fontWeight: 'bold' }}>{Trans.translate("earnings")}</Text>
+
+          <Text style={{ marginLeft: 'auto', marginRight: 20, color: 'white', fontWeight: 'bold' }}>{Global.userData.earnings+" QR"}</Text>
 
         </View>
         <this.Tab.Navigator
@@ -101,16 +105,16 @@ export default class DesignerRequests extends Component {
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
     console.log(parsedata)
-    let availability=   this.state.isEnabled ? 'yes' : 'no'
-    let query = '?user_id='+parsedata.id+'&trigger='+availability
-  
+    let availability = this.state.isEnabled ? 'yes' : 'no'
+    let query = '?user_id=' + parsedata.id + '&trigger=' + availability
+
     console.log("Query" + query)
     ApiCalls.getGenericCall("toggle_availability", query).then(data => {
       if (data.status == true) {
 
-        var userdetails=parsedata
+        var userdetails = parsedata
         userdetails.availability = this.state.isEnabled ? "0" : "1"
-        console.log("USER DETAILS: "+typeof userdetails)
+        console.log("USER DETAILS: " + typeof userdetails)
         Prefs.save(Keys.userData, JSON.stringify(userdetails))
       } else {
         this.setState({ isLoading: false, isFetching: false })

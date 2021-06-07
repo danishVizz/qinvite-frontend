@@ -1,6 +1,6 @@
-import { useNavigation } from "@react-navigation/core";
+
 import { StatusBar } from "expo-status-bar";
-import React, { Component, useState } from "react";
+import React, { Component, Tou } from "react";
 import mycolor from '../Constants/Colors'
 import {
   StyleSheet,
@@ -8,9 +8,9 @@ import {
   View,
   Image,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard, TouchableWithoutFeedback
 } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import TextInputComp from "../Components/TextInputComp";
 import ButtonComp from "../Components/ButtonComp";
 import Trans from "../Translation/translation"
@@ -38,14 +38,16 @@ export default class Login extends Component {
         <StatusBar style="auto" />
 
         <View style={styles.innerview}>
-          <TextInputComp
-            placeholder={Trans.translate("IDCard")}
-            leftIcon={require('../../assets/icon_user.png')}
-            placeholderTextColor={mycolor.lightgray}
-            empty={this.state.emailEmpty}
-            value={this.state.emailtxt}
-            onChangeText={(email) => this.setState({ emailtxt: email, emailEmpty: false })}
-          />
+            <TextInputComp
+              placeholder={Trans.translate("IDCard")}
+              leftIcon={require('../../assets/icon_user.png')}
+              placeholderTextColor={mycolor.lightgray}
+              empty={this.state.emailEmpty}
+              value={this.state.emailtxt}
+              returnKeyType='done'
+              onChangeText={(email) => this.setState({ emailtxt: email, emailEmpty: false })}
+              OnsubmitEditing={Keyboard.dismiss}
+            />
           {this.state.emailEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.Emailerrortxt}</Text> : <View></View>}
           <TextInputComp
             placeholder={Trans.translate("Password")}
@@ -57,10 +59,11 @@ export default class Login extends Component {
             rightIcon={require('../../assets/icon_visiblity.png')}
             onPressEyeBtn={() => this.setState({ isSecureTextEntry: !(this.state.isSecureTextEntry) })}
             isSecureTextEntry={this.state.isSecureTextEntry}
+            returnKeyType='done'
             onChangeText={(pass) => this.setState({ passwordtxt: pass, passEmpty: false })}
+            OnsubmitEditing={Keyboard.dismiss}
           />
           {this.state.passEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
-
 
           <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPass')} style={{ alignSelf: 'flex-end' }}>
             <Text style={{ color: '#707070', textAlign: 'right', alignSelf: 'flex-end', marginTop: 10, }}>{Trans.translate('Forgotpass')}</Text>
@@ -87,7 +90,6 @@ export default class Login extends Component {
       </View>
     );
   }
-
 
   logCallback = (log, callback) => {
     console.log(log);
@@ -128,8 +130,8 @@ export default class Login extends Component {
           case "5":
             this.props.navigation.replace('DesignerRequests');
             break;
-            default:
-              Alert.alert("", Trans.translate('not_auth_msg'));
+          default:
+            Alert.alert("", Trans.translate('not_auth_msg'));
         }
 
         // this.props.navigation.navigate('ChooseCategory')

@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +15,8 @@ import { Alert, Dimensions } from 'react-native';
 import { CheckBox } from "react-native-elements";
 import Snackbar from 'react-native-snackbar';
 import ApiCalls from '../../Services/ApiCalls';
+
+// const { getVideoDurationInSeconds } = require('get-video-duration')
 
 const WINDOW = Dimensions.get('window');
 export default class UploadDesign extends Component {
@@ -40,7 +43,15 @@ export default class UploadDesign extends Component {
                 {/* <ScrollView> */}
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Image resizeMode={ this.state.imageuri == '' ? 'contain' : 'contain'} style={{ width: 300, height: 300, borderRadius: 15 }} source={(this.state.imageuri == '' || this.state.mediaType == 'video') ? require('../../../assets/icon_uploadhint.png') : { uri: this.state.imageuri }}></Image>
+                        <Image resizeMode={this.state.imageuri == '' ? 'contain' : 'contain'} style={{ width: 300, height: 300, borderRadius: 15 }} source={(this.state.imageuri == '' || this.state.mediaType == 'video') ? require('../../../assets/icon_uploadhint.png') : { uri: this.state.imageuri }}></Image>
+                        <Video
+                            ref={ref => this._video = ref}
+                            source={{ uri: imageuri }}
+                            resizeMode={'cover'}
+                            repeat={true}
+                            paused={true}
+                            onLoad={() => this._onLoad()}
+                        />
                     </View>
                     <View style={{ flex: 2, alignSelf: 'center', justifyContent: 'flex-start', alignSelf: 'center' }}>
                         <Text style={{ color: 'black', fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>{Trans.translate('UploadDesign')}</Text>
@@ -102,6 +113,11 @@ export default class UploadDesign extends Component {
     componentDidMount() {
         // console.log("EVENT DATA");
         // console.log(this.props.route.params.event);
+    }
+
+    _onLoad(data) {
+        let durationVideo = data.duration
+        console.log(durationVideo)
     }
 
     checkConditions() {
@@ -173,11 +189,16 @@ export default class UploadDesign extends Component {
                 includeBase64: false,
                 maxHeight: WINDOW.height / 2,
                 maxWidth: WINDOW.width - 20,
+
             },
             (responses) => {
-                this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType });
-                console.log(responses.uri)
-            },
+                if (responses.fileSize > 5000000)
+                    Alert.alert(Trans.translate("alert"), Trans.translate('filesize'))
+                else {
+                    this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType });
+                    console.log(responses.uri)
+                }
+            }
         )
     }
 

@@ -153,11 +153,12 @@
     "selectedpackage": "Your Selected Package",
     "upgrade": "Upgrade",
     "alert": "Alert",
-     "designerhint": "Do you want Designer to design your event card/video.",
-     "restricttochoosedesigner": "You can't select/change your designer right now."
-     
-    
+    "designerhint": "Do you want Designer to design your event card/video.",
+    "restricttochoosedesigner": "You can't select/change your designer right now.",
+    "please_select_receptionist_msg": "Please select receptionist",
+    "please_select_receptionistcount_msg": "Please select all receptionists",
+    "availablity":"Availablity",
+    "earnings":"Earnings"
    
-    
     
 }

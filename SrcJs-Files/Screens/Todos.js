@@ -16,8 +16,7 @@ export default class Todos extends Component {
         categoriestatus: ''
     }
     render() {
-        console.log("????" + Keys.invitealldata["CategoriesData"])
-
+    
         return (
             <View>
                 <StatusBarComp backgroundColor={mycolor.pink} />
@@ -64,9 +63,19 @@ export default class Todos extends Component {
         if (Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined) {
             this.props.navigation.navigate('Designer', { "Type": "invitedesign" })
         } else {
-            this.props.navigation.navigate('ImageEditor');
-        }
+            if (Keys.invitealldata["ImageData"].indexOf('.mp4') > -1 || Keys.invitealldata["ImageData"].indexOf('.mov') > -1) {
+                if (Keys.invitealldata['CategoriesData'] == undefined || Keys.invitealldata['CategoriesData'] == "") {
+                    this.props.navigation.navigate('ChooseCategory');
+                }
+                else {
+                    // this.props.navigation.navigate('SendEditor', { "imagedata": this.state.imageuri })
+                    this.props.navigation.navigate('SendEditor');
+                }
 
+            } else {
+                this.props.navigation.navigate('ImageEditor');
+            }
+        }
     }
 }
 

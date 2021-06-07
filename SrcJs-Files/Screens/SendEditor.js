@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Image, StatusBar, Dimensions, Alert } from 'rea
 import { ScrollView, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Video from 'react-native-video';
 import TextInputComp from '../Components/TextInputComp';
 import ButtonComp from '../Components/ButtonComp';
 import StatusBarComp from '../Components/StatusBarComp';
@@ -17,6 +18,17 @@ import HeaderComp2 from '../Components/HeaderComp2';
 const WINDOW = Dimensions.get('window');
 
 export default class SendEditor extends Component {
+  
+  constructor(props) {
+    super(props)
+    console.log("RUNNNN")
+    this.uriArr = Keys.invitealldata["ImageData"].split('.')
+    this.ext = this.uriArr[this.uriArr.length - 1].toLowerCase()
+    this.type = 'photo'
+    if (this.ext == 'mp4' || this.ext == 'mov') {
+      this.type = 'video'
+    }
+  }
 
   state = {
     eventname: '',
@@ -41,7 +53,19 @@ export default class SendEditor extends Component {
     checkIcon: 'uncheckbox.png'
   }
 
+  onBuffer() {
+    console.log("BUFFERING")
+  }
+
+  videoError(error) {
+    console.log("VIDEO ERRROR")
+    console.log(error)
+  }
+
   render() {
+    console.log("VIDEO PATH")
+    console.log(Keys.invitealldata["ImageData"])
+    
     return (
       <View style={styles.container}>
         <StatusBarComp backgroundColor={mycolor.pink} />
@@ -53,9 +77,16 @@ export default class SendEditor extends Component {
           <View style={styles.subContainer}>
             <View style={styles.innercontainer}>
               {/* <Image style={{ backgroundColor: 'gray', width: '100%', height: 203, borderRadius: 6 }} source={require('../../assets/logo.png')}></Image> */}
-              <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6, backgroundColor: 'white' }} source={{ uri: Keys.invitealldata["ImageData"] }}></Image>
+              {this.type == 'photo' && <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6, borderColor:mycolor.lightgray, backgroundColor: 'white',borderWidth:1 }} source={{ uri: Keys.invitealldata["ImageData"] }}></Image>}
+              {this.type == 'video' && <Video source={{ uri: Keys.invitealldata["ImageData"] }}   // Can be a URL or a local file.
+                ref={(ref) => {
+                  this.player = ref
+                }}                                      // Store reference
+                onBuffer={this.onBuffer}                // Callback when remote video is buffering
+                onError={this.videoError} 
+                controls={true}              // Callback when video cannot be loaded
+                style={styles.backgroundVideo} />}
               <Text style={{ fontSize: 14, marginTop: 15, color: mycolor.txtGray }}>{Trans.translate("message")}</Text>
-
               <TextInputComp
                 style={{ height: 112 }}
                 placeholder={Trans.translate("message")}
@@ -124,8 +155,6 @@ export default class SendEditor extends Component {
     console.log(this.state.selectedvaluesarr)
   }
 
-
-
   componentDidMount() {
     var receptionistsarr = []
     var receptionistdata = Keys.invitealldata["CategoriesData"].SelectedCategories
@@ -148,7 +177,7 @@ export default class SendEditor extends Component {
   }
 
   async CreateEvent() {
-    
+
     if (this.state.sendToAll) {
       var messagesarray = []
       this.state.receptionistsarr.map((item) => {
@@ -198,6 +227,17 @@ const styles = StyleSheet.create({
     marginLeft: 13,
     marginRight: 13,
     marginTop: 13,
-  }
+  },
+  backgroundVideo: {
+    // position: 'absolute',
+    height: 300,
+    borderRadius:6,
+    borderWidth: 1,
+    borderColor:mycolor.lightgray,
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
 
 });
