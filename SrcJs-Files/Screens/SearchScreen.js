@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 
 
-import { View,SafeAreaView, StatusBar, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, StatusBar, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import mycolor from "../Constants/Colors";
 import { FlatList } from "react-native-gesture-handler";
 import ApiCalls from "../Services/ApiCalls";
 import { SearchBar } from 'react-native-elements';
-import keys from "../Constants/keys";
+import NetworkUtils from "../Constants/NetworkUtils";
 import Event_items from "../ListCustomviews/Event_items";
 
 export default class SearchScreen extends Component {
@@ -61,7 +61,12 @@ export default class SearchScreen extends Component {
     );
   }
 
-  onSearch(s) {
+  async onSearch(s) {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     ApiCalls.searchapicall("search", s).then(data => {
       if (data.status == true) {
         console.log(data);
@@ -73,7 +78,7 @@ export default class SearchScreen extends Component {
         this.setState({
           loading: false,
         })
-        
+
       }
     }, error => {
       console.log(error);
@@ -82,6 +87,11 @@ export default class SearchScreen extends Component {
   }
 
   async DeleteEvent(id) {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     this.setState({ showalert: false })
     this.logCallback("DeleteEvent :", this.state.contentLoading = true);
     // var userdata = await Prefs.get(Keys.userData);
@@ -145,11 +155,11 @@ export default class SearchScreen extends Component {
         //   "no_of_receptionists": item.no_of_receptionists,
         //   "receptionists": item.receptionists
         // }
-        console.log("---iTem--------"+item)
-        this.props.navigation.navigate('CreateEvent', {"eventdata": item})
+        console.log("---iTem--------" + item)
+        this.props.navigation.navigate('CreateEvent', { "eventdata": item })
         break
       default:
-    
+
     }
 
   }

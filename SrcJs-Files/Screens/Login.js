@@ -9,26 +9,30 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-  Keyboard, TouchableWithoutFeedback
+  Keyboard, Dimensions
 } from "react-native";
+import { CheckBox } from 'react-native-elements';
+import NetworkUtils from "../Constants/NetworkUtils";
 import TextInputComp from "../Components/TextInputComp";
 import ButtonComp from "../Components/ButtonComp";
 import Trans from "../Translation/translation"
 import ApiCalls from "../Services/ApiCalls";
 import Prefs from "../Prefs/Prefs";
 import Keys from "../Constants/keys";
+import Global from "../Constants/Global";
+
+const WIDTH = Dimensions.get('window').width
 
 export default class Login extends Component {
 
   state = {
-    // emailtxt: '123456',
-    // passwordtxt: '123456',
     emailtxt: '',
     passwordtxt: '',
     isSecureTextEntry: true,
     emailEmpty: false,
     passEmpty: false,
-    setLoginLoading: false
+    setLoginLoading: false,
+    rememberMe: false
   }
 
   render() {
@@ -38,16 +42,16 @@ export default class Login extends Component {
         <StatusBar style="auto" />
 
         <View style={styles.innerview}>
-            <TextInputComp
-              placeholder={Trans.translate("IDCard")}
-              leftIcon={require('../../assets/icon_user.png')}
-              placeholderTextColor={mycolor.lightgray}
-              empty={this.state.emailEmpty}
-              value={this.state.emailtxt}
-              returnKeyType='done'
-              onChangeText={(email) => this.setState({ emailtxt: email, emailEmpty: false })}
-              OnsubmitEditing={Keyboard.dismiss}
-            />
+          <TextInputComp
+            placeholder={Trans.translate("IDCard")}
+            leftIcon={require('../../assets/icon_user.png')}
+            placeholderTextColor={mycolor.lightgray}
+            empty={this.state.emailEmpty}
+            value={this.state.emailtxt}
+            returnKeyType='done'
+            onChangeText={(email) => this.setState({ emailtxt: email, emailEmpty: false })}
+            OnsubmitEditing={Keyboard.dismiss}
+          />
           {this.state.emailEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.Emailerrortxt}</Text> : <View></View>}
           <TextInputComp
             placeholder={Trans.translate("Password")}
@@ -65,10 +69,21 @@ export default class Login extends Component {
           />
           {this.state.passEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
 
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPass')} style={{ alignSelf: 'flex-end' }}>
-            <Text style={{ color: '#707070', textAlign: 'right', alignSelf: 'flex-end', marginTop: 10, }}>{Trans.translate('Forgotpass')}</Text>
-          </TouchableOpacity>
-
+          <View style={{ flexDirection: 'row', width: WIDTH, paddingHorizontal: 33, marginTop: 15, alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <CheckBox
+                containerStyle={{ marginLeft: 0, paddingLeft: 0, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, marginRight: 0 }}
+                checked={this.state.rememberMe}
+                checkedIcon={<Image source={require('../../assets/icon_checked.png')} style={{ height: 20, width: 20 }} />}
+                uncheckedIcon={<Image source={require('../../assets/uncheckbox.png')} style={{ height: 20, width: 20, borderColor: mycolor.lightgray, borderWidth: 1 }} />}
+                onPress={() => this.onPressCheckbox()}
+              ></CheckBox>
+              <Text style={{ color: '#707070', marginTop: 0, paddingTop: 0 }}>{Trans.translate('remember_me')}</Text>
+            </View>
+            <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => this.props.navigation.navigate('ForgotPass')}>
+              <Text style={{ color: '#707070' }}>{Trans.translate('Forgotpass')}</Text>
+            </TouchableOpacity>
+          </View>
           <View style={{ minWidth: "100%" }}>
             <ButtonComp
               onPress={() => this.onLoginPress()}
@@ -81,7 +96,6 @@ export default class Login extends Component {
             <ButtonComp
               onPress={() => this.props.navigation.navigate('SignUpScreen')}
               text={Trans.translate("SignUp")}
-
               style={{ backgroundColor: mycolor.white, marginTop: 20 }}
               textcolor={mycolor.darkgray}
               textstyle={{ color: mycolor.pink }} />
@@ -98,16 +112,21 @@ export default class Login extends Component {
     });
   }
 
+  onPressCheckbox() {
+    Prefs.save(Keys.REMEMBER_ME, JSON.stringify(this.state.rememberMe))
+    this.setState({ rememberMe: !this.state.rememberMe })
+  }
 
-
-  onLoginPress() {
+  async onLoginPress() {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     var check = this.checkEmptyFields()
     if (check) {
       return;
     }
-
-
-
     var formadata = new FormData()
     formadata.append("username", this.state.emailtxt)
     formadata.append("password", this.state.passwordtxt)
@@ -117,8 +136,10 @@ export default class Login extends Component {
     this.logCallback('Login Start', this.state.setLoginLoading = true);
     ApiCalls.postApicall(formadata, "login").then(data => {
       this.logCallback("Response came", this.state.setLoginLoading = false);
+      console.log(data.data)
       if (data.status == true) {
         Prefs.save(Keys.userData, JSON.stringify(data.data))
+        Global.userData = data.data
         switch (data.data.role) {
           case "0":
           case "2":
@@ -133,9 +154,6 @@ export default class Login extends Component {
           default:
             Alert.alert("", Trans.translate('not_auth_msg'));
         }
-
-        // this.props.navigation.navigate('ChooseCategory')
-
       } else {
         Alert.alert('Failed', data.message);
       }
@@ -145,6 +163,7 @@ export default class Login extends Component {
     }
     )
   }
+
   checkEmptyFields() {
     var anycheckfalse = false;
     if (this.state.emailtxt == "") {
@@ -171,7 +190,6 @@ export default class Login extends Component {
 
     return false;
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -180,7 +198,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-
   },
 
   image: {

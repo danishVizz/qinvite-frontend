@@ -28,7 +28,7 @@ export default class RequestDetails extends Component {
 
                         <View style={{ flexDirection: 'row', marginTop: 20 }}>
                             <View style={{ flex: 1, flexDirection: 'column' }}>
-                                <Text style={styles.textstyle}>{Trans.translate('Date')}</Text>
+                                <Text style={styles.textstyle}>{Trans.translate('event_date')}</Text>
                                 <Text style={[styles.textstyle, { color: 'black' } || {}]}>{moment(this.props.route.params.detail.event_date).format('ddd DD MMM,YYYY')}</Text>
                             </View>
                             <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -37,10 +37,21 @@ export default class RequestDetails extends Component {
                             </View>
 
                         </View>
-                        <View style={{ marginTop: 20 }}>
+                        <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                            <View style={{ flex: 1, flexDirection: 'column' }}>
+                                <Text style={styles.textstyle}>{Trans.translate('DeadLine')}</Text>
+                                <Text style={[styles.textstyle, { color: 'black' } || {}]}>{moment(this.props.route.params.detail.design_deadline).format('ddd DD MMM,YYYY')}</Text>
+                            </View>
+                            <View style={{ flex: 1, flexDirection: 'column' }}>
+                                <Text style={styles.textstyle}>{Trans.translate('created_date')}</Text>
+                                <Text style={[styles.textstyle, { color: 'black' } || {}]}>{moment(this.props.route.params.detail.event_created).format('ddd DD MMM,YYYY')}</Text>
+                            </View>
+
+                        </View>
+                        {/* <View style={{ marginTop: 20 }}>
                             <Text style={styles.textstyle}>{Trans.translate('DeadLine')}</Text>
                             <Text style={[styles.textstyle, { color: 'black' } || {}]}>{moment(this.props.route.params.detail.design_deadline).format('ddd DD MMM,YYYY')}</Text>
-                        </View>
+                        </View> */}
                         <View
                             style={{
                                 marginTop: 30,

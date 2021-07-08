@@ -7,7 +7,8 @@ import mycolor from '../Constants/Colors';
 import Trans from '../Translation/translation'
 import ButtonComp from '../Components/ButtonComp';
 import InputSpinner from "react-native-input-spinner";
-import mykeys from '../Constants/keys';
+import HeaderComp2 from '../Components/HeaderComp2';
+import StatusBarComp from '../Components/StatusBarComp';
 
 export default class CreateCategory extends Component {
 
@@ -25,7 +26,9 @@ export default class CreateCategory extends Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('CreateCategory')} textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
                 <ScrollView>
                     <View style={{ marginLeft: 23, marginRight: 23, flex: 1 }}>
                         <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("Categoryname")}</Text>
@@ -78,7 +81,7 @@ export default class CreateCategory extends Component {
 
                     </View>
                 </ScrollView>
-            </SafeAreaView>
+            </View>
 
 
         );
@@ -118,7 +121,7 @@ export default class CreateCategory extends Component {
             "iseditcategory":this.state.iseditcategory,
             "contactlist": this.state.contactlist.length==0 ? [] : this.state.contactlist
         }
-        this.props.navigation.navigate('CategoryContactsSelection', { "categorydata": data })
+        this.props.navigation.navigate('CategoryContactsSelection', { "categorydata": data, "categoriesArr": this.props.route.params.categoriesArr })
     }
 
 

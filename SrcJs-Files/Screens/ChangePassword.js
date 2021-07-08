@@ -10,14 +10,14 @@ import {
     Alert,
     ToastAndroid,
     Platform,
+    KeyboardAvoidingView
 } from "react-native";
 import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import TextInputComp from "../Components/TextInputComp";
 import ButtonComp from "../Components/ButtonComp";
 import Trans from "../Translation/translation"
 import ApiCalls from "../Services/ApiCalls";
-import Prefs from "../Prefs/Prefs";
-import Keys from "../Constants/keys";
+import NetworkUtils from "../Constants/NetworkUtils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComp2 from "../Components/HeaderComp2";
 
@@ -120,7 +120,12 @@ export default class ChangePassword extends Component {
         });
     }
 
-    onChangePass() {
+    async onChangePass() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         var check = this.checkEmptyFields()
         if (check) {
             return;

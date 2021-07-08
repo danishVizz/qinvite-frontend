@@ -1,22 +1,19 @@
 
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Image, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StackActions } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import mycolor from '../../Constants/Colors';
 import Trans from '../../Translation/translation'
+import Video from 'react-native-video';
 import * as Progress from 'react-native-progress';
 import ButtonComp from '../../Components/ButtonComp';
 import HeaderComp2 from '../../Components/HeaderComp2';
 import StatusBarComp from '../../Components/StatusBarComp';
 import * as ImagePicker from 'react-native-image-picker';
-import { ScrollView, } from 'react-native-gesture-handler';
 import { Alert, Dimensions } from 'react-native';
 import { CheckBox } from "react-native-elements";
 import Snackbar from 'react-native-snackbar';
 import ApiCalls from '../../Services/ApiCalls';
-
-// const { getVideoDurationInSeconds } = require('get-video-duration')
+import NetworkUtils from "../../Constants/NetworkUtils";
 
 const WINDOW = Dimensions.get('window');
 export default class UploadDesign extends Component {
@@ -41,12 +38,12 @@ export default class UploadDesign extends Component {
                 {/* <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../../assets/icon_back.png')} title={Trans.translate('UploadDesign')} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()} ></HeaderComp2> */}
                 <HeaderComp2 alignSelf='center' textfonts='bold' leftBtn={require('../../../assets/icon_back.png')} title={Trans.translate('UploadDesign')} titlepos='center' leftBtnClicked={() => this.props.navigation.goBack()}></HeaderComp2>
                 {/* <ScrollView> */}
-                <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Image resizeMode={this.state.imageuri == '' ? 'contain' : 'contain'} style={{ width: 300, height: 300, borderRadius: 15 }} source={(this.state.imageuri == '' || this.state.mediaType == 'video') ? require('../../../assets/icon_uploadhint.png') : { uri: this.state.imageuri }}></Image>
+                <ScrollView style={{ flex: 1 }}>
+                    <View style={{ alignSelf: 'center', justifyContent: 'center', marginTop: 20 }}>
+                        <Image resizeMode={this.state.attachmentUrl == '' ? 'contain' : 'contain'} style={{ width: 300, height: 300, borderRadius: 15 }} source={(this.state.attachmentUrl == '' || this.state.mediaType == 'video') ? require('../../../assets/icon_uploadhint.png') : { uri: this.state.attachmentUrl }}></Image>
                         <Video
                             ref={ref => this._video = ref}
-                            source={{ uri: imageuri }}
+                            source={{ uri: this.state.attachmentUrl }}
                             resizeMode={'cover'}
                             repeat={true}
                             paused={true}
@@ -103,7 +100,7 @@ export default class UploadDesign extends Component {
                             isloading={this.state.isLoading}>
                         </ButtonComp>
                     </View>
-                </View>
+                </ScrollView>
                 {/* </ScrollView> */}
             </View>
 
@@ -130,8 +127,8 @@ export default class UploadDesign extends Component {
 
     createDesign() {
         if (this.props.route.params.from == undefined) {
-            if (this.state.imageuri != '') {
-                this.props.navigation.navigate('DumyEditor', { "imagedata": this.state.imageuri })
+            if (this.state.attachmentUrl != '') {
+                this.props.navigation.navigate('DumyEditor', { "imagedata": this.state.attachmentUrl })
             }
             else {
                 Snackbar.show({
@@ -150,6 +147,11 @@ export default class UploadDesign extends Component {
     }
 
     async submitDesign() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.setState({ isLoading: true });
         var photo = {
             uri: Platform.OS === "android" ? this.state.attachmentUrl : this.state.attachmentUrl.replace("file://", ""),
@@ -195,7 +197,7 @@ export default class UploadDesign extends Component {
                 if (responses.fileSize > 5000000)
                     Alert.alert(Trans.translate("alert"), Trans.translate('filesize'))
                 else {
-                    this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType });
+                    this.setState({ response: responses, attachmentUrl: responses.uri, progress: 1, mediaType: mediaType });
                     console.log(responses.uri)
                 }
             }

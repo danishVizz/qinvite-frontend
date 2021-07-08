@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
 import { FlatList, Image, View, StyleSheet, Alert, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
-
 import Trans from '../Translation/translation'
-import ConversationComp from '../Components/ConversationComp';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import HeaderComp2 from '../Components/HeaderComp2';
-import { StatusBar } from 'expo-status-bar';
-import Contacts from 'react-native-contacts';
-import { PermissionsAndroid } from 'react-native'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import ContactsComp from '../Components/ContactsComp';
 import ApiCalls from "../Services/ApiCalls";
+import NetworkUtils from "../Constants/NetworkUtils";
 import Keys from "../Constants/keys";
 import Prefs from "../Prefs/Prefs";
 import moment from "moment";
@@ -55,7 +47,7 @@ export default class AllEvents extends Component {
                     customView={this.alertView()}
                 />
 
-                { !this.state.isFetching && this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
+                {!this.state.isFetching && this.state.isLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
                 <FlatList
                     contentContainerStyle={(this.props.type == "All" ? this.getallData().length : this.props.type == "Active" ? this.getActiveData().length : this.getCloseData().length) === 0 && {
                         flexGrow: 1,
@@ -71,7 +63,7 @@ export default class AllEvents extends Component {
                     onRefresh={() => this.onRefresh()}
                     refreshing={this.state.isFetching}
                     ListEmptyComponent={this.noItemDisplay} />
-                    
+
             </View>
         );
     }
@@ -181,6 +173,11 @@ export default class AllEvents extends Component {
     }
 
     async getAllEvents() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
         let query = '?receptionist_id=' + parsedata.id

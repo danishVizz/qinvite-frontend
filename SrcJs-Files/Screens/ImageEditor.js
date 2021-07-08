@@ -1,7 +1,7 @@
 
 
 
-import { ImageBackground, TextInput, Alert } from "react-native";
+import { ImageBackground, TextInput, InputAccessoryView, Keyboard, KeyboardAvoidingView, Button } from "react-native";
 
 import ViewShot from "react-native-view-shot";
 import Trans from "../Translation/translation";
@@ -59,12 +59,13 @@ const PROCESSBUTTON = [
   { icon: require('../../assets/align-center.png'), name: "Change Align", id: 4 },
   { icon: require('../../assets/add-color.png'), name: "Add Color", id: 5 },
 ];
+const inputAccessoryViewID = 'uniqueID';
 export default class ImageEditor extends Component {
   constructor(props) {
     super(props);
   };
   componentDidMount() {
-    console.log("--------Image------"+ Keys.invitealldata["ImageData"])
+    console.log("--------Image------" + Keys.invitealldata["ImageData"])
     this.setState({ imagedata: Keys.invitealldata["ImageData"] })
     this.addText()
   }
@@ -279,7 +280,7 @@ export default class ImageEditor extends Component {
           onResizeStart={() => console.log("- Resize Started")}
           onResize={() => console.log("- Resizing...")}
           onResizeEnd={() => console.log("- Resize Ended")}
-
+          inputAccessoryViewID={inputAccessoryViewID}
         />
       )
     });
@@ -287,26 +288,26 @@ export default class ImageEditor extends Component {
     return (
       <View style={styles.parent}>
         {/* <ScrollView contentContainerStyle={{ flexGrow: 1 }}> */}
-          <View style={{ flexGrow: 1 }}>
-            <Image style={styles.background} source={{ uri: BACKGROUND }}>
-            </Image>
-            <View style={styles.process}>
-              {this.processButtons()}
-            </View>
-            <View style={styles.process}>
-              {this.processPicker()}
-            </View>
+        <View style={{ flexGrow: 1 }}>
+          <Image style={styles.background} source={{ uri: BACKGROUND }}>
+          </Image>
+          <View style={styles.process}>
+            {this.processButtons()}
+          </View>
+          <View style={styles.process}>
+            {this.processPicker()}
+          </View>
 
-            <View style={{ paddingRight: 10, paddingLeft: 10, marginTop: 50 }}>
-              <ViewShot ref="viewShot" options={{ format: "jpg", quality: 1.0 }}>
-                <ImageBackground
-                  resizeMode='contain'
-                  source={{ uri: Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined ? this.props.route.params.imagedata : Keys.invitealldata["ImageData"]}}
-                  // style={{ height: WINDOW.height/2, width: WINDOW.width, borderRadius: 5, borderWidth: 1}}
-                  style={{ width: WINDOW.width - 20, height: WINDOW.height / 2, backgroundColor: '#fff' }}>
+          <View style={{ paddingRight: 10, paddingLeft: 10, marginTop: 50 }}>
+            <ViewShot ref="viewShot" options={{ format: "jpg", quality: 1.0 }}>
+              <ImageBackground
+                resizeMode='contain'
+                source={{ uri: Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined ? this.props.route.params.imagedata : Keys.invitealldata["ImageData"] }}
+                // style={{ height: WINDOW.height/2, width: WINDOW.width, borderRadius: 5, borderWidth: 1}}
+                style={{ width: WINDOW.width - 20, height: WINDOW.height / 2, backgroundColor: '#fff' }}>
 
 
-                  {/* <Draggable x={WINDOW.width / 2.5} y={WINDOW.height / 4} renderColor='green'>
+                {/* <Draggable x={WINDOW.width / 2.5} y={WINDOW.height / 4} renderColor='green'>
                     <QRCode
                       style={{ alignSelf: 'flex-end' }}
                       size={40}
@@ -314,23 +315,39 @@ export default class ImageEditor extends Component {
                     />
                   </Draggable> */}
 
-                  {ADDED_TEXTS}
-                </ImageBackground>
+                {ADDED_TEXTS}
+              </ImageBackground>
 
-              </ViewShot>
-            </View>
-            <View style={{ flexDirection: 'row', height: 50, alignContent: 'center', alignSelf: 'center', backgroundColor: mycolor.pink, margin: 10, borderRadius: 5, position: 'absolute', bottom: 20 }}>
-              <TouchableOpacity style={{ width: "100%", textAlign: 'center', alignSelf: 'center', fontSize: 14, fontWeight: 'bold', }} onPress={() => this.saveImg()}>
-                <Text style={{ color: 'white', width: "100%", textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>{Trans.translate('Save')}</Text>
-              </TouchableOpacity>
-
-            </View>
+            </ViewShot>
           </View>
+          <View style={{ flexDirection: 'row', height: 50, alignContent: 'center', alignSelf: 'center', backgroundColor: mycolor.pink, margin: 10, borderRadius: 5, position: 'absolute', bottom: 0 }}>
+            <TouchableOpacity style={{ width: "100%", textAlign: 'center', alignSelf: 'center', fontSize: 14, fontWeight: 'bold', }} onPress={() => this.saveImg()}>
+              <Text style={{ color: 'white', width: "100%", textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>{Trans.translate('Save')}</Text>
+            </TouchableOpacity>
+
+          </View>
+          {Keys.invitealldata["ImageData"] != "" && Keys.invitealldata["ImageData"] != undefined && <View style={{ flexDirection: 'row', height: 50, alignContent: 'center', alignSelf: 'center', backgroundColor: mycolor.pink, margin: 10, borderRadius: 5, position: 'absolute', bottom: 60 }}>
+            <TouchableOpacity style={{ width: "100%", textAlign: 'center', alignSelf: 'center', fontSize: 14, fontWeight: 'bold', }} onPress={() => this.props.navigation.replace("Designer", { Type: "choose" })}>
+              <Text style={{ color: 'white', width: "100%", textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>{Trans.translate('uploadnewdesign')}</Text>
+            </TouchableOpacity>
+          </View>}
+        </View>
         {/* </ScrollView> */}
+        <InputAccessoryView nativeID={inputAccessoryViewID}>
+          <View style={{ backgroundColor: '#fff', alignItems: 'flex-end' }}>
+            <Button
+              style={{ alignSelf: 'flex-end' }}
+              onPress={() => Keyboard.dismiss()}
+              title="Done"
+            />
+          </View>
+
+        </InputAccessoryView>
 
       </View>
     );
   }
+
   saveImg() {
     this.refs.viewShot.capture().then(uri => {
       console.log("do something with ", uri);

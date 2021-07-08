@@ -1,9 +1,7 @@
 
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 import { View, Text, StyleSheet, Alert, Keyboard } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
 import Prefs from '../Prefs/Prefs';
 import Keys from '../Constants/keys';
 import TextInputComp from '../Components/TextInputComp';
@@ -11,14 +9,12 @@ import ButtonComp from '../Components/ButtonComp';
 import mycolor from '../Constants/Colors';
 import ApiCalls from '../Services/ApiCalls';
 import Trans from '../Translation/translation'
-import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment";
 import mykeys from '../Constants/keys';
 import DropDownPicker from 'react-native-dropdown-picker';
-import MultiSelect from "react-multi-select-component";
 import DatePicker from 'react-native-date-picker'
-// import Snackbar from 'react-native-snackbar';
 import HeaderComp2 from '../Components/HeaderComp2';
+import NetworkUtils from "../Constants/NetworkUtils";
 import StatusBarComp from '../Components/StatusBarComp';
 import { SafeAreaView } from 'react-native';
 
@@ -52,20 +48,19 @@ export default class CreateEvent extends Component {
     mode: 'datetime',
     show: false,
     time: new Date(),
-    loadDropDown: false
+    loadDropDown: false,
+    selectedReceptionist: []
   }
-
 
   render() {
     var dropdownList = [];
-    console.log('start')
-    debugger
-    console.log('stop')
     let dec = this.state.recpntistcount;
+    // if (this.state.selectedReceptionist.length > 0) {
     for (let i = 0; i < this.state.recpntistcount; i++) {
-      dropdownList.push(this.receptionistDropdown(dec * 1000, i, this.props.route.params.eventdata.receptionists))
+      dropdownList.push(this.receptionistDropdown(dec * 1000, i, this.state.selectedReceptionist))
       dec = dec - 1
     }
+    // }
 
     return (
       <View style={styles.container}>
@@ -135,42 +130,13 @@ export default class CreateEvent extends Component {
               OnsubmitEditing={() => { Keyboard.dismiss() }}
               placeholderTextColor={mycolor.lightgray}
               textinstyle={{ width: "100%" }}
-              isEnable={!(this.state.iseditevent)}
+              isEnable={!(this.state.paymentstatus == 3)}
               value={String(this.state.recpntistcount)}
-              onChangeText={(count) => this.setState({ recpntistcount: count, selectedvaluesarr: [] }, () => console.log("COUNT : " + count))}
+              onChangeText={(count) => this.setState({ recpntistcount: count, selectedvaluesarr: [], selectedReceptionist: [] }, () => console.log("COUNT : " + count))}
             />
-
-            {/* <View style={{zIndex: 2000}}>
-              <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("ReceptionistName")}</Text>
-              {this.state.loadDropDown ?
-                <DropDownPicker
-                  zIndex={2000}
-                  items={this.state.user}
-                  containerStyle={{ height: 60, marginTop: 10 }}
-                  style={{ backgroundColor: '#fff', borderColor: mycolor.lightgray }}
-                  itemStyle={{
-                    justifyContent: 'flex-start',
-                  }}
-                  close={() => this.props.close}
-                  defaultValue={""}
-                  multiple={true}
-                  disabledropdown={(this.state.iseditevent)}
-                  disabled={(this.state.iseditevent)}
-                  placeholderStyle={{ color: mycolor.lightgray }}
-                  placeholder={Trans.translate('select_receptionists')}
-                  dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
-                  removeItem={(value => this.removeItem(value))}
-                  onChangeItemMultiple={item => this.setState({
-                  }, console.log("Multi......" + this.state.selectedCountries))}
-                  onChangeItem={(item, index) => this.updateUser(item, index)} />
-                :
-                null
-              }
-            </View> */}
 
             {
               dropdownList
-              // this.receptionistDropdown(2000)
             }
 
             {this.state.eventAddressError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.selectedvaluesErrortxt}</Text> : <View></View>}
@@ -192,12 +158,10 @@ export default class CreateEvent extends Component {
   }
 
   componentDidMount() {
-    // console.log("ROUTE")
-    // console.log(this.props.route.param.eventdata)
+    console.log("EVENT_DAATAFOR EDIT",this.props.route.params.eventdata)
     this.state.eventdata = this.props.route.params.eventdata ?? []
     if (this.state.eventdata.length != 0) {
-      let event_Date = this.state.eventdata.event_date// 2021-05-07 01:51:29
-      // let event_Date = moment(this.state.eventdata.event_date).format('ddd MMM DD HH:mm:ss');// 2021-05-07 01:51:29
+      let event_Date = this.state.eventdata.event_date
       this.setState({
         eventid: this.state.eventdata.id,
         eventname: this.state.eventdata.event_name,
@@ -207,13 +171,17 @@ export default class CreateEvent extends Component {
         recpntistcount: this.state.eventdata.no_of_receptionists,
         iseditevent: true,
         paymentstatus: this.state.eventdata.payment_status,
-        buttontxt: Trans.translate('Edit')
+        buttontxt: Trans.translate('Edit'),
+        selectedReceptionist: this.state.eventdata.receptionists
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
 
       mykeys.invitealldata = { "ImageData": this.props.route.params.eventdata.event_card }
+      console.log("CATEGORIESEDITDATADIDMOunt",this.props.route.params.eventdata.categories)
+      mykeys.invitealldata = { "CategoriesData": this.props.route.params.eventdata.categories }
+
 
     }
-    !(this.state.iseditevent) && this.getAllReceptionists()
+    !(this.state.iseditevent && !(this.state.paymentstatus == 3)) && this.getAllReceptionists()
   }
 
   updateSelectedVal(receptionistdata) {
@@ -247,10 +215,10 @@ export default class CreateEvent extends Component {
           close={() => this.props.close}
           defaultValue={""}
           multiple={false}
-          disabledropdown={(this.state.iseditevent)}
-          disabled={(this.state.iseditevent)}
+          disabledropdown={this.state.iseditevent && this.state.paymentstatus == 3}
+          disabled={this.state.iseditevent && this.state.paymentstatus == 3}
           placeholderStyle={{ color: mycolor.lightgray }}
-          placeholder={receptionists != undefined ? receptionists[dropdownIndex].first_name : Trans.translate('select_receptionists')} //{Trans.translate('select_receptionists')}
+          placeholder={receptionists != undefined && receptionists.length > 0 ? receptionists[dropdownIndex].first_name : Trans.translate('select_receptionists')} //{Trans.translate('select_receptionists')}
           dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
           removeItem={(value => this.removeItem(value))}
           onChangeItemMultiple={item => this.setState({
@@ -268,7 +236,7 @@ export default class CreateEvent extends Component {
   }
 
   async onSignupPress() {
-    
+
     if (!this.checkIfArrayIsUnique(this.state.selectedvaluesarr)) {
       Alert.alert("Warning", "You have selected same Receptionist more than one time.")
       return
@@ -294,7 +262,9 @@ export default class CreateEvent extends Component {
         "event_id": this.state.eventid,
         "categoriesList": this.props.route.params.eventdata.categories
       }
-      mykeys.invitealldata = { "Eventdata": data, "ImageData": data.event_card }
+      console.log("CATEGORIESEDITDATAONPress",data.categories)
+      mykeys.invitealldata = { "Eventdata": data, "ImageData": data.event_card,"CategoriesData":this.props.route.params.eventdata.categories }
+      
       if (!(this.state.iseditevent)) {
         this.createTwoButtonAlert(Trans.translate('designerhint'))
       }
@@ -373,6 +343,11 @@ export default class CreateEvent extends Component {
   }
 
   async CreateEvent() {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     console.log("EVENT DATE : " + this.state.eventdate)
     console.log('createEvent 4');
     var apiname = ''

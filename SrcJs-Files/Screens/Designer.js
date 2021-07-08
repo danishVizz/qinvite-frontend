@@ -12,10 +12,9 @@ import CircleImageComp from '../Components/CircleImageComp';
 import { CheckBox } from 'react-native-elements';
 import ApiCalls from '../Services/ApiCalls';
 import StatusBarComp from '../Components/StatusBarComp';
-
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native';
-import t from '../Translation/translation';
+import NetworkUtils from "../Constants/NetworkUtils";
 
 export default class Designer extends Component {
 
@@ -69,15 +68,19 @@ export default class Designer extends Component {
                         leftIcon={require('../../assets/icon_search.png')}
                         textviewstyle={{ height: 40 }}></TextInputComp>
                 </View>
-                <FlatList
-                    style={{ marginBottom: 30 }}
-                    data={this.state.designerdata}
-                    renderItem={this.renderItem.bind(this)}
-                    keyExtractor={(item) => item.id}
-                    onRefresh={() => this.onRefresh()}
-                    refreshing={this.state.isFetching}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false} />
+                {/* <View style={{ flex: 1 }}> */}
+                    <FlatList
+                        style={{ marginBottom: 30 }}
+                        data={this.state.designerdata}
+                        renderItem={this.renderItem.bind(this)}
+                        keyExtractor={(item) => item.id}
+                        onRefresh={() => this.onRefresh()}
+                        refreshing={this.state.isFetching}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                        ListEmptyComponent={() => this.noItemDisplay()}
+                    />
+                {/* </View> */}
 
                 {designerdialog}
 
@@ -97,6 +100,14 @@ export default class Designer extends Component {
     onRefresh() {
         this.setState({ isFetching: true, }, () => { this.getAllDesigners() });
 
+    }
+
+    noItemDisplay = () => {
+        return (
+            !this.state.contentLoading && <View style={{ paddingHorizontal: 50, justifyContent: 'center', alignItems: 'center', height: 400 }}>
+                <Text style={{textAlign: 'center'}}>{Trans.translate('designer_not_selected_msg')}</Text>
+            </View>
+        )
     }
 
     searchItems = text => {
@@ -161,25 +172,27 @@ export default class Designer extends Component {
                     value={true}
                     onChange={() => this.checkBox(index)} />
             </View>
-
-
         );
     }
     componentDidMount() {
-        this.setTypeTrigger()
-        this.getAllDesigners()
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            console.log("DESIGNER CALLED")
+            this.setTypeTrigger()
+            this.getAllDesigners()
+        });
     }
 
-    async setTypeTrigger() {
+    setTypeTrigger() {
         let type = this.props.route.params.Type
         console.log("TYPE IS " + type)
         if (type == 'selection') {
-            await this.setState({ showuploadbtn: false })
+            this.setState({ showuploadbtn: false })
         }
         else {
-            await this.setState({ showuploadbtn: true })
+            this.setState({ showuploadbtn: true })
         }
     }
+
     logCallback = (log, callback) => {
         console.log(log);
         this.setState({
@@ -191,6 +204,7 @@ export default class Designer extends Component {
         let type = this.props.route.params.Type
         if (type == "selection") {
             this.props.navigation.navigate("Packages", { "designer_id": itemdata.id })
+            console.log("ITEMDATA ID : ", itemdata.id)
         }
         else {
             console.log("Other-Selection")
@@ -198,8 +212,8 @@ export default class Designer extends Component {
             let designStatus = itemdata.design_status;
             console.log(itemdata)
             // if ((requestStatus == '0' && designStatus == '0') || (requestStatus == '1' && designStatus == '2') || (requestStatus == '0' && designStatus == '2')) {
-            if (requestStatus == undefined || designStatus == undefined) { 
-                Alert.alert(Trans.translate("alert"),Trans.translate('restricttochoosedesigner'))
+            if (requestStatus == undefined || designStatus == undefined) {
+                Alert.alert(Trans.translate("alert"), Trans.translate('restricttochoosedesigner'))
                 return;
             }
 
@@ -210,6 +224,11 @@ export default class Designer extends Component {
             } else if (designStatus == "3") {
                 this.props.navigation.navigate('ReceivedDesign', { "DesignerData": itemdata })
             }
+            else if(requestStatus=='2')
+            {
+                Alert.alert(Trans.translate("alert"), Trans.translate('requestrejected'))
+            }
+        
             else {
                 this.props.navigation.navigate('DesignerDetails', { "DesignerData": itemdata })
             }
@@ -217,17 +236,34 @@ export default class Designer extends Component {
     }
 
     async getAllDesigners() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.logCallback("getAllDesigner :", this.state.contentLoading = true, this.state.isFetching = false);
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
         var alleventdata = Keys.invitealldata
+        let apiName = ''
+        if (this.props.route.params.Type != 'selection') {
+            apiName = 'get_event_designer'
+        } else {
+            apiName = 'get_designers'
+        }
 
-        // ApiCalls.getapicall("get_designers", "?event_id=" + alleventdata["Eventdata"].event_id).then(data => {
-        ApiCalls.getapicall("get_designers", "").then(data => {
+        ApiCalls.getapicall(apiName, "?event_id=" + alleventdata["Eventdata"].event_id).then(data => {
+            // ApiCalls.getapicall("get_designers", "").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
                 console.log("DesignerData" + JSON.stringify(data.data))
-                this.setState({ designerdata: data.data })
+                if (this.props.route.params.Type != 'selection') {
+                    console.log("LENGTH: ", data.data.length)
+                    // data.data.length == 0 && Alert.alert('Alert', 'You have not seleted any designer, Now you can upload event card by tapping on upload button')
+                    data.data.length == undefined && this.setState({ designerdata: [data.data] })
+                } else {
+                    this.setState({ designerdata: data.data })
+                }
             } else {
                 Alert.alert('Failed', data.message);
             }

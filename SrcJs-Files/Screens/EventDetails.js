@@ -15,7 +15,6 @@ export default class EventDetails extends Component {
 
     constructor(props) {
         super(props)
-        console.log("RUNNNN")
         let eventdata = this.props.route.params.eventdata ?? []
         this.uriArr = eventdata.event_card.split('.')
         this.ext = this.uriArr[this.uriArr.length - 1].toLowerCase()
@@ -24,7 +23,6 @@ export default class EventDetails extends Component {
             this.type = 'video'
         }
     }
-
 
     state = {
         eventdata: []
@@ -43,7 +41,7 @@ export default class EventDetails extends Component {
                     backgroundColor='#F54260'
                 /> */}
                 <ScrollView>
-                    <View style={styles.imagecontainer}>
+                    {/* <View style={styles.imagecontainer}>
                         {this.type == 'photo' && <Image style={{ height: 200, width: 300 }} source={eventdata.event_card == "" ? require('../../assets/logo.png') : { uri: eventdata.event_card }} resizeMode='contain'></Image>}
                         {this.type == 'video' && <Video source={{ uri: eventdata.event_card }}   // Can be a URL or a local file.
                             ref={(ref) => { this.player = ref }}     // Store reference
@@ -51,7 +49,8 @@ export default class EventDetails extends Component {
                             onError={this.videoError}
                             controls={true}                   // Callback when video cannot be loaded
                             style={styles.backgroundVideo} />}
-                    </View>
+                    </View> */}
+                    <Text style={{fontSize:25,margin:20,alignSelf:'center',fontWeight:'bold',color:'black'}}>{eventdata.package_details.package_name}</Text>
 
 
 
@@ -84,14 +83,15 @@ export default class EventDetails extends Component {
                         </View>
                     </TouchableOpacity>
 
-                    <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
+                    { eventdata.participants.length > 0 && <View style={{ width: '100%', alignItems: 'center', marginBottom: 50 }}>
                         <ButtonComp
                             style={{ width: '70%' }}
                             textstyle={{ color: 'white' }}
                             text={Trans.translate('Savepdf')}
                             onPress={() => this.props.navigation.navigate('CategoryList', { categories: this.props.route.params.eventdata.categories })}
                         ></ButtonComp>
-                    </View>
+                    </View>}
+
                 </ScrollView>
             </View>
         );
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     imagecontainer: {
-
         marginTop: 10,
         marginLeft: 20, marginRight: 20, marginBottom: 20,
         borderWidth: 1,
-
+         justifyContent:'center',
+         alignItems:'center',
         borderColor: mycolor.lightgray,
         borderRadius: 5,
         // alignSelf: 'center',

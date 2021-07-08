@@ -17,11 +17,9 @@ class CategoryComp extends Component {
                     <Image source={this.props.lefticon} style={[styles.photo, this.props.imagestyle || {}]} />
                     <View style={[styles.container_text, this.props.containerStyle || {}]}>
                         <Text style={[styles.title, this.props.titlestyle || {}]}>
-                            {this.props.title}{this.props.count==undefined? " ":"("+ this.props.count +")"}
+                            {this.props.title}{this.props.count == undefined ? " " : "(" + this.props.count + ")"}
                         </Text>
                     </View>
-                    {/* <Image source={this.props.innerright} style={[styles.checkboxphoto,this.props.innerrightimagestyle || {}]} />
-            <Image source={this.props.righticon} style={[styles.optionphoto,this.props.rightimagestyle || {}]} /> */}
                     <View style={{ flex: 1, alignSelf: "center", marginRight: 10 }}>
                         <OptionsMenu
                             button={require('../../assets/icon_option.png')}
@@ -29,7 +27,6 @@ class CategoryComp extends Component {
                             destructiveIndex={2}
                             options={[Trans.translate('Edit'), Trans.translate('Delete'), Trans.translate('cancel')]}
                             actions={[() => this.onPressButtonChildren("edit", this.props.item), () => this.onPressButtonChildren("delete", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item)]} />
-
                     </View>
                 </View>
             </View>

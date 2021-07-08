@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
-import { FlatList, Image, View, StyleSheet, Alert } from 'react-native'
-
+import { FlatList, Modal, View, StyleSheet, Alert, Text, Pressable } from 'react-native'
+import NetworkUtils from "../Constants/NetworkUtils";
 import Trans from '../Translation/translation'
-import ConversationComp from '../Components/ConversationComp';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackActions } from '@react-navigation/native';
 import HeaderComp2 from '../Components/HeaderComp2';
-import { StatusBar } from 'expo-status-bar';
 import Contacts from 'react-native-contacts';
 import { PermissionsAndroid } from 'react-native'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import ContactsComp from '../Components/ContactsComp';
 import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from "../Services/ApiCalls";
@@ -23,8 +19,11 @@ import { Platform } from 'react-native';
 import Geocoder from 'react-native-geocoder';
 import CountryData from 'country-data'
 import GetLocation from 'react-native-get-location'
+import Global from '../Constants/Global';
+import TextComp from '../Components/TextComp';
 
 var contactlist = []
+let currentContact = {}
 export default class CategoryContactsSelection extends Component {
     state = {
         ContactsList: [],
@@ -33,10 +32,10 @@ export default class CategoryContactsSelection extends Component {
         catdata: {},
         callingcode: "+974",
         isLoading: false,
-        isphoneallowed: false
+        isphoneallowed: false,
+        modalVisible: false
     }
     render() {
-
         return (
             <View style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
@@ -72,11 +71,36 @@ export default class CategoryContactsSelection extends Component {
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false} />
                 </View>
+
+                <Modal
+                    animationType="slide"
+                    // transparent={true}
+                    presentationStyle={'pageSheet'}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                        // this.setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <HeaderComp2 textfonts={'bold'}
+                            headerStyle={{ height: 70 }}
+                            leftBtn={require('../../assets/icon_back.png')}
+                            titlepos={'center'}
+                            leftBtnClicked={() => this.setState({ modalVisible: false })}
+                            title={Trans.translate('ChooseCategory')}></HeaderComp2>
+                        <FlatList
+                            data={this.filterCategories(this.props.route.params.categoriesArr)}
+                            renderItem={this.categoryItem.bind(this)}
+                            keyExtractor={(item, index) => String(index)}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false} />
+                    </View>
+                </Modal>
             </View>
 
         );
     }
-
 
     searchItems = text => {
 
@@ -110,34 +134,42 @@ export default class CategoryContactsSelection extends Component {
         });
     }
 
+    filterCategories = (categories) => {
+        let tmp = categories.filter(obj => {
+            if (this.props.route.params.categorydata.isphoneallowd == false) {
+                return obj.phones == "1"
+            } else {
+                return obj.phones == "0"
+            }
+        })
+        return tmp
+    }
+
     async CreateCategoryCall() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         var apiname = ''
         var usersdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(usersdata)
         // console.log("MYDATA" + parsedata.id)
-
         var formadata = new FormData()
         formadata.append("name", this.props.route.params.categorydata.categoryename)
         formadata.append("phones", this.props.route.params.categorydata.isphoneallowd ? "allowed" : "notallowed")
         formadata.append("people_per_qr", this.props.route.params.categorydata.invitaitoncount)
         formadata.append("user_id", parsedata.id)
         formadata.append("participants", JSON.stringify(this.state.selectedLists))
-        // this.state.selectedLists.map((item, index) => {
-        //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
-        //   });
+        formadata.append("event_id", Keys.invitealldata["Eventdata"].event_id)
+
         if (this.props.route.params.categorydata.iseditcategory) {
             formadata.append("id", this.props.route.params.categorydata.categoryid)
             apiname = "edit_category"
         }
         else {
             apiname = "add_category"
-
         }
-
-        // console.log(formadata)
-        // this.state.selectedLists.map((item, index) => {
-        //     formadata.append("participants[" + index + "]", this.state.selectedLists[index])
-        // });
 
         this.logCallback('Creating Package Start', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, apiname).then(data => {
@@ -160,18 +192,25 @@ export default class CategoryContactsSelection extends Component {
             Alert.alert('Error', JSON.stringify(error));
         }
         )
-
     }
-    // ichecked = [{number:true},{}]
+
     isIconCheckedOrNot = (item, index) => {
-        // let { isChecked } = this.state;
-        // isChecked[index] = !this.state.isChecked[index];
-        // this.setState({ isChecked: isChecked });
+        console.log(item)
+        var data = Global.mergedContacts.find(function (obj) {
+            return obj.number.replace(/\s/g, '') == item.number.replace(/\s/g, '');
+        });
+
+        if (item.isselected == false && data) {
+            Alert.alert("Exist", "Contact already exists in " + data.category)
+            return
+        }
+
         var arr = this.state.ContactsList;
         arr[index].isselected = !(arr[index].isselected)
         this.setState({ ContactsList: arr });
 
         var contactdata = {
+            "participant_id": item.id,
             "name": item.name,
             "number": item.number,
             "isselected": false,
@@ -182,8 +221,6 @@ export default class CategoryContactsSelection extends Component {
         } else {
             this.state.selectedLists.pop(contactdata)
         }
-        // console.log("SelectedIndextoChange" + this.state.selectedLists)
-
     }
 
     renderItem({ item, index, props }) {
@@ -195,26 +232,130 @@ export default class CategoryContactsSelection extends Component {
                     imagepath={require('../../assets/icon_contact.png')}
                     contactname={item.name}
                     index={index}
-
                     isphonellow={item.isphoneallow}
                     fromchildprops={this.onPressButtonChildren}
-                    phonestate={item.isphoneallow ? (require('../../assets/icon_phallow.png')) : (require('../../assets/icon_phnotallow.png'))}
+                    phonestate={this.props.route.params.categorydata.isphoneallowd ? (require('../../assets/icon_phallow.png')) : (require('../../assets/icon_phnotallow.png'))}
                     status={item.number}
-
                 />
             </TouchableOpacity>
         );
     };
 
-    onPressButtonChildren = (value, index) => {
-        var arr = this.state.ContactsList;
-        arr[index].isphoneallow = !(arr[index].isphoneallow);
-        this.setState({ ContactsList: arr });
+    categoryItem({ item, index, props }) {
+        console.log("ALL INDEXS : ", index)
+        return (
+            <TouchableOpacity style={{ backgroundColor: '#FFF', paddingVertical: 30, marginHorizontal: 20, borderBottomWidth: 0.5, borderBottomColor: '#E4E4E4' }} onPress={() => this.onPressCategory(item, index)}>
+                <TextComp textStyle={{ fontSize: 18 }} text={item.name} />
+            </TouchableOpacity>
+        );
+    };
 
-
-
+    onPressCategory = (item, index) => {
+        console.log("INDEX: ", index)
+        console.log(item)
+        console.log(currentContact)
+        this.moveParticipant(item, index)
+        this.setState({
+            modalVisible: false
+        })
     }
-    ß
+
+    async moveParticipant(categoryItem, index) {
+
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
+
+        // let params = {
+        //     participant_id: currentContact.participant_id,
+        //     category_id: categoryItem.id, // where to move
+        //     participant: {
+        //         name: currentContact.name,
+        //         number: currentContact.number,
+        //         isphoneallow: currentContact.isphoneallow
+        //     }
+        // }
+
+        let participant = {
+            name: currentContact.name,
+            number: currentContact.number,
+            isphoneallow: currentContact.isphoneallow
+        }
+
+        var formadata = new FormData()
+        formadata.append("participant_id", currentContact.participant_id)
+        formadata.append("category_id", categoryItem.id)
+        formadata.append("participant", JSON.stringify(participant))
+
+        console.log("PARAMS")
+        console.log(formadata)
+
+        this.logCallback('Creating Package Start', this.state.isLoading = true);
+        ApiCalls.postApicall(formadata, 'move_participant').then(data => {
+            this.logCallback("Response came", this.state.isLoading = false);
+            if (data.status == true) {
+                console.log("--ServerResponse----" + data)
+                let tmp = [...this.state.ContactsList]
+                let selectedListTmp = [...this.state.selectedLists]
+                var index1 = tmp.map(item => item.number).indexOf(currentContact.number);
+                var index2 = selectedListTmp.map(item => item.number).indexOf(currentContact.number);
+                tmp.splice(index1, 1)
+                selectedListTmp.splice(index2, 1)
+                console.log("tmp")
+                console.log(tmp)
+                this.setState({
+                    ContactsList: tmp,
+                    selectedLists: selectedListTmp
+                })
+            } else {
+                Alert.alert('Failed', data.message);
+            }
+        }, error => {
+            this.logCallback("Something Went Wrong", this.state.isLoading = false);
+            console.log(error)
+            Alert.alert('Error', JSON.stringify(error));
+        }
+        )
+    }
+
+    onPressButtonChildren = (value, index) => {
+        console.log("PARTICIPANT ID : ")
+        console.log(this.state.ContactsList[index])
+        let number = this.state.ContactsList[index].number.replace(/\s/g, '')
+        var data = Global.mergedContacts.find(function (obj) {
+            return obj.number.replace(/\s/g, '') == number;
+        });
+
+        if ((this.state.ContactsList[index].participant_id == "" || this.state.ContactsList[index].participant_id == undefined || this.state.ContactsList[index].participant_id == null) && data) {
+            Alert.alert("Exist", "Contact already exists in " + data.category)
+            return
+        }
+        Alert.alert(
+            Trans.translate('move_contact'),
+            Trans.translate('move_contact_msg'),
+            [
+                {
+                    text: Trans.translate('cancel'),
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: Trans.translate('yes'), onPress: () => this.onMoveContactAlrt(this.state.ContactsList[index]) }
+            ]
+        );
+        // return
+        // var arr = this.state.ContactsList;
+        // arr[index].isphoneallow = !(arr[index].isphoneallow);
+        // this.setState({ ContactsList: arr });
+    }
+
+    onMoveContactAlrt(contact) {
+        console.log(contact)
+        currentContact = contact
+        this.setState({ modalVisible: true })
+    }
+
     actionOnRow(key) {
         let authUsers = [...this.state.ContactsList]
         for (let item of authUsers) {
@@ -224,20 +365,17 @@ export default class CategoryContactsSelection extends Component {
             }
         }
         this.setState({ authUsers });
-        // console.log("key is" + key)
-
     }
-
 
     successCallBackData = (data) => {
         // console.log(data)// can get callback data here
     }
 
     componentDidMount() {
+        console.log('CATEGORY ARR')
+        console.log(this.props.route.params.categoriesArr)
+        console.log('EVENT ID : ' + Keys.invitealldata["Eventdata"].event_id)
         this.getCurrentLocation()
-
-
-
     }
 
     getContactList() {
@@ -246,9 +384,9 @@ export default class CategoryContactsSelection extends Component {
         var isphoneallow = this.props.route.params.categorydata.isphoneallowd
         var contactlist = []
         if (categorydataaa.length !== 0) {
-
             categorydataaa.map((item, index) => {
                 var contactdata = {
+                    "participant_id": item.id,
                     "name": item.name,
                     "number": item.number.startsWith("0") ? item.number.replace('0', this.state.callingcode) : item.number,
                     "isselected": true,
@@ -259,7 +397,6 @@ export default class CategoryContactsSelection extends Component {
 
             })
             console.log("----SelectedValuesFrom Array" + JSON.stringify(this.state.selectedLists))
-
             this.setState({ ContactsList: contactlist, ContactListReplicae: contactlist }, () => console.log("??ContactListUpdated????" + JSON.stringify(this.state.ContactsList)))
         }
 
@@ -281,12 +418,13 @@ export default class CategoryContactsSelection extends Component {
                         if (index != -1) {
                             isselected = true
                         }
-                        obj.isphoneallow = isphoneallow;
+                        obj.participant_id = "",
+                            obj.isphoneallow = isphoneallow;
                         obj.name = (Platform.OS === "android") ? obj.displayName : obj.givenName
                         obj.isselected = isselected
-                        obj.number = obj.phoneNumbers[0]?.number
+                        obj.number = obj.phoneNumbers[0]?.number.replace(/\s/g, '')
 
-                        let num = String(obj.phoneNumbers[0]?.number);
+                        let num = String(obj.phoneNumbers[0]?.number.replace(/\s/g, ''));
                         // console.log("TYPEOF 3: ", typeof (num));
 
                         if (num.startsWith("0")) {
@@ -301,8 +439,6 @@ export default class CategoryContactsSelection extends Component {
                     this.setState({ ContactsList: uniqueArray, ContactListReplicae: this.state.ContactsList.concat(contacts) })
                     // this.setState({ ContactsList: contacts, ContactListReplicae: this.state.ContactsList.concat(contacts)},console.log("---Contc"+JSON.stringify(this.state.ContactsList)))
                 })
-
-
         })
             .catch((err) => {
                 console.log(err);
@@ -333,7 +469,7 @@ export default class CategoryContactsSelection extends Component {
                     // console.log("Calling Code "+JSON.stringify(callingcode.countryCallingCodes[0]))
 
                     this.setState({ callingcode: callingcode.countryCallingCodes[0] }, () => this.getContactList())
-                    
+
                 })
                     .catch(err => console.log(err))
 
@@ -343,9 +479,6 @@ export default class CategoryContactsSelection extends Component {
                 console.warn(code, message);
                 this.getContactList()
             })
-
-
-
     }
     // }
 
@@ -371,11 +504,7 @@ export default class CategoryContactsSelection extends Component {
         }
         return uniqueArray;
     }
-
 }
-
-
-
 
 const styles = StyleSheet.create({
     container: {

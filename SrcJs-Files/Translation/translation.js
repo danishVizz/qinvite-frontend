@@ -35,6 +35,7 @@ class Trans {
     // update layout direction
     I18nManager.forceRTL(isRTL);
     // set i18n-js config
+    
     i18n.translations = { [languageTag]: this.translationGetters[languageTag]() };
     i18n.locale = languageTag;
   };

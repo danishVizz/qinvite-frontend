@@ -16,6 +16,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 // import { StackActions } from 'react-navigation';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import moment from "moment";
+import NetworkUtils from "../Constants/NetworkUtils";
 
 export default class PreviewInvite extends Component {
     constructor(props) {
@@ -141,6 +142,11 @@ export default class PreviewInvite extends Component {
     }
 
     async CreateEvent() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.logCallback("Creating Event :", this.state.contentLoading = true);
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata);
@@ -153,32 +159,18 @@ export default class PreviewInvite extends Component {
             type: 'video/*',
             name: 'media.' + ext,
         };
-        console.log("PHOTO : ")
-        console.log(photo)
-        // formadata.append("event_card", alleventdata["ImageData"])
         formadata.append("event_card", photo)
         formadata.append("event_id", alleventdata["Eventdata"].event_id)
-
         formadata.append("categories_messages", JSON.stringify(alleventdata["CategoriesMessages"]))
 
-        var categories = alleventdata["CategoriesData"].SelectedCategories
+        // var categories = alleventdata["CategoriesData"].SelectedCategories
+        var categories = alleventdata["CategoriesData"]
         categories.map((item, index) => {
             formadata.append("categories[" + index + "]", item.id)
         })
-
         ApiCalls.postApicall(formadata, "add_event_details").then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
-                // this.props.navigation.push('CombineComp')
-                // const resetAction = StackActions.reset({
-                //     index: 0,
-                //     actions: [
-                //         NavigationActions.navigate({ screen: 'CombineComp' })
-                //     ]
-                // })
-                // this.props.navigation.dispatch(resetAction);
-
-
                 const resetAction = CommonActions.reset({
                     index: 0,
                     routes: [{ name: 'CombineComp' }],
@@ -218,7 +210,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderColor: mycolor.lightgray,
         borderRadius: 5,
-     
+
     },
     textstyle: {
         marginLeft: 20,

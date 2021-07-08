@@ -11,10 +11,17 @@ import Prefs from '../Prefs/Prefs'
 import Keys from '../Constants/keys'
 import ButtonComp from '../Components/ButtonComp';
 import AlertComp from '../Components/AlertComp';
+import NetworkUtils from "../Constants/NetworkUtils";
+import Global from '../Constants/Global';
+import HeaderComp2 from '../Components/HeaderComp2';
+import StatusBarComp from '../Components/StatusBarComp';
+
 export default class ChooseCategory extends Component {
     state = {
         contentLoading: false,
         categoriesdata: [],
+        messageSent: 0,
+        invites: 0,
         isChecked: [],
         selectedLists: [],
         currentselected: '',
@@ -32,8 +39,13 @@ export default class ChooseCategory extends Component {
         );
 
         return (
-            <SafeAreaView style={styles.container}>
-                <View style={{ height: "65%", marginTop: 20 }}>
+            <View style={styles.container}>
+                <StatusBarComp backgroundColor={mycolor.pink} />
+                <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('ChooseCategory')} textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
+                <TouchableOpacity style={{ height: 50, width: 200, borderRadius: 5, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', backgroundColor: mycolor.pink, marginTop: 10 }} onPress={() => this.props.navigation.navigate('ContactStatus')}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 15 }}>{Trans.translate('invitations') + this.state.messageSent + "/" + this.state.invites}</Text>
+                </TouchableOpacity>
+                <View style={{ marginTop: 20, height: '100%' }}>
                     <View style={{
                         zIndex: -100,
                         position: 'absolute',
@@ -54,14 +66,13 @@ export default class ChooseCategory extends Component {
                         onRefresh={() => this.onRefresh()}
                         refreshing={this.state.isFetching}
                         showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false} />
-
-
+                        showsHorizontalScrollIndicator={false}
+                        ListEmptyComponent={() => this.noItemDisplay()} />
                 </View>
                 {Deletealert}
 
-                <View style={{ height: "20%" }}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateCategory', { "categorydata": [] })} style={{ position: 'absolute', width: '100%', marginBottom: 5, bottom: 0 }}>
+                <View style={{ height: "20%", marginTop: 'auto' }}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateCategory', { "categorydata": [], "categoriesArr": this.state.categoriesdata })} style={{ position: 'absolute', width: '100%', marginBottom: 5, bottom: 0 }}>
                         <CategoryComp innerright={null} lefticon={require('../../assets/icon_add.png')} title={Trans.translate('NewCategory')}></CategoryComp>
                     </TouchableOpacity>
                 </View>
@@ -72,16 +83,12 @@ export default class ChooseCategory extends Component {
                     style={{ backgroundColor: mycolor.pink, marginBottom: 10, marginLeft: 22, marginRight: 22 }}
                     textcolor={mycolor.white}
                     textstyle={{ color: mycolor.white }} />
-            </SafeAreaView>
+            </View>
         );
-
-
     }
 
     renderItem({ item, index }) {
-
         return (
-
             <TouchableOpacity onPress={() => this.choosecategory(item, index)}>
                 <CategoryComp lefticon={require('../../assets/icon_category.png')}
                     title={item.name}
@@ -99,6 +106,14 @@ export default class ChooseCategory extends Component {
         this.setState({ isFetching: true, }, () => { this.getAllCategories() });
     }
 
+    noItemDisplay = () => {
+        return (
+            !this.state.contentLoading && <View style={{ paddingHorizontal: 50, justifyContent: 'center', alignItems: 'center', height: 400 }}>
+                <Text style={{ textAlign: 'center' }}>{Trans.translate('no_data_found')}</Text>
+            </View>
+        )
+    }
+
     onPressButtonChildren = (value, item) => {
         switch (value) {
             // case 'view':
@@ -108,29 +123,26 @@ export default class ChooseCategory extends Component {
                 this.setState({ showalert: true, currentselected: item.id })
                 break
             case 'edit':
-                console.log("----EddittCat" + JSON.stringify(item))
-                this.props.navigation.navigate('CreateCategory', { "categorydata": item })
+                this.props.navigation.navigate('CreateCategory', { "categorydata": item, "categoriesArr": this.state.categoriesdata })
                 break
             default:
         }
     }
     createTwoButtonAlert = (message) =>
-    Alert.alert(
-      Trans.translate("packagedetails"),
-     message,
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "OK", onPress: () => this.props.navigation.navigate('UpgradePackage') }
-      ]
-    );
+        Alert.alert(
+            Trans.translate("packagedetails"),
+            message,
+            [{
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+            },
+            { text: "OK", onPress: () => this.props.navigation.navigate('UpgradePackage') }
+            ]
+        );
 
     onNextScreen() {
         var invitedata = Keys.invitealldata
-        console.log("EventDataaaaa" + JSON.stringify(invitedata["Eventdata"]))
         let SelectedCategories = this.state.selectedLists;
         let count = 0;
         for (let i in SelectedCategories) {
@@ -142,14 +154,12 @@ export default class ChooseCategory extends Component {
 
         else if (count > invitedata["Eventdata"].package_details.package_people) {
             // Alert.alert("Alert", )
-           this.createTwoButtonAlert("You have selected package with " + invitedata["Eventdata"].package_details.package_people + " invitation now your invitation limit exceed please upgrade your package")
+            this.createTwoButtonAlert("You have selected package with " + invitedata["Eventdata"].package_details.package_people + " invitation now your invitation limit exceed please upgrade your package")
         }
         else {
-            console.log('??selected categories?? ' + JSON.stringify(this.state.selectedLists))
 
-            invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": { "SelectedCategories": this.state.selectedLists }, "ImageData": invitedata["ImageData"] }
+            invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": this.state.selectedLists , "ImageData": invitedata["ImageData"] }
             Keys.invitealldata = invitedata
-            console.log(Keys.invitealldata["CategoriesData"])
             if (invitedata["ImageData"] == undefined || invitedata["ImageData"] == "")
                 this.props.navigation.navigate('Todos')
             else
@@ -158,12 +168,7 @@ export default class ChooseCategory extends Component {
         }
     }
     componentDidMount() {
-        // console.log("EVENT DATA")
-        // console.log(Keys.invitealldata["Eventdata"])
-        // this.getAllCategories()
-
         this.focusListener = this.props.navigation.addListener('focus', () => {
-            console.log("Screen REFRESHED");
             this.getAllCategories()
         });
     }
@@ -171,8 +176,7 @@ export default class ChooseCategory extends Component {
     choosecategory = (item, index) => {
         let { isChecked } = this.state;
         isChecked[index] = !this.state.isChecked[index];
-        console.log("BEFORE" + this.state.isChecked)
-        this.setState({ isChecked: isChecked }, () => console.log("AFTER" + this.state.isChecked));
+        this.setState({ isChecked: isChecked });
         if (isChecked[index] == true) {
             this.state.selectedLists.push(item)
         } else {
@@ -180,35 +184,84 @@ export default class ChooseCategory extends Component {
         }
     }
     async getAllCategories() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.logCallback("getallcategory :", this.state.contentLoading = true);
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
 
-        ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id).then(data => {
+        // ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id + "&event_id=" + Keys.invitealldata["Eventdata"].event_id).then(data => {
+        ApiCalls.getapicall("get_categories", "?event_id=" + Keys.invitealldata["Eventdata"].event_id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
-                this.setState({ isChecked: [],selectedLists:[] })
+                this.setState({ isChecked: [], selectedLists: [] })
                 let eventCategories = Keys.invitealldata["Eventdata"].categoriesList;
-                console.log("tttttt"+Keys.invitealldata["Eventdata"].categoriesList);
-                this.setState({ categoriesdata: data.data })
-                for (let i in data.data) {
-                    for (let j in eventCategories) {
-                        if (data.data[i].id == eventCategories[j].category_id) {
-                            this.choosecategory(data.data[i], i);
+                console.log("EVENT CATEGORIES")
+                console.log(eventCategories)
+                this.mergeContacts(data.data.categories)
+                this.setState({ categoriesdata: data.data.categories, messageSent: data.data.message_sent, invites: data.data.invites })
+                let arr = []
+                console.log("CategoriesData")
+                console.log(Keys.invitealldata["CategoriesData"])
+                if (eventCategories == undefined) {
+                    // arr = Keys.invitealldata["CategoriesData"].SelectedCategories
+                    arr = Keys.invitealldata["CategoriesData"]
+                } else {
+                    arr = eventCategories
+                }
+
+                // for (let i in data.data.categories) {
+                //     for (let j in arr) {
+                //         if (data.data.categories[i].id == arr[j].category_id || data.data.categories[i].id == arr[j].id) {
+                //             this.choosecategory(data.data.categories[i], i);
+                //         }
+                //     }
+                // }
+                for (let i in data.data.categories) {
+                    for (let j in arr) {
+                        if (data.data.categories[i].id == arr[j].id) {
+                            this.choosecategory(data.data.categories[i], i);
                         }
                     }
                 }
             } else {
-                Alert.alert('Failed', data.message);
+                // Alert.alert('Failed', data.message);
+                Global.mergedContacts = []
             }
         }, error => {
             this.logCallback("Something Went Wrong", this.state.contentLoading = false, this.state.isFetching = false);
+            Global.mergedContacts = []
             Alert.alert('Error', JSON.stringify(error));
         }
         )
     }
 
+    mergeContacts(contacts) {
+        let allContacts = [];
+        for (let i = 0; i < contacts.length; i++) {
+            for (let j = 0; j < contacts[i].participants.length; j++) {
+                let item = {
+                    category: contacts[i].name,
+                    number: contacts[i].participants[j].number
+                }
+                allContacts.push(item)
+            }
+        }
+        Global.mergedContacts = []
+        Global.mergedContacts = allContacts;
+        console.log("MERGED CONTACTS")
+        console.log(Global.mergedContacts)
+    }
+
     async DeleteCategory(id) {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.setState({ showalert: false })
         this.logCallback("DeleteEvent :", this.state.contentLoading = true);
         ApiCalls.deletapicall("delete_category", id).then(data => {
@@ -225,19 +278,15 @@ export default class ChooseCategory extends Component {
         }
         )
     }
+
     logCallback = (log, callback) => {
-        console.log(log);
+        // console.log(log);
         this.setState({
             callback
         });
     }
-
-
-
-
 }
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
         backgroundColor: "#fff"

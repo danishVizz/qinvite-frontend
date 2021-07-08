@@ -116,6 +116,7 @@ export default class UploadMedia extends Component {
             //     text: Trans.translate("ImageSelection"),
             //     duration: Snackbar.LENGTH_SHORT,
             // });
+            Alert.alert(Trans.translate("alert"), Trans.translate("ImageSelection"))
         }
     }
     chooseImage = () => {

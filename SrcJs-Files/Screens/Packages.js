@@ -14,6 +14,7 @@ import Prefs from '../Prefs/Prefs';
 import mykeys from '../Constants/keys';
 import { TouchableOpacity } from 'react-native';
 import moment from "moment";
+import NetworkUtils from "../Constants/NetworkUtils";
 
 export class Packages extends Component {
   state = {
@@ -42,7 +43,7 @@ export class Packages extends Component {
         /> */}
         <View style={{ flex: 8 }}>
 
-          <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')} textfonts={'bold'} textsize={18} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()}/>
+          <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')} textfonts={'bold'} textsize={18} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
 
           {/* <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
@@ -73,10 +74,10 @@ export class Packages extends Component {
         </View>
         <View style={{ flex: 1.5 }}>
           <ButtonComp style={styles.button} textstyle={{ color: 'white', fontSize: 16, fontWeight: 'bold' }} text={Trans.translate('CreatOwnPackage')}
-            onPress={() => this.props.navigation.navigate('CreatePackage')}
+            onPress={() => this.props.navigation.navigate('CreatePackage', {designer_id: this.props.route.params.designer_id})}
           ></ButtonComp>
         </View>
-        { this.state.showLoaderView && <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(52, 52, 52, 0.8)', justifyContent: 'center' }}>
+        {this.state.showLoaderView && <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(52, 52, 52, 0.8)', justifyContent: 'center' }}>
           <ActivityIndicator size="large" color={mycolor.pink} />
         </View>}
       </View>
@@ -107,6 +108,30 @@ export class Packages extends Component {
     );
   }
 
+  actionOnRow(itemdata) {
+    console.log('Selected Item :' + itemdata.package_name);
+    // alert(itemdata.package_name)
+    this.setState({ selectedItem: itemdata.id });
+    this.createTwoButtonAlert(Trans.translate('packageselectionhint'))
+
+  }
+
+  createTwoButtonAlert(message) {
+    console.log("AlertCreateTwoButton", "I am Here")
+    Alert.alert(
+      Trans.translate("alert"),
+      message,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => this.CreateEvent() }
+      ]
+    );
+  }
+
   componentDidMount() {
     console.log('Mounted');
     this.setState({ isLoading: true })
@@ -114,12 +139,7 @@ export class Packages extends Component {
   }
 
 
-  actionOnRow(itemdata) {
-    console.log('Selected Item :' + itemdata.package_name);
-    // alert(itemdata.package_name)
-    this.setState({ selectedItem: itemdata.id });
-    this.CreateEvent()
-  }
+
 
   logCallback = (log, callback) => {
     console.log(log);
@@ -130,6 +150,11 @@ export class Packages extends Component {
 
 
   async getAllPackages() {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     this.logCallback("getProducts :", this.state.contentLoading = !(this.state.isFetching));
     var userdata = await Prefs.get(mykeys.userData);
     var parsedata = JSON.parse(userdata)
@@ -153,7 +178,11 @@ export class Packages extends Component {
   }
 
   async CreateEvent() {
-
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     var invitedata = mykeys.invitealldata
     var apiname = 'add_event'
     var usersdata = await Prefs.get(mykeys.userData);
@@ -167,13 +196,11 @@ export class Packages extends Component {
     formadata.append("event_address", invitedata["Eventdata"].event_address)
     formadata.append("user_id", parsedata.id)
     formadata.append("package_id", this.state.selectedItem)
-    // console.log("--------------RR"+invitedata["Eventdata"].receptionists[index].id)
-
     formadata.append("no_of_receptionists", invitedata["Eventdata"].no_of_receptionists)
     invitedata["Eventdata"].receptionists.map((item, index) => {
       formadata.append("receptionists[" + index + "]", invitedata["Eventdata"].receptionists[index])
     });
-
+    console.log("PACKAGES FORMDATA")
     console.log(formadata)
 
     this.logCallback('Creating Event', this.state.showLoaderView = true);
@@ -187,36 +214,45 @@ export class Packages extends Component {
         var eventdata = invitedata["Eventdata"]
         eventdata.event_id = data.data.id
         eventdata.package_details = data.data.package_details
-    
+
         invitedata = { "Eventdata": eventdata, "PackageData": this.state.selectedItem }
         mykeys.invitealldata = invitedata
-        console.log("DESIGNER ID "+"this.props.route.params.designer_id")
-        console.log(this.props.route.params.designer_id)
-        if(this.props.route.params.designer_id == null) {
-          this.props.navigation.navigate('Payment', { "event_data": mykeys.invitealldata["Eventdata"],"Type":"new" })
+        console.log("PATH 01")
+        console.log(this.props.route.params)
+        console.log("DESIGNER ID : ", this.props.route.params.designer_id)
+        if ((this.props.route.params.designer_id == null || this.props.route.params.designer_id == undefined)) {
+          console.log("PATH 02")
+          this.props.navigation.navigate('Payment', { "event_data": mykeys.invitealldata["Eventdata"], "Type": "new" })
         } else {
+          console.log("PATH 03")
           this.SendRequestDesigners()
         }
-        
+
 
       } else {
         Alert.alert('Failed', data.message);
       }
     }, error => {
       this.logCallback("Something Went Wrong", this.state.contentLoading = false);
-      this.props.navigation.navigate('Payment', { "event_id": data.data.id })
+      // this.props.navigation.navigate('Payment', { "event_id": data.data.id })
       // Alert.alert('Error', JSON.stringify(error));
     }
     )
   }
 
   async SendRequestDesigners() {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     this.logCallback("getAllDesigner :", this.state.contentLoading = true);
     var userdata = await Prefs.get(mykeys.userData);
     var parsedata = JSON.parse(userdata);
 
     var formadata = new FormData()
     formadata.append("user_id", parsedata.id)
+    console.log("PATH 04")
     formadata.append("designer_id", this.props.route.params.designer_id)
     formadata.append("event_id", mykeys.invitealldata["Eventdata"].event_id)
 
@@ -225,7 +261,7 @@ export class Packages extends Component {
       if (data.status == true) {
         console.log("Response Came " + JSON.stringify(data))
         // this.props.navigation.navigate('Packages')
-        this.props.navigation.navigate('Payment', { "event_data": mykeys.invitealldata["Eventdata"],"Type":"new" })
+        this.props.navigation.navigate('Payment', { "event_data": mykeys.invitealldata["Eventdata"], "Type": "new" })
       } else {
         Alert.alert('Failed', data.message);
       }

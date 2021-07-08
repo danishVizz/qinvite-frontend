@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Trans from '../Translation/translation'
-import { StyleSheet, View, Image, TextInput, Text, ToastAndroid, Platform } from 'react-native';
+import { StyleSheet, View, Image, Alert, Text, ToastAndroid, Platform } from 'react-native';
 import mycolor from "../Constants/Colors";
 import EditTextComp from "../Components/EditTextComp";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,11 +11,10 @@ import * as ImagePicker from 'react-native-image-picker';
 import Prefs from '../Prefs/Prefs'
 import Keys from '../Constants/keys'
 import ApiCalls from '../Services/ApiCalls'
-import { Alert } from "react-native";
 import { ActivityIndicator } from "react-native";
 import { StackActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-// import asst from '../../assets/'
+import NetworkUtils from "../Constants/NetworkUtils";
 
 const iamgepath = '../../assets';
 
@@ -68,7 +67,7 @@ export default class Profile extends Component {
                         <EditTextComp value={this.state.phonetxt} isEnable={this.state.allfieldsenabel} onChangeText={(phone) => this.setState({ phonetxt: phone, eventnameError: false })} text={Trans.translate('Phonenumber')}></EditTextComp>
                         <EditTextComp value={this.state.countrytxt} isEnable={this.state.allfieldsenabel} onChangeText={(country) => this.setState({ countrytxt: country, eventnameError: false })} text={Trans.translate('Country')}></EditTextComp>
 
-                        <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.DeleteProfile()}>
+                        <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.deleteAccountConfirmation()}>
 
                             <Image style={{ height: 17, width: 15 }} resizeMode='contain' source={require('../../assets/icon_delete.png')}></Image>
                             <Text style={{ alignItems: 'center', marginLeft: 10, fontSize: 14, color: mycolor.pink }}>{Trans.translate('DeleteAcc')}</Text>
@@ -105,11 +104,15 @@ export default class Profile extends Component {
     }
 
 
-    onProfileUpdate() {
-
+    async onProfileUpdate() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         var photo = {
             uri: Platform.OS === "android" ? this.state.response : this.state.response.replace("file://", ""),
-            type: 'image/jpeg',
+            type: 'image/*',
             name: 'photo.jpg',
         };
 
@@ -127,7 +130,7 @@ export default class Profile extends Component {
         if (photo.uri == "" || photo.uri == null) {
 
         } else {
-            formadata.append("user_image ", photo)
+            formadata.append("user_image", photo)
         }
 
         this.logCallback('Updating Started....', this.state.isLoading = true);
@@ -142,14 +145,38 @@ export default class Profile extends Component {
                 Alert.alert('Failed', data.message);
             }
         }, error => {
-            this.logCallback("Something Went Wrong", this.state.isLoading = false);
+            this.logCallback(error, this.state.isLoading = false);
             Alert.alert('Error', JSON.stringify(error));
         }
         )
         return
     }
 
+    deleteAccountConfirmation() {
+        Alert.alert(
+            Trans.translate("delete_account"),
+            Trans.translate("delete_confirm_msg"),
+            [
+                {
+                    text: Trans.translate("cancel"),
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "Cancel"
+                },
+                {
+                    text: Trans.translate("Delete"),
+                    onPress: () => this.DeleteProfile(),
+                    style: "Delete"
+                }
+            ]
+        );
+    }
+
     async DeleteProfile() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.logCallback("DeleteEvent :", this.state.contentLoading = true);
         ApiCalls.deletapicall("delete_user", this.state.user_id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);

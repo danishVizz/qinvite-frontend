@@ -5,19 +5,18 @@ import Trans from '../Translation/translation'
 import ConversationComp from '../Components/ConversationComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
-import NetworkUtils from "../Constants/NetworkUtils";
 import moment from 'moment';
 import ApiCalls from '../Services/ApiCalls';
 import { ActivityIndicator } from 'react-native';
-
-export default class ContactListing extends Component {
+import NetworkUtils from "../Constants/NetworkUtils";
+import Keys from '../Constants/keys'
+export default class ContactStatus extends Component {
     state = {
-        isLoading: false
-
+        isLoading: false,
+        list: []
     }
 
     render() {
-        var participants = this.props.route.params.Eventdata.participants ?? []
         return (
             <View style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
@@ -25,7 +24,6 @@ export default class ContactListing extends Component {
                     backgroundColor='#F54260'
                 /> */}
                 <HeaderComp2 textfonts={'bold'}
-                    righttitle={Trans.translate('Resend')}
                     titlepos='center'
                     textsize={12}
                     rightBtnClicked={() => this.resendMessage(this.props.route.params.Eventdata.id)}
@@ -34,7 +32,7 @@ export default class ContactListing extends Component {
                     leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
                 <FlatList
-                    data={participants}
+                    data={this.state.list}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
@@ -64,81 +62,45 @@ export default class ContactListing extends Component {
         else if (item.status == "2") { status = "Message Delivered" }
         else if (item.status == "3") { status = "Message Seen" }
         return (
-
-
-            // <TouchableWithoutFeedback style={{
-            //   marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, }} onPress={() => actionOnRow(item,props)}>
             <ConversationComp
-                // toggle={() => this.onToggle(index)}
-                // propsfromparents={onPressButtonChildren.bind()}
                 contact={item.number}
                 imagepath={require('../../assets/icon_contact.png')}
                 contactname={item.name}
                 status={status}
                 time={String(moment(item.invitation_date).format("hh:mm A"))}
             />
-            // </TouchableWithoutFeedback>
         );
     }
 
-    // onPressButtonChildren(value) {
-    //     switch (value) {
-    //         case 'delete':
-    //             break
-    //         case 'edit':
-    //             break
-    //         default:
-    //             navigation.navigate('EventDetails')
-    //     }
-
-    //     console.log("working" + value)
-    //     //press button chilldren 
-    // }
-
-    actionOnRow(itemdata, props) {
-        console.log('Selected Item :' + itemdata.title);
-        // navigation.navigate('EventDetails')
-        alert(itemdata.title)
+    componentDidMount() {
+        var event_id = Keys.invitealldata["Eventdata"].event_id
+        this.getMessageDetail(event_id)
     }
 
-    async resendMessage(id) {
+    async getMessageDetail(id) {
         const isConnected = await NetworkUtils.isNetworkAvailable()
         if (!isConnected) {
             Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
             return
         }
+        console.log(id)
         this.setState({ isLoading: true });
-        let query = "/" + id
-        console.log("resendMessage()")
-        ApiCalls.getGenericCall("resend_message", query).then(data => {
+        let query = "?event_id=" + id
+        ApiCalls.getGenericCall("get_message_details", query).then(data => {
             console.log("DATA")
             console.log(data)
             if (data.status == true) {
-                this.setState({ isLoading: false, showAlert: false, scanner: false })
-                this.notifyMessage(data.messsage)
-                // Alert.alert(data.message);
+                this.setState({ list: data.data, isLoading: false })
             } else {
                 Alert.alert('Failed', data.message);
-                this.setState({ isLoading: false, showAlert: false, scanner: false });
+                this.setState({ isLoading: false })
+
             }
         }, error => {
-            // Alert.alert('Error', JSON.stringify(error));
             console.log(JSON.stringify(error))
         }
         )
     }
-
-    notifyMessage(msg) {
-        if (Platform.OS === 'android') {
-            ToastAndroid.show(msg, ToastAndroid.SHORT)
-        } else {
-
-            Alert.alert(msg);
-        }
-    }
-}
-const successCallBackData = (data) => {
-    console.log(data)// can get callback data here
 }
 
 

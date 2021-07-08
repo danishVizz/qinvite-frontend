@@ -13,8 +13,10 @@ import { TouchableOpacity } from 'react-native';
 import ButtonComp from '../../Components/ButtonComp';
 import Trans from '../../Translation/translation';
 import moment from "moment";
-
+import NetworkUtils from "../../Constants/NetworkUtils";
+let currentItem = {}
 export default class AllRequests extends Component {
+
     state = {
         EventAllData: [],
         contentLoading: true,
@@ -67,13 +69,17 @@ export default class AllRequests extends Component {
                         date={this.state.date}
                         mode="datetime"
                         minimumDate={moment().toDate()}
+                        // maximumDate= {new Date()}
                         onDateChange={(date) => this.setState({ date: date, eventdate: date })}
                     />
                     <View style={{ margin: 20, width: '70%' }}>
                         <ButtonComp
-                            onPress={() => this.changeDesignerStatus()}
+                            onPress={() => this.changeDesignerStatus('accept')}
                             textstyle={{ color: 'white' }}
                             text={Trans.translate("set_as_deadline")}></ButtonComp>
+                        <TouchableOpacity style={{alignSelf: 'center', padding: 15}} onPress={() => this.setState({ showDatePicker: false })}>
+                            <Text>{Trans.translate("cancel")}</Text>
+                        </TouchableOpacity>
                     </View>
                 </View> : null}
             </View>);
@@ -131,6 +137,11 @@ export default class AllRequests extends Component {
     }
 
     async getAllEvents() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         var userdata = await Prefs.get(Keys.userData);
         var parsedata = JSON.parse(userdata)
         // parsedata.id = "17";
@@ -149,6 +160,11 @@ export default class AllRequests extends Component {
     }
 
     async DeleteEvent(id) {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.logCallback("DeleteEvent :", this.state.contentLoading = true);
         ApiCalls.deletapicall("delete_event", id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
@@ -175,7 +191,7 @@ export default class AllRequests extends Component {
                     image={item.image_url}
                     title={item.event_name}
                     description={item.event_date}
-                    showMenu={item.design_status == "1" || item.design_status == "2"  ? false : true}
+                    showMenu={item.design_status == "1" || item.design_status == "2" ? false : true}
                 />
             </TouchableOpacity>
         );
@@ -184,6 +200,7 @@ export default class AllRequests extends Component {
     onPressButtonChildren = (value, item) => {
         console.log("value : " + value);
         console.log(item);
+        currentItem = item
         if (value == 'accept') {
             this.setState({
                 showDatePicker: true,
@@ -195,16 +212,26 @@ export default class AllRequests extends Component {
             this.setState({
                 status: value,
                 id: item.event_id
-            }, () => this.changeDesignerStatus());
-            
+            }, () => this.changeDesignerStatus(value));
         }
-        // this.changeDesignerStatus(value, item.event_id);
     }
 
-    async changeDesignerStatus() {
+    async changeDesignerStatus(value) {
+        if (value == 'accept') {
+            let deadline = moment(this.state.date).format('YYYY-MM-DD HH:mm:ss')
+            let exceed = moment(currentItem.event_date).isAfter(deadline)
+            if (exceed == false) {
+                Alert.alert(Trans.translate('deadline_date_title'), Trans.translate('deadline_date_msg'))
+                return
+            }
+        }
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.setState({ showDatePicker: false });
         this.logCallback("getAllDesigner :", this.state.contentLoading = true);
-
         var formadata = new FormData()
         console.log("status : " + this.state.status);
         formadata.append("design_status", this.state.status);
@@ -215,17 +242,17 @@ export default class AllRequests extends Component {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false);
             if (data.status == true) {
                 var arr = this.state.EventAllData;
-                for ( let obj of arr) {
+                for (let obj of arr) {
                     if (obj.event_id == this.state.id) {
-                        if (status == "accept") {
+                        if (this.state.status == "accept") {
                             obj.design_status = "1"
-                        }else {
+                        } else {
                             obj.design_status = "2"
                         }
-                        console.log("changed event id: "+obj.event_id)
+                        console.log("changed event id: " + obj.event_id)
                     }
                 }
-                this.setState({EventAllData: arr});
+                this.setState({ EventAllData: arr });
             } else {
                 Alert.alert('Failed', data.message);
             }
@@ -238,9 +265,9 @@ export default class AllRequests extends Component {
 
     actionOnRow(itemdata, props) {
         console.log('Selected Item :' + itemdata.event_name);
+
         this.props.navigation.navigate('RequestDetails', { detail: itemdata })
     }
-
 
     successCallBackData = (data) => {
         console.log(data)// can get callback data here

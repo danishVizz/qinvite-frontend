@@ -1,6 +1,5 @@
 import { Component } from "react";
 import React from 'react';
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator, Alert, StatusBar, StyleSheet, Text, View } from "react-native";
 import TextInputComp from "../Components/TextInputComp";
 import Trans from "../Translation/translation";
@@ -12,6 +11,7 @@ import Prefs from "../Prefs/Prefs";
 import { ScrollView } from "react-native-gesture-handler";
 import HeaderComp2 from "../Components/HeaderComp2";
 import StatusBarComp from '../Components/StatusBarComp';
+import NetworkUtils from "../Constants/NetworkUtils";
 
 export default class CreatePackage extends Component {
 
@@ -23,18 +23,13 @@ export default class CreatePackage extends Component {
         packagenametxt: '',
         invitationcounttxt: '',
         discounttxt: ''
-
-
     }
     render() {
-        
+
         return (
             <View style={styles.container}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
-                <HeaderComp2 alignSelf='center' textsize={18}leftBtnClicked={()=>this.props.navigation.goBack()} textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CreatePackage')} titlepos='center' ></HeaderComp2>
-
-
-
+                <HeaderComp2 alignSelf='center' textsize={18} leftBtnClicked={() => this.props.navigation.goBack()} textfonts='bold' leftBtn={require('../../assets/icon_back.png')} title={Trans.translate('CreatePackage')} titlepos='center' ></HeaderComp2>
                 <ScrollView>
                     <View style={{ flex: 1, marginLeft: 33, marginRight: 33 }}>
                         <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("PackageName")}</Text>
@@ -88,7 +83,6 @@ export default class CreatePackage extends Component {
 
     }
 
-
     logCallback = (log, callback) => {
         console.log(log);
         this.setState({
@@ -96,9 +90,12 @@ export default class CreatePackage extends Component {
         });
     }
 
-
     async OnCreatePackage() {
-
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         var check = this.checkforError()
         if (check) {
             return;
@@ -112,14 +109,12 @@ export default class CreatePackage extends Component {
         formadata.append("no_of_people", this.state.invitationcounttxt)
         // formadata.append("package_price", this.state.passwordtxt)
         console.log(formadata)
-
-       
         this.logCallback('Creating Package Start', this.state.isLoading = true);
         ApiCalls.postApicall(formadata, "add_package").then(data => {
             this.logCallback("Response came", this.state.isLoading = false);
             if (data.status == true) {
                 // this.props.navigation.replace('Packages')
-                this.props.navigation.push('Packages')
+                this.props.navigation.push('Packages', { designer_id: this.props.route.params.designer_id })
 
             } else {
                 Alert.alert('Failed', data.message);

@@ -1,8 +1,10 @@
 import { Component } from "react";
 import React from 'react'
 import { Button, Image, Alert, TouchableOpacity, StyleSheet } from "react-native";
-import { Dimensions, View, Text, ToastAndroid,
-    Platform, } from "react-native";
+import {
+    Dimensions, View, Text, ToastAndroid,
+    Platform,
+} from "react-native";
 import Draggable from 'react-native-draggable';
 import ViewShot from "react-native-view-shot";
 import { SafeAreaView } from "react-native";
@@ -22,7 +24,7 @@ import { RNCamera } from 'react-native-camera';
 import mycolor from "../Constants/Colors";
 import HeaderComp2 from '../Components/HeaderComp2';
 import ButtonComp from '../Components/ButtonComp';
-import FloatingButtonComp from '../Components/FloatingButtonComp';
+import NetworkUtils from "../Constants/NetworkUtils";
 import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from '../Services/ApiCalls';
 const WINDOW = Dimensions.get('window');
@@ -96,7 +98,7 @@ export default class ScannerScreen extends Component {
                     customView={this.alertView()}
                 />
 
-                { this.state.scanner &&
+                {this.state.scanner &&
                     <QRCodeScanner
                         onRead={this.onSuccess}
                         ref={(node) => { this.scanner = node }}
@@ -116,7 +118,7 @@ export default class ScannerScreen extends Component {
                     />
                 }
 
-                { !this.state.scanner &&
+                {!this.state.scanner &&
                     <View style={{ display: this.state.scanner == false ? 'flex' : 'none', flex: 1, justifyContent: 'center', alignItems: 'center', color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 20, marginRight: 20 }}>
                         <ButtonComp
                             onPress={() => this.setState({ scanner: true })}
@@ -126,16 +128,15 @@ export default class ScannerScreen extends Component {
                     </View>
                 }
 
-
-               {this.state.showsuccessAlert? <AwesomeAlert
+                {this.state.showsuccessAlert ? <AwesomeAlert
                     show={this.state.showsuccessAlert}
                     contentContainerStyle={{ width: '100%', borderRadius: 4 }}
                     showProgress={false}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
                     customView={this.alertsuccessView()}
-                
-                />:null}
+
+                /> : null}
 
             </View>
 
@@ -144,7 +145,7 @@ export default class ScannerScreen extends Component {
     }
 
     oncheckedin() {
-        this.setState({ isLoading: false,showAlert:false, showsuccessAlert: false, scanner: false });
+        this.setState({ isLoading: false, showAlert: false, showsuccessAlert: false, scanner: false });
     }
 
     alertsuccessView() {
@@ -233,6 +234,11 @@ export default class ScannerScreen extends Component {
     }
 
     async updateCheckInStatus(id) {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.setState({ isLoading: true });
         let query = "/" + id
         console.log("updateCheckInStatus()")
@@ -240,8 +246,8 @@ export default class ScannerScreen extends Component {
             console.log("DATA")
             console.log(data)
             if (data.status == true) {
-                this.setState({ showsuccessAlert: true })
-                // Alert.alert(data.message);
+                this.setState({ isLoading: false, showAlert: false, scanner: false })
+                Alert.alert(data.message);
             } else {
                 Alert.alert('Failed', data.message);
                 this.setState({ isLoading: false, showAlert: false, scanner: false });
@@ -254,12 +260,12 @@ export default class ScannerScreen extends Component {
     }
     notifyMessage(msg) {
         if (Platform.OS === 'android') {
-          ToastAndroid.show(msg, ToastAndroid.SHORT)
+            ToastAndroid.show(msg, ToastAndroid.SHORT)
         } else {
 
-          Alert.alert(msg);
+            Alert.alert(msg);
         }
-      }
+    }
 }
 
 const styles = StyleSheet.create({

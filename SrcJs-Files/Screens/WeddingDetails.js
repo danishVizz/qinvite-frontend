@@ -1,24 +1,12 @@
 import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
 import { FlatList, Image, View, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native'
-
-import Trans from '../Translation/translation'
-import ConversationComp from '../Components/ConversationComp';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 import HeaderComp2 from '../Components/HeaderComp2';
-import { StatusBar } from 'expo-status-bar';
-import Contacts from 'react-native-contacts';
-import { PermissionsAndroid } from 'react-native'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from "../Services/ApiCalls";
-import Keys from "../Constants/keys";
-import Prefs from "../Prefs/Prefs";
-
+import NetworkUtils from "../Constants/NetworkUtils";
 
 export default class WeddingDetails extends Component {
-
 
     state = {
         ContactsList: [{ "name": "Haroon Shaukat", "status": false }, { "name": "Mubashir Mobi", "status": true }, { "name": "Haroon Iqbal", "status": false }],
@@ -61,7 +49,7 @@ export default class WeddingDetails extends Component {
                 <View style={{ flexDirection: 'row', width: '100%', height: 60, marginTop: 34, alignItems: 'center' }}>
                     <Image style={{ width: 36, height: 36 }} source={require('../../assets/gentleman.png')}></Image>
                     <View style={{ marginLeft: 17 }}>
-                        <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.host_details.first_name+" "+this.props.route.params.item.host_details.last_name}</Text>
+                        <Text style={{ fontSize: 16, color: mycolor.darkgray, fontWeight: '600' }}>{this.props.route.params.item.host_details.first_name + " " + this.props.route.params.item.host_details.last_name}</Text>
                         <Text style={{ fontSize: 14, color: "#C9C9C9", marginTop: 3 }}>{"Host Name"}</Text>
                     </View>
                 </View>
@@ -107,23 +95,28 @@ export default class WeddingDetails extends Component {
     };
 
     actionOnRow(index) {
-        
+
         var list = this.state.participants;
         console.log(list[index]);
-        console.log("ID : "+list[index].id)
-        console.log("NAME : "+list[index].name)
+        console.log("ID : " + list[index].id)
+        console.log("NAME : " + list[index].name)
         this.updateCheckInStatus(list[index].id);
         if (list[index].check_in == "0") {
             list[index].check_in = "1";
         } else {
             list[index].check_in = "0";
         }
-        console.log("check_in : "+list[index].check_in)
+        console.log("check_in : " + list[index].check_in)
         this.setState({ participants: list });
     }
 
     async updateCheckInStatus(id) {
-        let query = "/"+id
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
+        let query = "/" + id
         ApiCalls.getGenericCall("check_in", query).then(data => {
             if (data.status == true) {
                 console.log(data);

@@ -2,18 +2,15 @@ import React, { Component, useState } from 'react';
 import mycolor from '../Constants/Colors'
 import { FlatList, StyleSheet, ActivityIndicator, Text, TouchableOpacity, View, Alert, Image, PermissionsAndroid } from 'react-native'
 import Trans from '../Translation/translation'
-import FloatingButtonComp from '../Components/FloatingButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
-import DesignerComp from '../Components/DesignerComp';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import TextInputComp from '../Components/TextInputComp';
 import CircleImageComp from '../Components/CircleImageComp';
 import { CheckBox } from 'react-native-elements';
 import ApiCalls from '../Services/ApiCalls';
-import Keys from '../Constants/keys';
 import moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob'
+import NetworkUtils from "../Constants/NetworkUtils";
+import Keys from "../Constants/keys";
 
 export default class ReceivedDesign extends Component {
 
@@ -126,12 +123,18 @@ export default class ReceivedDesign extends Component {
 
 
     actionOnRow(itemdata, index) {
+        Keys.invitealldata["ImageData"] = itemdata.design_card
         this.props.navigation.navigate('ImageEditor', { "imagedata": itemdata.design_card })
     }
 
     async getDesigns() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         this.logCallback("getDesigns :", this.state.contentLoading = true);
-        ApiCalls.getapicall("get_event_cards", "?event_id="+this.props.route.params.DesignerData.event_id).then(data => {
+        ApiCalls.getapicall("get_event_cards", "?event_id=" + this.props.route.params.DesignerData.event_id).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.isLoading = false);
             if (data.status == true) {
                 this.setState({ designerdata: data.data, isLoading: false })

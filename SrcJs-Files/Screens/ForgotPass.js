@@ -19,6 +19,7 @@ import Keys from "../Constants/keys";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComp2 from "../Components/HeaderComp2";
 import { KeyboardAvoidingView } from "react-native";
+import NetworkUtils from "../Constants/NetworkUtils";
 
 export default class ForgotPass extends Component {
 
@@ -49,22 +50,22 @@ export default class ForgotPass extends Component {
                         <View style={styles.innerview}>
 
 
-                        <TextInputComp
-                            placeholder={Trans.translate('Phonenumber')}
-                            leftIcon={require('../../assets/icon_phone2x.png')}
-                            placeholderTextColor={mycolor.lightgray}
-                            onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
-                        />
-                        {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
+                            <TextInputComp
+                                placeholder={Trans.translate('Phonenumber')}
+                                leftIcon={require('../../assets/icon_phone2x.png')}
+                                placeholderTextColor={mycolor.lightgray}
+                                onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
+                            />
+                            {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
 
-                        <View style={{ width: '100%' }}>
-                            <ButtonComp
-                                text={Trans.translate("Send")}
-                                isloading={this.state.setLoading}
-                                onPress={() => this.onForgotPress()}
-                                style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
-                                textcolor={mycolor.white}
-                                textstyle={{ color: mycolor.white, textAlign: 'center' }} />
+                            <View style={{ width: '100%' }}>
+                                <ButtonComp
+                                    text={Trans.translate("Send")}
+                                    isloading={this.state.setLoading}
+                                    onPress={() => this.onForgotPress()}
+                                    style={{ backgroundColor: mycolor.pink, marginTop: 50, width: '100%', alignItems: 'center', alignSelf: 'center', }}
+                                    textcolor={mycolor.white}
+                                    textstyle={{ color: mycolor.white, textAlign: 'center' }} />
 
                             </View>
                         </View>
@@ -84,9 +85,12 @@ export default class ForgotPass extends Component {
         });
     }
 
-
-
-    onForgotPress() {
+    async onForgotPress() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         var check = this.checkEmptyFields()
         if (check) {
             return;
@@ -96,7 +100,7 @@ export default class ForgotPass extends Component {
 
         const data = null
         this.logCallback('Forgot Pass Call Started', this.state.setLoading = true);
-        ApiCalls.postApicall(formadata, "forget_password").then(data => {
+        ApiCalls.getGenericCall("forget_password", "?number=" + this.state.phonenumber).then(data => {
             this.logCallback("Response came", this.state.setLoading = false);
             if (data.status == true) {
                 console.log("successdata " + JSON.stringify(data))

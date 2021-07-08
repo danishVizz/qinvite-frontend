@@ -13,7 +13,9 @@ import {
   Alert,
   Keyboard
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import NetworkUtils from "../Constants/NetworkUtils";
+import { CheckBox } from 'react-native-elements';
 import RadioButtonComp from "../Components/RadioComp";
 import ButtonComp from "../Components/ButtonComp";
 import Trans from "../Translation/translation"
@@ -35,25 +37,23 @@ export default class SignUp extends Component {
     isSelectedRB2: false,
     shouldShow: false,
     signupLoading: false,
-
+    isChecked: false
   }
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.container} >
+        <View style={styles.container}>
           <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
             <View style={styles.logocontainer}>
               <Image style={styles.image} source={require('../../assets/icon_logo.png')}></Image>
             </View>
             <View style={styles.innerview}>
               <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>{Trans.translate("Signuphint")}</Text>
-
               <View style={styles.radioview}>
                 <RadioButtonComp
                   size={12} text={Trans.translate("Phonenumber")}
                   onPress={() => this.changebuttons(1)}
                   isSelected={this.state.isSelectedRB1}
-                  
                 >
                 </RadioButtonComp>
                 <View style={{ flex: 1 }}>
@@ -119,7 +119,6 @@ export default class SignUp extends Component {
               />) : null}
               {this.state.phoneError2 ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt2}</Text> : <View></View>}
 
-
               <TextInputComp
                 placeholder={Trans.translate('CPass')}
                 marginTop='20'
@@ -132,6 +131,16 @@ export default class SignUp extends Component {
                 OnsubmitEditing={Keyboard.dismiss}
               />
               {this.state.confirmpasswordError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.cpassworderrortxt}</Text> : <View></View>}
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                <CheckBox
+                  containerStyle={{ marginLeft: 0, paddingLeft: 0 }}
+                  checked={this.state.isChecked}
+                  checkedIcon={<Image source={require('../../assets/icon_checked.png')} style={{ height: 20, width: 20 }} />}
+                  uncheckedIcon={<Image source={require('../../assets/uncheckbox.png')} style={{ height: 20, width: 20, borderColor: mycolor.lightgray, borderWidth: 1 }} />}
+                  onPress={() => this.onPressCheckbox()}
+                ></CheckBox>
+                <Text style={{ flex: 1, fontSize: 12, color: mycolor.lightgray, includeFontPadding: false }}>{'By registerting, I agree to terms & conditions of Qinvite.'}</Text>
+              </View>
 
               <ButtonComp
                 onPress={() => this.onSignupPress()}
@@ -146,9 +155,7 @@ export default class SignUp extends Component {
         </View>
       </SafeAreaView>
     );
-
   }
-
 
   notifyMessage(msg) {
     if (Platform.OS === 'android') {
@@ -190,7 +197,22 @@ export default class SignUp extends Component {
     });
   }
 
-  onSignupPress() {
+  onPressCheckbox() {
+    this.setState({ isChecked: !(this.state.isChecked) })
+    !this.state.isChecked && this.props.navigation.navigate('TermsConditions')
+  }
+
+  async onSignupPress() {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
+    
+    if (!this.state.isChecked) {
+      Alert.alert('T&C', 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')
+      return
+    }
     var check = this.checkforError()
     if (check) {
       return;
@@ -221,7 +243,6 @@ export default class SignUp extends Component {
     formadata.append("phone", this.state.phoneTxt)
     console.log(formadata)
 
-
     ApiCalls.postApicall(formadata, "signup").then(data => {
       this.logCallback("Response came", this.state.signupLoading = false);
       console.log(data);
@@ -245,7 +266,6 @@ export default class SignUp extends Component {
     }
     )
   }
-
 
   checkforError() {
     var anycheckfalse = false;

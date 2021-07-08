@@ -152,17 +152,23 @@ export default class SendEditor extends Component {
     }
     // messagesarray.push(item)
     this.setState({ selectedvaluesarr: messagesarray, message: '' })
+    console.log("SelectedCategoryForMessages")
     console.log(this.state.selectedvaluesarr)
   }
 
   componentDidMount() {
+    console.log("CategoriesData")
+    console.log(Keys.invitealldata["CategoriesData"])
     var receptionistsarr = []
-    var receptionistdata = Keys.invitealldata["CategoriesData"].SelectedCategories
+    var receptionistdata = Keys.invitealldata["CategoriesData"]
     receptionistdata.map((item, key) => {
       var receptionists = {
         label: item.name,
         value: item.id,
         selected: true
+        // label: item.category_name,
+        // value: item.category_id,
+        // selected: true
       }
       receptionistsarr.push(receptionists)
     })
@@ -190,7 +196,8 @@ export default class SendEditor extends Component {
       })
       await this.setState({ selectedvaluesarr: messagesarray, message: '' })
       console.log(messagesarray)
-
+    } else {
+      
     }
     console.log(JSON.stringify(this.state.selectedvaluesarr))
     var invitedata = Keys.invitealldata

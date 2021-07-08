@@ -6,6 +6,8 @@ class Prefs {
       try {
         await useAsyncStorage(key).setItem(value);
       } catch (error) {
+        console.log('PREFS save ERROR')
+        console.log(error)
         // Error saving data
       }
     }
@@ -16,6 +18,8 @@ class Prefs {
         return value;
       } catch (error) {
         // Error saving data
+        console.log('PREFS get ERROR')
+        console.log(error)
       }
     }
   };

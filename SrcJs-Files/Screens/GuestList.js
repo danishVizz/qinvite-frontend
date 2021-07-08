@@ -3,7 +3,7 @@ import mycolor from '../Constants/Colors'
 import { FlatList, Image, View, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native'
 
 import Trans from '../Translation/translation'
-import ConversationComp from '../Components/ConversationComp';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import HeaderComp2 from '../Components/HeaderComp2';

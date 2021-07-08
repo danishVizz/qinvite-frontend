@@ -17,6 +17,7 @@ import Prefs from '../Prefs/Prefs';
 import Global from '../Constants/Global';
 import mykeys from '../Constants/keys';
 import ApiCalls from '../Services/ApiCalls';
+import NetworkUtils from "../Constants/NetworkUtils";
 
 // const jsCode = `window.postMessage(document.getElementById('gb-main').innerHTML)`
 const jsCode = "window.postMessage(document.getElementsByClassName(payment-response))"
@@ -43,7 +44,7 @@ export class Payment extends Component {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
-                <HeaderComp leftBtn={require('../../assets/icon_back.png')} leftBtnClicked={() => this.props.navigation.goBack()} textfonts={'bold'} fromleft={10} title={Trans.translate('Payment')} textfonts={'bold'} textsize={18} titlepos="center" />
+                <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Payment')} textfonts={'bold'} textsize={18} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.onBackpress()} />
                 {
                     this.state.eventData != undefined &&
                     <WebView
@@ -110,6 +111,7 @@ export class Payment extends Component {
         }, () => console.log(typeof this.state.eventData.package_details))
     }
 
+
     hideSpinner() {
         this.setState({ visible: false });
     }
@@ -128,7 +130,12 @@ export class Payment extends Component {
             this.upgradePackage()
         }
         else {
-            this.props.navigation.replace('Todos')
+            // this.props.navigation.replace('Todos')
+            const resetAction = CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Todos' }],
+            });
+            this.props.navigation.dispatch(resetAction);
         }
     }
 
@@ -146,7 +153,22 @@ export class Payment extends Component {
         );
     }
 
+    onBackpress() {
+        const resetAction = CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'CombineComp' }],
+        });
+
+        this.props.navigation.dispatch(resetAction);
+
+    }
+
     async upgradePackage() {
+        const isConnected = await NetworkUtils.isNetworkAvailable()
+        if (!isConnected) {
+            Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+            return
+        }
         let people = this.props.route.params.People || {}
         var formadata = new FormData()
         formadata.append("package_id", this.state.eventData.package_details.id)

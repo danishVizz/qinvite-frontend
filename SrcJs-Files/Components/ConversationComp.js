@@ -17,6 +17,8 @@ export default class ConversationComp extends Component {
 
 
     render() {
+        var statues = ["Message Sent", "Message Delivered", "Message Seen"];
+
         return (
 
             <View style={styles.conatiner}>
@@ -27,7 +29,8 @@ export default class ConversationComp extends Component {
                     </View>
                     <View style={{ flex: 3 }}>
                         <Text>{this.props.contactname}</Text>
-                        <Text>{this.props.status}</Text>
+                        <Text>{this.props.contact}</Text>
+                        <Text style={{ color: statues.includes(this.props.status) ? 'green' : 'red' }}>{this.props.status}</Text>
                     </View>
                     <View style={{ flex: 1, alignSelf: 'flex-end' }}>
                         <Text>{this.props.time}</Text>

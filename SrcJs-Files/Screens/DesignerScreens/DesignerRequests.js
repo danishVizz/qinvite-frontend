@@ -16,7 +16,7 @@ import Keys from '../../Constants/keys'
 import ApiCalls from '../../Services/ApiCalls'
 import { Alert } from 'react-native';
 import Global from '../../Constants/Global';
-
+import NetworkUtils from "../../Constants/NetworkUtils";
 
 export default class DesignerRequests extends Component {
 
@@ -37,10 +37,7 @@ export default class DesignerRequests extends Component {
     }
   }
 
-
-
   render() {
-
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: mycolor.pink }}>
         <HeaderComp style={{}} title={Trans.translate('requests')} titlepos='center' textsize={20} textfonts='bold' tintColor="#fff" rightBtn={require('../../../assets/logout.png')} rightBtnClicked={() => this.logout()} />
@@ -60,7 +57,7 @@ export default class DesignerRequests extends Component {
 
           <Text style={{ marginLeft: 'auto', color: 'white', fontWeight: 'bold' }}>{Trans.translate("earnings")}</Text>
 
-          <Text style={{ marginLeft: 'auto', marginRight: 20, color: 'white', fontWeight: 'bold' }}>{Global.userData.earnings+" QR"}</Text>
+          <Text style={{ marginLeft: 'auto', marginRight: 20, color: 'white', fontWeight: 'bold' }}>{(Global.userData.earnings == undefined ? 0 : Global.userData.earnings)  + " QR"}</Text>
 
         </View>
         <this.Tab.Navigator
@@ -102,6 +99,11 @@ export default class DesignerRequests extends Component {
   }
 
   async setdesigneravailablity() {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
     console.log(parsedata)

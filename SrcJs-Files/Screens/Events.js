@@ -10,6 +10,7 @@ import Trans from '../Translation/translation';
 import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import AlertComp from '../Components/AlertComp';
+import NetworkUtils from "../Constants/NetworkUtils";
 
 export default class Events extends Component {
 
@@ -54,6 +55,7 @@ export default class Events extends Component {
           refreshing={this.state.isFetching}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
+          ListFooterComponent={<View style={{ height: 80 }}></View>}
           ListEmptyComponent={this.noItemDisplay} />
 
         <View style={{ flexDirection: 'row', alignSelf: 'flex-end', position: "absolute", bottom: 20, right: 20 }}>
@@ -62,7 +64,7 @@ export default class Events extends Component {
 
         {Deletealert}
 
-        { !this.state.isFetching && this.state.contentLoading && <View style={{
+        {!this.state.isFetching && this.state.contentLoading && <View style={{
           position: 'absolute',
           width: '100%',
           height: '100%',
@@ -111,8 +113,11 @@ export default class Events extends Component {
   }
   componentDidMount() {
     console.log('Mounted');
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      console.log("Events Focused")
+      this.getAllEvents();
+    });
 
-    this.getAllEvents();
   }
 
   logCallback = (log, callback) => {
@@ -126,6 +131,11 @@ export default class Events extends Component {
     this.setState({ isFetching: true, }, () => { this.getAllEvents() });
   }
   async getAllEvents() {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     this.logCallback("Getting Events....:", this.state.contentLoading = !(this.state.isFetching));
     var userdata = await Prefs.get(Keys.userData);
     var parsedata = JSON.parse(userdata)
@@ -144,6 +154,11 @@ export default class Events extends Component {
   }
 
   async DeleteEvent(id) {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
     this.setState({ showalert: false })
     this.logCallback("DeleteEvent :", this.state.contentLoading = true);
     // var userdata = await Prefs.get(Keys.userData);

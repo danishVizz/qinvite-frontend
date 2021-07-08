@@ -20,10 +20,8 @@ export default class SplashScreen extends Component {
         if (this.state.isLoading) {
             return (
                 <View style={styles.container}>
-
                     <Image style={{ height: 200, width: 200, alignSelf: 'center' }} resizeMode="contain" source={require('../../assets/icon_logo.png')}>
                     </Image>
-
                     <View style={{ flexDirection: 'row', marginTop: 20 }}>
                         <CheckBox
                             title="Arabic"
@@ -65,23 +63,37 @@ export default class SplashScreen extends Component {
     SelectLanguage(langarabic, langenglish) {
         if (langarabic) {
             Trans.setI18nConfig("en");
+            Prefs.save(Keys.SELECTED_LANGUAGE, 'en')
             this.setState({ langarabic: !(langarabic), langenglish: true })
         } else if (langenglish) {
             Trans.setI18nConfig("ar");
+            Prefs.save(Keys.SELECTED_LANGUAGE, 'ar')
             this.setState({ langenglish: !(langenglish), langarabic: true })
         }
-
     }
 
     componentDidMount() {
         console.log('componentDidMount()');
+        this.setLanguage()
         // this.signinStatus();
         this.getUserData();
     }
 
+    setLanguage() {
+        if (this.state.langarabic == true) {
+            Trans.setI18nConfig("ar");
+        } else {
+            Trans.setI18nConfig("en");
+        }
+        this.setState({
+            langarabic : this.state.langarabic
+        })
+    }
+
     async getUserData() {
         var userData = await Prefs.get(Keys.userData);
-        if (userData != null) {
+        var rememberMe = await Prefs.get(Keys.REMEMBER_ME) || false;
+        if (userData != null && rememberMe) {
             console.log("userData 1");
             var parsedData = JSON.parse(userData);
             console.log(parsedData);
@@ -95,13 +107,13 @@ export default class SplashScreen extends Component {
         switch (this.state.userRole) {
             case "0":
             case "2":
-                this.props.navigation.navigate('CombineComp');
+                this.props.navigation.replace('CombineComp');
                 break;
             case "4":
-                this.props.navigation.navigate('Reception');
+                this.props.navigation.replace('Reception');
                 break;
             case "5":
-                this.props.navigation.navigate('DesignerRequests');
+                this.props.navigation.replace('DesignerRequests');
                 break;
             default:
             // screen = 'SplashScreen';
