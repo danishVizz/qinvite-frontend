@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import mycolor from '../Constants/Colors'
-import { FlatList, Alert, View, StyleSheet } from 'react-native'
+import { Text, Alert, View, StyleSheet, ActivityIndicator } from 'react-native'
 import Trans from '../Translation/translation'
 import ConversationComp from '../Components/ConversationComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
+import InviteStatusComp from '../Components/InviteStatusComp';
 import NetworkUtils from "../Constants/NetworkUtils";
 import moment from 'moment';
 import ApiCalls from '../Services/ApiCalls';
-import { ActivityIndicator } from 'react-native';
 
 export default class ContactListing extends Component {
     state = {
         isLoading: false
-
     }
 
     render() {
@@ -21,9 +20,6 @@ export default class ContactListing extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: mycolor.white }}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
-                {/* <StatusBar
-                    backgroundColor='#F54260'
-                /> */}
                 <HeaderComp2 textfonts={'bold'}
                     righttitle={Trans.translate('Resend')}
                     titlepos='center'
@@ -33,75 +29,34 @@ export default class ContactListing extends Component {
                     title={Trans.translate('InvitedPeoples')}
                     leftBtn={require('../../assets/icon_back.png')}></HeaderComp2>
 
-                <FlatList
+                <InviteStatusComp navigation={this.props.navigation} participants={participants} />
+
+                {/* <FlatList
                     data={participants}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false} />
+                    showsHorizontalScrollIndicator={false} /> */
 
 
-                {this.state.isLoading && <View style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'rgba(52, 52, 52, 0.2)'
-                }}>
-                    < ActivityIndicator size="large" color={mycolor.pink} />
-                </View>}
+                    this.state.isLoading && <View style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                         alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgba(52, 52, 52, 0.8)'
+                    }}>
+                        < ActivityIndicator size="large" color={'#fff'} />
+                        <Text style={{marginHorizontal: 40, textAlign: 'center', marginTop: 20, color: '#fff'}}>{Trans.translate('invite_wait_msg')}</Text>
+                    </View>}
             </View>
 
         );
     }
 
-    renderItem({ item, index, props }) {
-        console.log("inex: " + item.invitation_date);
-        var status = ''
-        if (item.status == "0") { status = "Pending" }
-        else if (item.status == "1") { status = "Message Sent" }
-        else if (item.status == "2") { status = "Message Delivered" }
-        else if (item.status == "3") { status = "Message Seen" }
-        return (
-
-
-            // <TouchableWithoutFeedback style={{
-            //   marginTop: 5, marginBottom: 5, marginLeft: 20, marginRight: 20, }} onPress={() => actionOnRow(item,props)}>
-            <ConversationComp
-                // toggle={() => this.onToggle(index)}
-                // propsfromparents={onPressButtonChildren.bind()}
-                contact={item.number}
-                imagepath={require('../../assets/icon_contact.png')}
-                contactname={item.name}
-                status={status}
-                time={String(moment(item.invitation_date).format("hh:mm A"))}
-            />
-            // </TouchableWithoutFeedback>
-        );
-    }
-
-    // onPressButtonChildren(value) {
-    //     switch (value) {
-    //         case 'delete':
-    //             break
-    //         case 'edit':
-    //             break
-    //         default:
-    //             navigation.navigate('EventDetails')
-    //     }
-
-    //     console.log("working" + value)
-    //     //press button chilldren 
-    // }
-
-    actionOnRow(itemdata, props) {
-        console.log('Selected Item :' + itemdata.title);
-        // navigation.navigate('EventDetails')
-        alert(itemdata.title)
-    }
-
     async resendMessage(id) {
+        console.log({id})
         const isConnected = await NetworkUtils.isNetworkAvailable()
         if (!isConnected) {
             Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
@@ -114,12 +69,11 @@ export default class ContactListing extends Component {
             console.log("DATA")
             console.log(data)
             if (data.status == true) {
-                this.setState({ isLoading: false, showAlert: false, scanner: false })
-                this.notifyMessage(data.messsage)
-                // Alert.alert(data.message);
+                this.setState({ isLoading: false })
+                this.notifyMessage(data.message)
             } else {
                 Alert.alert('Failed', data.message);
-                this.setState({ isLoading: false, showAlert: false, scanner: false });
+                this.setState({ isLoading: false });
             }
         }, error => {
             // Alert.alert('Error', JSON.stringify(error));
@@ -132,14 +86,14 @@ export default class ContactListing extends Component {
         if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT)
         } else {
-
             Alert.alert(msg);
         }
     }
 }
-const successCallBackData = (data) => {
-    console.log(data)// can get callback data here
-}
+
+// const successCallBackData = (data) => {
+//     console.log(data)// can get callback data here
+// }
 
 
 const styles = StyleSheet.create({

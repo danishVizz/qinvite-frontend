@@ -39,11 +39,13 @@ export default class CategoryList extends Component {
                     this.loadingView() :
                     <View style={{ flex: 1 }}>
                         <FlatList
-                            data={this.props.route.params.categories}
+                            contentContainerStyle={{ flex: 1 }}
+                            data={this.filterCategory(this.props.route.params.categories)}
                             renderItem={this.renderItem.bind(this)}
-                            keyExtractor={(item) => item.category_id}
+                            keyExtractor={(item) => item.id}
                             showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false} />
+                            showsHorizontalScrollIndicator={false}
+                            ListEmptyComponent={() => this.emptyList()} />
                     </View>}
 
                 {/* <ButtonComp
@@ -55,12 +57,23 @@ export default class CategoryList extends Component {
                     textstyle={{ color: mycolor.white }} /> */}
             </View>
         );
+    }
 
-
+    emptyList() {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <Text style={{ alignSelf: 'center' }}>{Trans.translate('no_data_found')}</Text>
+            </View>
+        )
     }
 
     componentDidMount() {
         // this.permissionFunc("https://qinvite.vizzwebsolutions.com/pdf/1620114635.jpg-1620298644.jpg.pdf")
+    }
+
+    filterCategory(arr) {
+        const tmp = arr.filter(obj => obj.pdf != "")
+        return tmp
     }
 
     loadingView() {
@@ -100,15 +113,13 @@ export default class CategoryList extends Component {
                     righticon={null}></CategoryComp> */}
                 <View >
                     <TextComp
-
                         textStyle={{ fontSize: 20, fontWeight: 'bold' }}
-                        text={item.category_name}
+                        text={item.name + ' PDF'}
                     />
-                    <TextComp
-
+                    {/* <TextComp
                         textStyle={{ fontSize: 15, fontWeight: 'normal', marginTop: 5 }}
                         text={Trans.translate("Download_Pdf")}
-                    />
+                    /> */}
                 </View>
                 <Image
                     style={{ marginLeft: 'auto', height: 30, width: 30 }}
@@ -164,7 +175,6 @@ export default class CategoryList extends Component {
             useDownloadManager: true,
             notification: true,
             path: `${dirToSave}/${(Math.floor(date.getTime() + date.getSeconds() / 2))}.pdf`,
-
         }
 
         let options = {
@@ -197,13 +207,11 @@ export default class CategoryList extends Component {
             if (Platform.OS == 'android') {
                 console.log("File downloaded" + res.path())
             }
-
         })
     }
 }
 
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
         backgroundColor: "#fff"

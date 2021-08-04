@@ -5,7 +5,6 @@ import mycolor from "../Constants/Colors";
 import CircleImageComp from "../Components/CircleImageComp";
 import { CheckBox } from 'react-native-elements';
 
-
 const iamgepath = '../../assets'
 
 export default class ConversationComp extends Component {
@@ -14,15 +13,10 @@ export default class ConversationComp extends Component {
         allfieldsenabel: false,
         changetext: true
     }
-
-
     render() {
         var statues = ["Message Sent", "Message Delivered", "Message Seen"];
-
         return (
-
             <View style={styles.conatiner}>
-
                 <View style={{ flex: 1, flexDirection: 'row', marginRight: 21, marginTop: 20 }}>
                     <View style={{ flex: 1 }}>
                         <CircleImageComp imagestyle={{ height: 40, width: 40 }} style={{ height: 40, width: 40 }} imagesrc={this.props.imagepath} ></CircleImageComp>
@@ -35,15 +29,6 @@ export default class ConversationComp extends Component {
                     <View style={{ flex: 1, alignSelf: 'flex-end' }}>
                         <Text>{this.props.time}</Text>
                     </View>
-
-                    {/* <CheckBox
-                    style={{backgroundColor:'red'}}
-                        checked={this.props.isChecked}
-                        checkedIcon={<Image source={require('../../assets/icon_check.png')} style={{ height: 20, width: 20 }} />}
-                        uncheckedIcon={<Image source={null} style={{ height: 20, width: 20 }} />}
-                        onPress={this.props.OnCheckPress}
-                    /> */}
-
                 </View>
                 <View
                     style={{
@@ -53,12 +38,9 @@ export default class ConversationComp extends Component {
                         backgroundColor: 'red',
                         borderBottomColor: '#E4E4E4',
                         borderBottomWidth: 1,
-
                     }}
                 />
-
             </View>
-
         );
     }
     changeviews() {

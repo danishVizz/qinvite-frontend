@@ -4,10 +4,12 @@ import { CheckBox } from "react-native-elements";
 import mycolor from '../Constants/Colors';
 import Trans from '../Translation/translation'
 import * as Progress from 'react-native-progress';
+import Video from 'react-native-video';
 import ButtonComp from '../Components/ButtonComp';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
 import * as ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'rn-fetch-blob';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Alert, Dimensions } from 'react-native';
 import mykeys from '../Constants/keys';
@@ -35,6 +37,14 @@ export default class UploadMedia extends Component {
                         <Image resizeMode='cover' style={{
                             width: 300, height: 300, borderRadius: 15
                         }} source={(this.state.imageuri == '' || this.state.mediaType == 'video') ? require('../../assets/icon_uploadhint.png') : { uri: this.state.imageuri }}></Image>
+                        <Video
+                            ref={ref => this._video = ref}
+                            source={{ uri: this.state.imageuri }}
+                            resizeMode={'cover'}
+                            repeat={true}
+                            paused={true}
+                            // onLoad={() => this._onLoad()}
+                        />
                     </View>
                     <View style={{ flex: 2, alignSelf: 'center', justifyContent: 'flex-start', alignSelf: 'center' }}>
                         <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center' }}>{Trans.translate('UploadMedia')}</Text>
@@ -91,13 +101,18 @@ export default class UploadMedia extends Component {
         );
     }
 
+    // _onLoad(data) {
+    //     let durationVideo = data.duration
+    //     console.log(durationVideo)
+    // }
+
     createDesign() {
         if (this.state.imageuri != '') {
 
             var invitedata = mykeys.invitealldata
             invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": this.state.imageuri }
             mykeys.invitealldata = invitedata
-           
+
 
             if (this.state.mediaType == 'photo') {
                 this.props.navigation.navigate('ImageEditor', { "imagedata": this.state.imageuri })
@@ -132,10 +147,28 @@ export default class UploadMedia extends Component {
                 maxWidth: WINDOW.width - 20,
             },
             (responses) => {
-                // console.log("Size "+this.niceBytes(responses.fileSize))
-                if (responses.fileSize > 5000000)
+                // if (mediaType == 'video') {
+                //     RNFetchBlob.fs.stat(responses.uri.replace('file://', ''))
+                //         .then((stats) => {
+                //             console.log(stats.size)
+                //             if (stats.size > 5000000) {
+                //                 // this.setState({ imageuri: '', progress: 0 })
+                //                 Alert.alert(Trans.translate("alert"), Trans.translate('filesize_5mb'))
+                //                 return
+                //             } else {
+                //                 this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType });
+                //             }
+                //         })
+                //         .catch((err) => {
+                //             console.log({ err })
+                //         })
+                // }
+
+                if (responses.fileSize > 2000000) {
+                    // this.setState({ imageuri: '', progress: 0 })
                     Alert.alert(Trans.translate("alert"), Trans.translate('filesize'))
-                else {
+                } else {
+                    console.log("I AM IN MEDIA SUCCESS")
                     this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType });
                     console.log(responses.uri)
                 }

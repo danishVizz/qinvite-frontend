@@ -181,7 +181,6 @@ export default class AllRequests extends Component {
         )
     }
 
-
     renderItem({ item, index }) {
         return (
             <TouchableOpacity onPress={() => this.actionOnRow(item)}>
@@ -191,7 +190,7 @@ export default class AllRequests extends Component {
                     image={item.image_url}
                     title={item.event_name}
                     description={item.event_date}
-                    showMenu={item.design_status == "1" || item.design_status == "2" ? false : true}
+                    showMenu={item.design_status == "1" || item.design_status == "2" || this.props.type == "Accepted" ? false : true}
                 />
             </TouchableOpacity>
         );

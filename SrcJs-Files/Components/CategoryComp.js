@@ -11,13 +11,14 @@ class CategoryComp extends Component {
     }
 
     render() {
+        console.log(this.props.item)
         return (
             <View>
                 <View onPress={this.props.Onpress} style={[styles.container, this.props.containerstyle || {}]} >
                     <Image source={this.props.lefticon} style={[styles.photo, this.props.imagestyle || {}]} />
                     <View style={[styles.container_text, this.props.containerStyle || {}]}>
                         <Text style={[styles.title, this.props.titlestyle || {}]}>
-                            {this.props.title}{this.props.count == undefined ? " " : "(" + this.props.count + ")"}
+                            {this.props.title}{this.props.count == undefined ? " " : "(" + this.props.count + "x"+ this.props.item.people_per_qr + "="+(this.props.count*this.props.item.people_per_qr)+")"}
                         </Text>
                     </View>
                     <View style={{ flex: 1, alignSelf: "center", marginRight: 10 }}>

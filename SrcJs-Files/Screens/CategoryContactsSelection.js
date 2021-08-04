@@ -90,16 +90,25 @@ export default class CategoryContactsSelection extends Component {
                             leftBtnClicked={() => this.setState({ modalVisible: false })}
                             title={Trans.translate('ChooseCategory')}></HeaderComp2>
                         <FlatList
+                            contentContainerStyle={{ flex: 1 }}
                             data={this.filterCategories(this.props.route.params.categoriesArr)}
                             renderItem={this.categoryItem.bind(this)}
                             keyExtractor={(item, index) => String(index)}
                             showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false} />
+                            showsHorizontalScrollIndicator={false}
+                            ListEmptyComponent={() => this.emptyList()} />
                     </View>
                 </Modal>
             </View>
-
         );
+    }
+
+    emptyList() {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <Text style={{ alignSelf: 'center' }}>{Trans.translate('no_data_found')}</Text>
+            </View>
+        )
     }
 
     searchItems = text => {
@@ -420,13 +429,11 @@ export default class CategoryContactsSelection extends Component {
                         }
                         obj.participant_id = "",
                             obj.isphoneallow = isphoneallow;
-                        obj.name = (Platform.OS === "android") ? obj.displayName : obj.givenName
+                        obj.name = (Platform.OS === "android") ? obj.displayName : (obj.givenName +" "+obj.familyName).trim()
                         obj.isselected = isselected
                         obj.number = obj.phoneNumbers[0]?.number.replace(/\s/g, '')
 
                         let num = String(obj.phoneNumbers[0]?.number.replace(/\s/g, ''));
-                        // console.log("TYPEOF 3: ", typeof (num));
-
                         if (num.startsWith("0")) {
                             obj.number = num.replace('0', callingcode);
                         }
@@ -458,18 +465,10 @@ export default class CategoryContactsSelection extends Component {
                 };
 
                 Geocoder.geocodePosition(locationvariables).then(res => {
-
                     var countrycode = res[0].countryCode
-                    // console.log("Codeeeeee..."+countrycode)
-
-                    // var callingcode=CountryData.countries[countrycode].countryCallingCodes;
                     console.log(CountryData.countries["PK"]);
-
                     var callingcode = CountryData.countries[countrycode]
-                    // console.log("Calling Code "+JSON.stringify(callingcode.countryCallingCodes[0]))
-
                     this.setState({ callingcode: callingcode.countryCallingCodes[0] }, () => this.getContactList())
-
                 })
                     .catch(err => console.log(err))
 

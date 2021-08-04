@@ -5,6 +5,7 @@ import { ImageBackground, TextInput, InputAccessoryView, Keyboard, KeyboardAvoid
 
 import ViewShot from "react-native-view-shot";
 import Trans from "../Translation/translation";
+import Video from 'react-native-video';
 import Draggable from 'react-native-draggable';
 import QRCode from 'react-native-qrcode-svg';
 import mycolor from "../Constants/Colors";
@@ -93,6 +94,7 @@ export default class ImageEditor extends Component {
             <Slider
               value={this.state.sizeOfText}
               onValueChange={sizeOfText => {
+                console.log(sizeOfText)
                 this.fontSizing(sizeOfText);
               }}
               style={styles.slide}
@@ -170,7 +172,8 @@ export default class ImageEditor extends Component {
     markers[index].defLineHeight = sizeValue;
     this.setState({
       arrayTextData: markers,
-      lineHegOfText: sizeValue / 2
+      lineHegOfText: sizeValue / 2,
+      sizeTracker: sizeValue
     });
   }
   alignPicker = (alignValue) => {
@@ -251,9 +254,33 @@ export default class ImageEditor extends Component {
       )
     });
   }
-  render() {
-    let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
 
+  render() {
+    console.log("IMAGE")
+    console.log(Keys.invitealldata["ImageData"])
+    return (
+      (Keys.invitealldata["ImageData"].indexOf('.mp4') > -1 || Keys.invitealldata["ImageData"].indexOf('.mov') > -1) ? this.videoModuleView() : this.cardModuleView()
+    );
+  }
+
+  videoModuleView() {
+    return (
+      <View style={{ flex: 1, height: '100%' }}>
+        <Video source={{ uri: Keys.invitealldata["ImageData"] }}   // Can be a URL or a local file.
+          ref={(ref) => { this.player = ref }}     // Store reference
+          onBuffer={this.onBuffer}                // Callback when remote video is buffering
+          onError={this.videoError}
+          controls={true}                   // Callback when video cannot be loaded
+          style={styles.backgroundVideo} />
+        <View style={{ position: 'absolute', bottom: 20, flex: 1 }}>
+          {this.buttonsView()}
+        </View>
+
+      </View>)
+
+  }
+
+  cardModuleView = () => {
     let ADDED_TEXTS = this.state.arrayTextData.map((ID, index) => {
       return (
         <DragTextEditor
@@ -284,7 +311,6 @@ export default class ImageEditor extends Component {
         />
       )
     });
-
     return (
       <View style={styles.parent}>
         {/* <ScrollView contentContainerStyle={{ flexGrow: 1 }}> */}
@@ -303,37 +329,18 @@ export default class ImageEditor extends Component {
               <ImageBackground
                 resizeMode='contain'
                 source={{ uri: Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined ? this.props.route.params.imagedata : Keys.invitealldata["ImageData"] }}
-                // style={{ height: WINDOW.height/2, width: WINDOW.width, borderRadius: 5, borderWidth: 1}}
                 style={{ width: WINDOW.width - 20, height: WINDOW.height / 2, backgroundColor: '#fff' }}>
-
-
-                {/* <Draggable x={WINDOW.width / 2.5} y={WINDOW.height / 4} renderColor='green'>
-                    <QRCode
-                      style={{ alignSelf: 'flex-end' }}
-                      size={40}
-                      value="QInvites"
-                    />
-                  </Draggable> */}
-
                 {ADDED_TEXTS}
               </ImageBackground>
-
             </ViewShot>
-          </View>
-          <View style={{ flexDirection: 'row', height: 50, alignContent: 'center', alignSelf: 'center', backgroundColor: mycolor.pink, margin: 10, borderRadius: 5, position: 'absolute', bottom: 0 }}>
-            <TouchableOpacity style={{ width: "100%", textAlign: 'center', alignSelf: 'center', fontSize: 14, fontWeight: 'bold', }} onPress={() => this.saveImg()}>
-              <Text style={{ color: 'white', width: "100%", textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>{Trans.translate('Save')}</Text>
-            </TouchableOpacity>
 
           </View>
-          {Keys.invitealldata["ImageData"] != "" && Keys.invitealldata["ImageData"] != undefined && <View style={{ flexDirection: 'row', height: 50, alignContent: 'center', alignSelf: 'center', backgroundColor: mycolor.pink, margin: 10, borderRadius: 5, position: 'absolute', bottom: 60 }}>
-            <TouchableOpacity style={{ width: "100%", textAlign: 'center', alignSelf: 'center', fontSize: 14, fontWeight: 'bold', }} onPress={() => this.props.navigation.replace("Designer", { Type: "choose" })}>
-              <Text style={{ color: 'white', width: "100%", textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>{Trans.translate('uploadnewdesign')}</Text>
-            </TouchableOpacity>
-          </View>}
+          <View style={{ position: 'absolute', bottom: 5, flex: 1 }}>
+            {this.buttonsView()}
+          </View>
         </View>
         {/* </ScrollView> */}
-        <InputAccessoryView nativeID={inputAccessoryViewID}>
+        {Platform.OS === 'ios' && <InputAccessoryView nativeID={inputAccessoryViewID}>
           <View style={{ backgroundColor: '#fff', alignItems: 'flex-end' }}>
             <Button
               style={{ alignSelf: 'flex-end' }}
@@ -342,31 +349,61 @@ export default class ImageEditor extends Component {
             />
           </View>
 
-        </InputAccessoryView>
+        </InputAccessoryView>}
 
       </View>
-    );
+    )
+  }
+
+  buttonsView = () => {
+    return (
+      <View>
+        <View style={{ flexDirection: 'row', height: 50, alignContent: 'center', alignSelf: 'center', backgroundColor: mycolor.pink, margin: 10, borderRadius: 5 }}>
+          <TouchableOpacity style={{ width: "100%", textAlign: 'center', alignSelf: 'center', fontSize: 14, fontWeight: 'bold', }} onPress={() => this.saveImg()}>
+            <Text style={{ color: 'white', width: "100%", textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>{Trans.translate('Save')}</Text>
+          </TouchableOpacity>
+        </View>
+        {Keys.invitealldata["ImageData"] != "" && Keys.invitealldata["ImageData"] != undefined && <View style={{ flexDirection: 'row', height: 50, alignContent: 'center', alignSelf: 'center', backgroundColor: mycolor.pink, margin: 10, borderRadius: 5, position: 'absolute', bottom: 60 }}>
+          <TouchableOpacity style={{ width: "100%", textAlign: 'center', alignSelf: 'center', fontSize: 14, fontWeight: 'bold', }} onPress={() => this.props.navigation.replace("Designer", { Type: "choose" })}>
+            <Text style={{ color: 'white', width: "100%", textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>{Trans.translate('uploadnewdesign')}</Text>
+          </TouchableOpacity>
+        </View>}
+      </View>
+    )
+  }
+
+  onBuffer() {
+    console.log("BUFFERING")
+  }
+
+  videoError(error) {
+    console.log("VIDEO ERRROR")
+    console.log(error)
   }
 
   saveImg() {
+    if (Keys.invitealldata["ImageData"].indexOf('.mp4') > -1 || Keys.invitealldata["ImageData"].indexOf('.mov') > -1) {
+      this.saveData(Keys.invitealldata["ImageData"])
+      return
+    }
     this.refs.viewShot.capture().then(uri => {
       console.log("do something with ", uri);
-      // Alert.alert(uri);
-      var invitedata = Keys.invitealldata
-      invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": uri }
-      Keys.invitealldata = invitedata
-
-
-      if (Keys.invitealldata['CategoriesData'] == undefined || Keys.invitealldata['CategoriesData'] == "") {
-        this.props.navigation.navigate('Todos');
-      }
-      else {
-        this.props.navigation.navigate('SendEditor', { "imagedata": uri });
-      }
+      this.saveData(uri)
     });
   }
 
+  saveData(uri) {
+    var invitedata = Keys.invitealldata
+    invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": invitedata['CategoriesData'], "ImageData": uri }
+    Keys.invitealldata = invitedata
 
+    if (Keys.invitealldata['CategoriesData'] == undefined || Keys.invitealldata['CategoriesData'] == "") {
+      this.props.navigation.navigate('Todos');
+    }
+    else {
+      this.props.navigation.navigate('SendEditor', { "imagedata": uri });
+    }
+  }
 }
 const styles = StyleSheet.create({
   parent: {
@@ -460,5 +497,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
-  }
+  },
+  backgroundVideo: {
+    // position: 'absolute',
+    height: 500,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: mycolor.lightgray,
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
 })

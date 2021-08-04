@@ -11,6 +11,7 @@ import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import AlertComp from '../Components/AlertComp';
 import NetworkUtils from "../Constants/NetworkUtils";
+import Global from '../Constants/Global';
 
 export default class Events extends Component {
 
@@ -24,6 +25,7 @@ export default class Events extends Component {
 
   _onPress() {
     this.props.onPressButtonChildren(this.props.item); //Change: passing prop onPressItem and calling _onPressItem
+    // this.props.deleteAll()
   }
 
   render() {
@@ -37,17 +39,14 @@ export default class Events extends Component {
           onDeletePress={() => this.DeleteEvent(this.state.currentselected)}></AlertComp> : null
     );
     return (
-
       <View style={{ flex: 1, backgroundColor: mycolor.white }}>
-
-
         <FlatList
           contentContainerStyle={(this.props.type == "All" ? this.getallData().length : this.props.type == "Active" ? this.getActiveData().length : this.getCloseData().length) === 0 && {
             flexGrow: 1,
             justifyContent: "center",
             alignItems: "center"
           }}
-          data={this.props.type == "All" ? this.getallData() : this.props.type == "Active" ? this.getActiveData() : this.getCloseData()}
+          data = {this.state.EventAllData}
           renderItem={this.renderItem.bind(this)}
           horizontal={false}
           keyExtractor={(item) => item.id}
@@ -74,9 +73,7 @@ export default class Events extends Component {
         }}>
           < ActivityIndicator size="large" color={mycolor.pink} />
         </View>}
-
       </View>
-
     )
   }
 
@@ -148,7 +145,8 @@ export default class Events extends Component {
       }
     }, error => {
       this.logCallback("Something Went Wrong", this.state.contentLoading = false, this.state.isFetching = false);
-      Alert.alert('Error', JSON.stringify(error));
+      console.log(JSON.stringify(error))
+      // Alert.alert('Error', JSON.stringify(error));
     }
     )
   }
@@ -179,9 +177,6 @@ export default class Events extends Component {
     )
   }
 
-
-
-
   renderItem({ item, index }) {
     return (
       <TouchableOpacity onPress={() => this.actionOnRow(item)}>
@@ -203,17 +198,6 @@ export default class Events extends Component {
         this.setState({ showalert: true, currentselected: item.id })
         break
       case 'edit':
-        // var newitem = {
-        //   "eventid": item.id,
-        //   "eventname": item.event_name,
-        //   "eventaddress": item.event_address,
-        //   "eventdate": item.event_date,
-        //   "no_of_receptionists": item.no_of_receptionists,
-        //   "receptionists": item.receptionists,
-        //   "receptionists": item.receptionists,
-        //   "participants": item.participants
-        // }
-
         this.props.navigation.navigate('CreateEvent',
           {
             "eventdata": item
@@ -234,12 +218,52 @@ export default class Events extends Component {
     })
   }
 
-
   successCallBackData = (data) => {
     console.log(data)// can get callback data here
   }
 
+   deleteAll = async () => {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
+    this.logCallback("Getting Events....:", this.state.contentLoading = !(this.state.isFetching));
+    console.log(this.state.contentLoading)
+    let query = '?user_id=' + Global.userData.id
+    ApiCalls.getGenericCall("delete_all_events", query).then(data => {
+      console.log("DELETE ALL DATA")
+      console.log(data)
+      if (data.status == true) {
+        this.setState({ EventAllData: data.data, contentLoading: false })
+      } else {
+        Alert.alert('Failed', data.message);
+        this.setState({ contentLoading: false });
+      }
+    }, error => {
+      // Alert.alert('Error', JSON.stringify(error));
+      console.log(JSON.stringify(error))
+    }
+    )
+  }
+
+  deleteAllAlert = () => {
+
+    Alert.alert(
+      "Delete",
+      Trans.translate('delete_all_events_msg'),
+      [
+        {
+          text: Trans.translate('cancel'),
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: Trans.translate('Delete'), onPress: () => this.deleteAll() }
+      ]
+    );
+  }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

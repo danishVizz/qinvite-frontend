@@ -158,7 +158,7 @@ export default class CreateEvent extends Component {
   }
 
   componentDidMount() {
-    console.log("EVENT_DAATAFOR EDIT",this.props.route.params.eventdata)
+    console.log("EVENT_DAATAFOR EDIT", this.props.route.params.eventdata)
     this.state.eventdata = this.props.route.params.eventdata ?? []
     if (this.state.eventdata.length != 0) {
       let event_Date = this.state.eventdata.event_date
@@ -176,7 +176,7 @@ export default class CreateEvent extends Component {
       }, () => this.updateSelectedVal(this.state.eventdata.receptionists))
 
       mykeys.invitealldata = { "ImageData": this.props.route.params.eventdata.event_card }
-      console.log("CATEGORIESEDITDATADIDMOunt",this.props.route.params.eventdata.categories)
+      console.log("CATEGORIESEDITDATADIDMOunt", this.props.route.params.eventdata.categories)
       mykeys.invitealldata = { "CategoriesData": this.props.route.params.eventdata.categories }
 
 
@@ -202,7 +202,7 @@ export default class CreateEvent extends Component {
     console.log("RECEPTIONIST " + dropdownIndex)
     console.log(receptionists)
     return (
-      <View style={{ zIndex: key }} key={key}>
+      Platform.OS === 'ios' ? <View style={{ zIndex: key }} key={key}>
         <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("ReceptionistName")}</Text>
         <DropDownPicker
           zIndex={key}
@@ -224,7 +224,30 @@ export default class CreateEvent extends Component {
           onChangeItemMultiple={item => this.setState({
           }, console.log("Multi......" + this.state.selectedCountries))}
           onChangeItem={(item, index) => this.updateUser(item, index, dropdownIndex)} />
-      </View>
+      </View> :
+
+        <View key={key}>
+          <Text style={{ fontSize: 14, marginTop: 30 }}>{Trans.translate("ReceptionistName")}</Text>
+          <DropDownPicker
+            items={this.state.user}
+            containerStyle={{ height: 60, marginTop: 10 }}
+            style={{ backgroundColor: '#fff', borderColor: mycolor.lightgray }}
+            itemStyle={{
+              justifyContent: 'flex-start',
+            }}
+            close={() => this.props.close}
+            defaultValue={""}
+            multiple={false}
+            disabledropdown={this.state.iseditevent && this.state.paymentstatus == 3}
+            disabled={this.state.iseditevent && this.state.paymentstatus == 3}
+            placeholderStyle={{ color: mycolor.lightgray }}
+            placeholder={receptionists != undefined && receptionists.length > 0 ? receptionists[dropdownIndex].first_name : Trans.translate('select_receptionists')} //{Trans.translate('select_receptionists')}
+            dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
+            removeItem={(value => this.removeItem(value))}
+            onChangeItemMultiple={item => this.setState({
+            }, console.log("Multi......" + this.state.selectedCountries))}
+            onChangeItem={(item, index) => this.updateUser(item, index, dropdownIndex)} />
+        </View>
     )
   }
 
@@ -262,9 +285,9 @@ export default class CreateEvent extends Component {
         "event_id": this.state.eventid,
         "categoriesList": this.props.route.params.eventdata.categories
       }
-      console.log("CATEGORIESEDITDATAONPress",data.categories)
-      mykeys.invitealldata = { "Eventdata": data, "ImageData": data.event_card,"CategoriesData":this.props.route.params.eventdata.categories }
-      
+      console.log("CATEGORIESEDITDATAONPress", data.categories)
+      mykeys.invitealldata = { "Eventdata": data, "ImageData": data.event_card, "CategoriesData": this.props.route.params.eventdata.categories }
+
       if (!(this.state.iseditevent)) {
         this.createTwoButtonAlert(Trans.translate('designerhint'))
       }
@@ -391,10 +414,7 @@ export default class CreateEvent extends Component {
         else {
           console.log("Eventttt" + mykeys.invitealldata["Eventdata"])
           this.props.navigation.navigate("Payment", { "event_data": mykeys.invitealldata["Eventdata"], "Type": "new" })
-          // this.props.navigation.replace('Todos')
         }
-
-
       } else {
         Alert.alert('Failed', data.message);
       }
@@ -509,13 +529,17 @@ export default class CreateEvent extends Component {
         />
         <View style={{ margin: 20 }}>
           <ButtonComp
-            onPress={() => this.setState({ show: false })}
+            onPress={() => {
+              this.setState({ show: false })
+              console.log("CATEGORY DATA")
+              console.log(this.props.route.params.eventdata.categories)
+              this.state.iseditevent && this.props.route.params.eventdata.categories.length > 0 && Alert.alert(Trans.translate("alert"), Trans.translate('change_event_date_msg'))
+            }}
             textstyle={{ color: 'white' }}
             text={Trans.translate("Ok")}></ButtonComp>
         </View>
       </View>
       )
-
     );
   }
 }

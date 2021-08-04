@@ -158,7 +158,7 @@ export default class ChooseCategory extends Component {
         }
         else {
 
-            invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": this.state.selectedLists , "ImageData": invitedata["ImageData"] }
+            invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": this.state.selectedLists, "ImageData": invitedata["ImageData"] }
             Keys.invitealldata = invitedata
             if (invitedata["ImageData"] == undefined || invitedata["ImageData"] == "")
                 this.props.navigation.navigate('Todos')
@@ -183,6 +183,7 @@ export default class ChooseCategory extends Component {
             this.state.selectedLists.pop(item)
         }
     }
+
     async getAllCategories() {
         const isConnected = await NetworkUtils.isNetworkAvailable()
         if (!isConnected) {

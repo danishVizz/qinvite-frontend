@@ -71,7 +71,7 @@ class ApiCalls {
   async getGenericCall(apiname, query) {
     try {
       var fullurl = Base_url + apiname;
-      console.log(fullurl)
+      console.log(fullurl + query)
       let codeData = await fetch(`${fullurl}` + query, {
         method: 'GET',
         // headers: {

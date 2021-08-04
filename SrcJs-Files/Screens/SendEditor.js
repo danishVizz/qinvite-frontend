@@ -14,11 +14,12 @@ import ApiCalls from '../Services/ApiCalls'
 import Keys from '../Constants/keys'
 import Prefs from '../Prefs/Prefs'
 import HeaderComp2 from '../Components/HeaderComp2';
+import { ActivityIndicator } from 'react-native';
 
 const WINDOW = Dimensions.get('window');
 
 export default class SendEditor extends Component {
-  
+
   constructor(props) {
     super(props)
     console.log("RUNNNN")
@@ -65,7 +66,7 @@ export default class SendEditor extends Component {
   render() {
     console.log("VIDEO PATH")
     console.log(Keys.invitealldata["ImageData"])
-    
+
     return (
       <View style={styles.container}>
         <StatusBarComp backgroundColor={mycolor.pink} />
@@ -77,13 +78,13 @@ export default class SendEditor extends Component {
           <View style={styles.subContainer}>
             <View style={styles.innercontainer}>
               {/* <Image style={{ backgroundColor: 'gray', width: '100%', height: 203, borderRadius: 6 }} source={require('../../assets/logo.png')}></Image> */}
-              {this.type == 'photo' && <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6, borderColor:mycolor.lightgray, backgroundColor: 'white',borderWidth:1 }} source={{ uri: Keys.invitealldata["ImageData"] }}></Image>}
+              {this.type == 'photo' && <Image resizeMode='contain' style={{ width: '100%', height: 300, borderRadius: 6, borderColor: mycolor.lightgray, backgroundColor: 'white', borderWidth: 1 }} source={{ uri: Keys.invitealldata["ImageData"] }}></Image>}
               {this.type == 'video' && <Video source={{ uri: Keys.invitealldata["ImageData"] }}   // Can be a URL or a local file.
                 ref={(ref) => {
                   this.player = ref
                 }}                                      // Store reference
                 onBuffer={this.onBuffer}                // Callback when remote video is buffering
-                onError={this.videoError} 
+                onError={this.videoError}
                 controls={true}              // Callback when video cannot be loaded
                 style={styles.backgroundVideo} />}
               <Text style={{ fontSize: 14, marginTop: 15, color: mycolor.txtGray }}>{Trans.translate("message")}</Text>
@@ -111,8 +112,8 @@ export default class SendEditor extends Component {
                 placeholderStyle={{ color: mycolor.lightgray }}
                 placeholder={Trans.translate('ChooseCategory')}
                 dropDownStyle={{ backgroundColor: '#fafafa', height: 100 }}
-                onChangeItem={(item => this.updateUser(item))} />
-
+                onChangeItem={(item => this.updateUser(item))}
+              />
 
               <View style={{ flexDirection: 'row', marginTop: 15, alignItems: 'center' }}>
                 <TouchableOpacity onPress={() => this.setState({ sendToAll: !(this.state.sendToAll) })}>
@@ -126,10 +127,7 @@ export default class SendEditor extends Component {
                   // onPress={() => this.props.navigation.navigate('Packages')}
                   onPress={() => this.CreateEvent()}
                 ></ButtonComp>
-
-
               </View>
-
             </View>
           </View>
         </ScrollView>
@@ -138,20 +136,34 @@ export default class SendEditor extends Component {
 
   }
   updateUser = (selectedvalue, index) => {
-    this.setState
+    console.log("UPDATE USER")
+    console.log(selectedvalue)
+    let tmp = [...this.state.receptionistsarr]
+    const listIndex = this.state.receptionistsarr.indexOf(selectedvalue)
+    if (this.state.message != "") {
+      let obj = { ...selectedvalue, icon: () => <Image style={{ width: 10, height: 10 }} source={require('../../assets/green_tick.png')} /> }
+      // selectedvalue.label = selectedvalue.label + " (" + this.state.message + ")"
+      tmp[listIndex] = obj
+    } else {
+      Alert.alert('Alert', 'Please add message first')
+      return
+    }
+
     var item = {
       message: this.state.message,
-      categoryid: selectedvalue.value
+      categoryid: selectedvalue.value,
+      categoryname: selectedvalue.label,
+
     }
     var messagesarray = this.state.selectedvaluesarr
     let ind = messagesarray.findIndex((item) => item.categoryid === selectedvalue.value);
-    // replace element having same category id
+
     if (ind != -1) { messagesarray[ind] = item }
     else {
       messagesarray.push(item)
     }
-    // messagesarray.push(item)
-    this.setState({ selectedvaluesarr: messagesarray, message: '' })
+
+    this.setState({ selectedvaluesarr: messagesarray, receptionistsarr: tmp })
     console.log("SelectedCategoryForMessages")
     console.log(this.state.selectedvaluesarr)
   }
@@ -165,10 +177,7 @@ export default class SendEditor extends Component {
       var receptionists = {
         label: item.name,
         value: item.id,
-        selected: true
-        // label: item.category_name,
-        // value: item.category_id,
-        // selected: true
+        selected: true,
       }
       receptionistsarr.push(receptionists)
     })
@@ -183,21 +192,21 @@ export default class SendEditor extends Component {
   }
 
   async CreateEvent() {
-
     if (this.state.sendToAll) {
       var messagesarray = []
       this.state.receptionistsarr.map((item) => {
         console.log("Message Item is " + item.value + " " + this.state.message)
         var messageitem = {
           message: this.state.message,
-          categoryid: item.value
+          categoryid: item.value,
+          categoryname: item.label
         }
         messagesarray.push(messageitem)
       })
-      await this.setState({ selectedvaluesarr: messagesarray, message: '' })
+      this.setState({ selectedvaluesarr: messagesarray, message: '' })
       console.log(messagesarray)
     } else {
-      
+
     }
     console.log(JSON.stringify(this.state.selectedvaluesarr))
     var invitedata = Keys.invitealldata
@@ -238,9 +247,9 @@ const styles = StyleSheet.create({
   backgroundVideo: {
     // position: 'absolute',
     height: 300,
-    borderRadius:6,
+    borderRadius: 6,
     borderWidth: 1,
-    borderColor:mycolor.lightgray,
+    borderColor: mycolor.lightgray,
     top: 0,
     left: 0,
     bottom: 0,

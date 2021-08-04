@@ -13,7 +13,8 @@ export default class ButtonComp extends Component {
     return (
       <TouchableOpacity
         style={[styles.loginButton, this.props.style || {}]}
-        onPress={this.props.isloading ? null : this.props.onPress}>
+        onPress={this.props.isloading ? null : this.props.onPress}
+        disabled={this.props.disabled}>
         {view}
       </TouchableOpacity>
     );

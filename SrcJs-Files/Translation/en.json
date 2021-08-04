@@ -100,7 +100,7 @@
     "DesignQuality": "Design is in High Quality",
     "DeadLine": "Your Deadline",
     "SubmitDesign": "Submit Design",
-    "Filesizehint": "Maximum File Size 2mb File Type (jpg, jpeg, png, pdf, mp4, mov)",
+    "Filesizehint": "Maximum File Size 2mb File Type (jpg, jpeg, png, mp4, mov)",
     "pleasewaitdesigner": "No design received yet! Kindly contact to your designer and make sure about deadline. You can add guest lists while designer is working on your design",
     "guest_list": "Guest List",
     "wedding": "Wedding",
@@ -159,7 +159,8 @@
     "please_select_receptionistcount_msg": "Please select all receptionists",
     "availablity":"Availablity",
     "earnings":"Earnings",
-    "filesize": "File size should be less than 5 Mb.",
+    "filesize": "File size should be less than 2 Mb.",
+    "filesize_5mb": "File size should be less than 5 Mb.",
     "invitations":"Invitations ",
     "uploadnewdesign":"Upload New Media",
     "packageselectionhint": "Are you sure you want to proceed with this package once you select package you will not able to change it you can update it later.",
@@ -177,6 +178,18 @@
     "yes": "Yes",
     "designer_not_selected_msg": "You have not seleted any designer, Now you can upload event card by tapping on upload button",
     "no_data_found": "No data found",
-    "requestrejected": "Your request is rejected by designer"
+    "requestrejected": "Your request is rejected by designer",
+    "no_payment_msg": "Your purchase couldn't be completed. Please pay by updating this event.",
+    "pay_now": "Pay Now",
+    "seen": "Seen",
+    "delivered": "Delivered",
+    "sent": "Sent",
+    "pending": "Pending",
+    "invite_wait_msg": "Please wait..., it will take upto 5 minutes to send invites if you have fine internet connection",
+    "duplication": "Duplication",
+    "cat_duplication_msg": "Category already exist with same name.",
+    "delete_all_events_msg": "Are you sure you want to delete all expired events?",
+    "delete_all_custom_package_msg": "Are you sure you want to delete all custom packages?",
+    "change_event_date_msg": "If you want to change this event date, you have to resend this message to all categories again."
     
 }

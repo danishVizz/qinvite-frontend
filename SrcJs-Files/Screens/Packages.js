@@ -15,6 +15,7 @@ import mykeys from '../Constants/keys';
 import { TouchableOpacity } from 'react-native';
 import moment from "moment";
 import NetworkUtils from "../Constants/NetworkUtils";
+import Global from '../Constants/Global';
 
 export class Packages extends Component {
   state = {
@@ -43,12 +44,21 @@ export class Packages extends Component {
         /> */}
         <View style={{ flex: 8 }}>
 
-          <HeaderComp textfonts={'bold'} fromleft={10} title={Trans.translate('Packages')} textfonts={'bold'} textsize={18} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.props.navigation.goBack()} />
-
-          {/* <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            {this.state.contentLoading && <ActivityIndicator size="large" color={mycolor.pink} />}
-          </View> */}
-
+          <HeaderComp
+            textfonts={'bold'}
+            fromleft={10}
+            title={Trans.translate('Packages')}
+            textfonts={'bold'}
+            textsize={18}
+            titlepos="center"
+            leftBtn={require('../../assets/icon_back.png')}
+            lefttintColor='white'
+            leftBtnClicked={() => this.props.navigation.goBack()}
+            deleteBtn={false}
+            rightBtn={require('../../assets/icon_delete.png')}
+            rightBtnClicked={() => { this.deleteAllAlert() }}
+            tintColor={'white'}
+          />
           <FlatList
             data={this.state.packagesdata}
             renderItem={this.renderItem.bind(this)}
@@ -57,7 +67,6 @@ export class Packages extends Component {
             refreshing={this.state.isFetching}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false} />
-
 
           <View style={{
             zIndex: -100,
@@ -74,7 +83,8 @@ export class Packages extends Component {
         </View>
         <View style={{ flex: 1.5 }}>
           <ButtonComp style={styles.button} textstyle={{ color: 'white', fontSize: 16, fontWeight: 'bold' }} text={Trans.translate('CreatOwnPackage')}
-            onPress={() => this.props.navigation.navigate('CreatePackage', {designer_id: this.props.route.params.designer_id})}
+            onPress={() => this.props.navigation.navigate('CreatePackage', { designer_id: this.props.route.params.designer_id })}
+            disabled={this.props.route.name == 'PackagesTab' ? true : false}
           ></ButtonComp>
         </View>
         {this.state.showLoaderView && <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(52, 52, 52, 0.8)', justifyContent: 'center' }}>
@@ -138,16 +148,12 @@ export class Packages extends Component {
     this.getAllPackages();
   }
 
-
-
-
   logCallback = (log, callback) => {
     console.log(log);
     this.setState({
       callback
     });
   }
-
 
   async getAllPackages() {
     const isConnected = await NetworkUtils.isNetworkAvailable()
@@ -227,8 +233,6 @@ export class Packages extends Component {
           console.log("PATH 03")
           this.SendRequestDesigners()
         }
-
-
       } else {
         Alert.alert('Failed', data.message);
       }
@@ -270,6 +274,45 @@ export class Packages extends Component {
       Alert.alert('Error', JSON.stringify(error));
     }
     )
+  }
+
+  async deleteAllPackages() {
+    const isConnected = await NetworkUtils.isNetworkAvailable()
+    if (!isConnected) {
+      Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
+      return
+    }
+    this.logCallback("Getting Events....:", this.state.showLoaderView = true);
+    let query = '?user_id=' + Global.userData.id
+    ApiCalls.getGenericCall("delete_all_packages", query).then(data => {
+      console.log("DATA")
+      console.log(data)
+      if (data.status == true) {
+        this.setState({ packagesdata: data.data, showLoaderView: false })
+      } else {
+        Alert.alert('Failed', data.message);
+        this.setState({ showLoaderView: false });
+      }
+    }, error => {
+      // Alert.alert('Error', JSON.stringify(error));
+      console.log(JSON.stringify(error))
+    }
+    )
+  }
+
+  deleteAllAlert = () => {
+    Alert.alert(
+      "Delete",
+      Trans.translate('delete_all_custom_package_msg'),
+      [
+        {
+          text: Trans.translate('cancel'),
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: Trans.translate('Delete'), onPress: () => this.deleteAllPackages() }
+      ]
+    );
   }
 
 }

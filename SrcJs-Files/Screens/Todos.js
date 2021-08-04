@@ -87,8 +87,8 @@ export default class Todos extends Component {
                     this.props.navigation.navigate('ChooseCategory');
                 }
                 else {
-                    // this.props.navigation.navigate('SendEditor', { "imagedata": this.state.imageuri })
-                    this.props.navigation.navigate('SendEditor');
+                    // this.props.navigation.navigate('SendEditor');
+                    this.props.navigation.navigate('ImageEditor');
                 }
 
             } else {

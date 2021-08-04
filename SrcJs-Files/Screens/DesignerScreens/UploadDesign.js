@@ -191,16 +191,34 @@ export default class UploadDesign extends Component {
                 includeBase64: false,
                 maxHeight: WINDOW.height / 2,
                 maxWidth: WINDOW.width - 20,
-
             },
             (responses) => {
-                if (responses.fileSize > 5000000)
+                // if (mediaType == 'video') {
+                //     RNFetchBlob.fs.stat(responses.uri.replace('file://', ''))
+                //         .then((stats) => {
+                //             console.log(stats.size)
+                //             if (stats.size > 5000000) {
+                //                 // this.setState({ imageuri: '', progress: 0 })
+                //                 Alert.alert(Trans.translate("alert"), Trans.translate('filesize_5mb'))
+                //                 return
+                //             } else {
+                //                 this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType });
+                //             }
+                //         })
+                //         .catch((err) => {
+                //             console.log({ err })
+                //         })
+                // }
+
+                if (responses.fileSize > 2000000) {
+                    // this.setState({ imageuri: '', progress: 0 })
                     Alert.alert(Trans.translate("alert"), Trans.translate('filesize'))
-                else {
-                    this.setState({ response: responses, attachmentUrl: responses.uri, progress: 1, mediaType: mediaType });
+                } else {
+                    console.log("I AM IN MEDIA SUCCESS")
+                    this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType, attachmentUrl: responses.uri });
                     console.log(responses.uri)
                 }
-            }
+            },
         )
     }
 

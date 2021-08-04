@@ -10,16 +10,18 @@ export default class HeaderComp extends Component {
         <TouchableOpacity style={{ flex: 1, justifyContent: 'center', paddingLeft: 0 }} onPress={this.props.leftBtnClicked}>
           <Image style={{ width: 30, height: 30, left: this.props.fromleft, tintColor: this.props.lefttintColor }} source={this.props.leftBtn}></Image>
         </TouchableOpacity>
-        <View style={{flex: 5}}>
-          <View style={{justifyContent: 'center' ,alignSelf:this.props.selfalign}}>
-          <TouchableOpacity  onPress={this.props.titleclick}>
-            <Text style={{ fontSize: this.props.textsize, fontWeight: this.props.textfonts, color: this.props.titleColor || mycolor.white, textAlign: this.props.titlepos }}>{this.props.title}</Text>
-          </TouchableOpacity>
+        <View style={{ flex: 5 }}>
+          <View style={{ justifyContent: 'center', alignSelf: this.props.selfalign }}>
+            <TouchableOpacity onPress={this.props.titleclick}>
+              <Text style={{ fontSize: this.props.textsize, fontWeight: this.props.textfonts, color: this.props.titleColor || mycolor.white, textAlign: this.props.titlepos }}>{this.props.title}</Text>
+            </TouchableOpacity>
           </View>
-         
         </View>
+        {this.props.deleteBtn && <TouchableOpacity style={{ flex: 2, justifyContent: 'center', paddingRight: 18 }} onPress={this.props.deleteBtnClicked}>
+          <Image resizeMode='contain' style={{ width: 20, height: 20, left: 0, tintColor: this.props.tintColor }} source={require('../../assets/icon_delete.png')}></Image>
+        </TouchableOpacity>}
         <TouchableOpacity style={{ flex: 2, justifyContent: 'center', paddingRight: 18 }} onPress={this.props.rightBtnClicked}>
-          <Image style={{width: 20, height: 20, left: 0, tintColor: this.props.tintColor }} source={this.props.rightBtn}></Image>
+          <Image resizeMode='contain' style={{ width: 20, height: 20, left: 0, tintColor: this.props.tintColor }} source={this.props.rightBtn}></Image>
         </TouchableOpacity>
       </View>
 

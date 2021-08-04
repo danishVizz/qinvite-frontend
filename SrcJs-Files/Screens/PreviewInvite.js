@@ -1,6 +1,6 @@
 import React from 'react'
 import { Component } from "react";
-import { StyleSheet, View, Image, Text, StatusBar, Alert } from "react-native";
+import { StyleSheet, View, Image, Text, ActivityIndicator, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RNImageToPdf from 'react-native-image-to-pdf';
 import Video from 'react-native-video';
@@ -28,6 +28,7 @@ export default class PreviewInvite extends Component {
         if (this.ext == 'mp4' || this.ext == 'mov') {
             this.type = 'video'
         }
+        console.log("CategoriesData",Keys.invitealldata["CategoriesMessages"])
     }
 
     state = {
@@ -43,8 +44,24 @@ export default class PreviewInvite extends Component {
         console.log(error)
     }
 
+    displayMessages(category) {
+        return (
+            <View style={{flexDirection: 'row', marginTop: 15, marginLeft: 15}}>
+                <Text style={styles.textstyle}>{category.categoryname}</Text>
+                <Text>{category.message}</Text>
+            </View>
+        )
+    }
+
     render() {
         console.log(Keys.invitealldata["ImageData"])
+
+        let categoryMessages = []
+        for (let i = 0; i < Keys.invitealldata["CategoriesMessages"].length; i++) {
+            let item = Keys.invitealldata["CategoriesMessages"][i]
+            console.log({item})
+            categoryMessages.push(this.displayMessages(Keys.invitealldata["CategoriesMessages"][i]))
+        }
         return (
             <View style={styles.container}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
@@ -80,21 +97,28 @@ export default class PreviewInvite extends Component {
                             <Text style={styles.textstyle}>{Trans.translate('Place')}</Text>
                             <Text style={[styles.textstyle, { color: 'black' } || {}]}>{Keys.invitealldata["Eventdata"].event_address}</Text>
                         </View>
+                        {categoryMessages.length > 0 && <Text style={[styles.textstyle, {marginTop: 20, fontSize: 16, fontWeight: 'bold'}]}>Messages</Text>}
+                        {
+                            categoryMessages
+                        }
                     </View>
 
                     <View style={{ flex: 1, marginTop: 20, marginRight: 33, marginLeft: 33 }}>
                         <ButtonComp text={Trans.translate('SendInvites')}
                             textstyle={{ color: mycolor.white, fontWeight: 'bold' }}
-                            isloading={this.state.contentLoading}
+                            // isloading={this.state.contentLoading}
                             onPress={() => this.CreateEvent()}>
 
                         </ButtonComp>
                         {/* <ButtonComp style={{ marginTop: 15, backgroundColor: mycolor.white }}
                             onPress={()=> this.myAsyncPDFFunction()}
                             textstyle={{ color: mycolor.pink, fontWeight: 'bold' }} text={Trans.translate('Savepdf')} ></ButtonComp> */}
-
                     </View>
                 </ScrollView>
+                {this.state.contentLoading && <View style={{ flex: 1, position: 'absolute', backgroundColor: 'rgba(52, 52, 52, 0.8)', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator color={'#fff'} size='large' />
+                    <Text style={{marginHorizontal: 40, textAlign: 'center', marginTop: 20, color: '#fff'}}>{Trans.translate('invite_wait_msg')}</Text>
+                </View>}
             </View>
         );
     }
@@ -103,10 +127,7 @@ export default class PreviewInvite extends Component {
         // console.log("Event Data KEYS");
         // console.log(Keys.invitealldata["Eventdata"]);
         // console.log(Keys.invitealldata["Eventdata"].event_date);
-
     }
-
-    async
 
     async myAsyncPDFFunction() {
         console.log("myAsyncPDFFunction()");
@@ -143,6 +164,7 @@ export default class PreviewInvite extends Component {
 
     async CreateEvent() {
         const isConnected = await NetworkUtils.isNetworkAvailable()
+        
         if (!isConnected) {
             Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
             return
@@ -192,6 +214,7 @@ export default class PreviewInvite extends Component {
         )
     }
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
