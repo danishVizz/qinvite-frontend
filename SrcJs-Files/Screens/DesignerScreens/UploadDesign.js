@@ -189,27 +189,11 @@ export default class UploadDesign extends Component {
             {
                 mediaType: mediaType, // 'photo', 'video
                 includeBase64: false,
-                maxHeight: WINDOW.height / 2,
-                maxWidth: WINDOW.width - 20,
+                // maxHeight: WINDOW.height / 2,
+                // maxWidth: WINDOW.width - 20,
             },
             (responses) => {
-                // if (mediaType == 'video') {
-                //     RNFetchBlob.fs.stat(responses.uri.replace('file://', ''))
-                //         .then((stats) => {
-                //             console.log(stats.size)
-                //             if (stats.size > 5000000) {
-                //                 // this.setState({ imageuri: '', progress: 0 })
-                //                 Alert.alert(Trans.translate("alert"), Trans.translate('filesize_5mb'))
-                //                 return
-                //             } else {
-                //                 this.setState({ response: responses, imageuri: responses.uri, progress: 1, mediaType: mediaType });
-                //             }
-                //         })
-                //         .catch((err) => {
-                //             console.log({ err })
-                //         })
-                // }
-
+                this.requireddimensions(responses.uri)
                 if (responses.fileSize > 2000000) {
                     // this.setState({ imageuri: '', progress: 0 })
                     Alert.alert(Trans.translate("alert"), Trans.translate('filesize'))
@@ -220,6 +204,12 @@ export default class UploadDesign extends Component {
                 }
             },
         )
+    }
+
+    requireddimensions(path) {
+        Image.getSize(path, (imgwidth, imgheight) => {
+           mykeys.IMAGE_WIDTHDIMENSIONS=imgwidth
+        })
     }
 
     mediaOptionAlert = () => {

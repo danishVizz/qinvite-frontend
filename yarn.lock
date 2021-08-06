@@ -1410,9 +1410,9 @@
     "pouchdb-collections" "^1.0.1"
     "tiny-queue" "^0.2.1"
 
-"@ffprobe-installer/darwin-x64@4.1.0":
-  "integrity" "sha512-ESwvOnbGVGK0r7bUdThSZAYipQOH0X79M4SoNZ5Tg77lq/RVbEdpObNEM2oRfLINbMlQQrezA4VYzt0n/DOkcQ=="
-  "resolved" "https://registry.npmjs.org/@ffprobe-installer/darwin-x64/-/darwin-x64-4.1.0.tgz"
+"@ffprobe-installer/win32-x64@4.1.0":
+  "integrity" "sha512-gPW2FZxexzCAOhGch0JFkeSSln+wcL5d1JDlJwfSJVEAShHf9MmxiWq0NpHoCSzFvK5qwl0C58KG180eKvd3mA=="
+  "resolved" "https://registry.npmjs.org/@ffprobe-installer/win32-x64/-/win32-x64-4.1.0.tgz"
   "version" "4.1.0"
 
 "@hapi/address@2.x.x":
@@ -5769,11 +5769,6 @@
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
-
-"fsevents@^1.2.7", "fsevents@^2.1.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="

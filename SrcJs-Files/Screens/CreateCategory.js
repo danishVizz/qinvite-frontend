@@ -9,12 +9,13 @@ import InputSpinner from "react-native-input-spinner";
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
 import { Alert } from 'react-native';
+import mykeys from '../Constants/keys';
 
 export default class CreateCategory extends Component {
 
     state = {
         categoryid: '',
-        categorynametxt: '',
+        categorynametxt:mykeys.SELECTED_MAINCATEGORY,
         categoryError: false,
         invitationcount: 1,
         categorydata: [],

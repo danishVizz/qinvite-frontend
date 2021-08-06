@@ -113,13 +113,10 @@ export default class CategoryList extends Component {
                     righticon={null}></CategoryComp> */}
                 <View >
                     <TextComp
-                        textStyle={{ fontSize: 20, fontWeight: 'bold' }}
+                        textStyle={{ width:220, fontSize: 20, fontWeight: 'bold' }}
                         text={item.name + ' PDF'}
                     />
-                    {/* <TextComp
-                        textStyle={{ fontSize: 15, fontWeight: 'normal', marginTop: 5 }}
-                        text={Trans.translate("Download_Pdf")}
-                    /> */}
+                    
                 </View>
                 <Image
                     style={{ marginLeft: 'auto', height: 30, width: 30 }}

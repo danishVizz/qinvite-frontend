@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Modal, Dimensions, TouchableOpacity,Image } from 'react-native';
 import Keys from '../Constants/keys'
 import EventDetailsComp from '../Components/EventDetailsComp'
 import mycolor from '../Constants/Colors';
@@ -8,13 +8,18 @@ import Trans from '../Translation/translation';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
 import { CommonActions } from '@react-navigation/native';
+import mykeys from '../Constants/keys';
 
+
+
+const { width } = Dimensions.get("window");
 export default class Todos extends Component {
     state = {
         imagedatadstatus: '',
         categoriestatus: '',
         inviteDesignColor: mycolor.offPink,
-        guestlistColor: mycolor.offPink
+        guestlistColor: mycolor.offPink,
+        modalVisible: false
     }
     render() {
         return (
@@ -34,7 +39,8 @@ export default class Todos extends Component {
                     ></EventDetailsComp>
                     {/* backgroundColor: Keys.invitealldata["Event"] == "" || Keys.invitealldata["CategoriesData"] == undefined ?  mycolor.offPink : "#C5FFE6" */}
                     <EventDetailsComp
-                        Onpress={() => this.props.navigation.navigate('ChooseCategory')}
+                        // Onpress={() => this.props.navigation.navigate('ChooseCategory')}
+                        Onpress={() => this.setModalVisible(true)}
                         mainviewstyle={{ backgroundColor: this.state.guestlistColor, height: 120, borderWidth: 1, borderRadius: 8, borderColor: '#F54260' }}
                         imagestyle={{ height: 56, width: 69, marginLeft: 30, flex: 3, alignSelf: 'center' }}
                         title={Trans.translate('guestlist')}
@@ -43,9 +49,47 @@ export default class Todos extends Component {
                         lefticon={require('../../assets/icon_friends.png')}
                     ></EventDetailsComp>
                 </View>
+                <View style={styles.centeredView}>
+
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.modalVisible}
+                        onRequestClose={() => { this.setModalVisible(false) }}>
+                        <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('ChooseCategory')} textfonts={'normal'} textsize={16} titlepos="center" />
+
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <TouchableOpacity onPress={this.onSelection.bind(this, "whatsapp")}>
+                                    <Text style={styles.title}>{Trans.translate("whatsappinvitations")}</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.modalView}>
+                                <TouchableOpacity onPress={this.onSelection.bind(this, "pdf")}>
+                                    <Text style={styles.title}>{Trans.translate("pdfinvitations")}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+
             </View>
         );
     }
+
+ 
+
+    onSelection = (type) => {
+        this.setState({ modalVisible: false })
+        mykeys.SELECTED_MAINCATEGORY = type
+        this.props.navigation.navigate('ChooseCategory')
+    }
+
+    setModalVisible = (visible) => {
+        console.log({ visible })
+        this.setState({ modalVisible: visible });
+    }
+
 
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener('focus', () => {
@@ -103,5 +147,35 @@ const styles = StyleSheet.create({
         marginTop: 40,
         marginLeft: 20,
         marginRight: 20,
+    },
+    centeredView: {
+        flex: 1,
+
+        alignItems: "center",
+        backgroundColor: 'white',
+
+    },
+    modalView: {
+        marginTop: 20,
+        backgroundColor: mycolor.lightPink,
+        borderRadius: 10,
+        padding: 25,
+        width: 250,
+        justifyContent: 'center',
+        alignItems: "center",
+        // shadowColor: mycolor.lightPink,
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 1
+        // },
+        // shadowOpacity: 0.15,
+        // shadowRadius: 2,
+        // elevation: 2
+    },
+    title: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        color: mycolor.pink
+
     }
 });

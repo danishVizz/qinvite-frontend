@@ -15,6 +15,7 @@ import NetworkUtils from "../Constants/NetworkUtils";
 import Global from '../Constants/Global';
 import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
+import mykeys from '../Constants/keys';
 
 export default class ChooseCategory extends Component {
     state = {
@@ -78,7 +79,7 @@ export default class ChooseCategory extends Component {
                 </View>
                 <ButtonComp
                     onPress={() => this.onNextScreen()}
-                    text={Trans.translate("Next")}
+                    text={mykeys.SELECTED_MAINCATEGORY == "whatsapp" ? Trans.translate("Next") : Trans.translate('Savepdf')}
                     isloading={this.state.setLoginLoading}
                     style={{ backgroundColor: mycolor.pink, marginBottom: 10, marginLeft: 22, marginRight: 22 }}
                     textcolor={mycolor.white}
@@ -116,9 +117,6 @@ export default class ChooseCategory extends Component {
 
     onPressButtonChildren = (value, item) => {
         switch (value) {
-            // case 'view':
-            //     this.props.navigation.navigate('CreateCategory', { "categorydata": item })
-            //     break
             case 'delete':
                 this.setState({ showalert: true, currentselected: item.id })
                 break
@@ -133,40 +131,59 @@ export default class ChooseCategory extends Component {
             Trans.translate("packagedetails"),
             message,
             [{
-                text: "Cancel",
+                text:Trans.translate("cancel"),
                 onPress: () => console.log("Cancel Pressed"),
                 style: "cancel"
             },
-            { text: "OK", onPress: () => this.props.navigation.navigate('UpgradePackage') }
+            { text:Trans.translate("Ok"), onPress: () => this.props.navigation.navigate('UpgradePackage') }
             ]
         );
 
     onNextScreen() {
-        var invitedata = Keys.invitealldata
-        let SelectedCategories = this.state.selectedLists;
-        let count = 0;
-        for (let i in SelectedCategories) {
-            count = count + SelectedCategories[i].participants.length
-        }
+        if (mykeys.SELECTED_MAINCATEGORY == "whatsapp") {
+            var invitedata = Keys.invitealldata
+            let SelectedCategories = this.state.selectedLists;
+            let count = 0;
+            for (let i in SelectedCategories) {
+                count = count + (SelectedCategories[i].participants.length * SelectedCategories[i].people_per_qr)
+            }
 
-        if (this.state.selectedLists.length == 0)
-            Alert.alert("No category selected")
+            if (this.state.selectedLists.length == 0)
+                Alert.alert("No category selected")
 
-        else if (count > invitedata["Eventdata"].package_details.package_people) {
-            // Alert.alert("Alert", )
-            this.createTwoButtonAlert("You have selected package with " + invitedata["Eventdata"].package_details.package_people + " invitation now your invitation limit exceed please upgrade your package")
+            else if (count > invitedata["Eventdata"].package_details.package_people) {
+                // Alert.alert("Alert", )
+                this.createTwoButtonAlert("You have selected package with " + invitedata["Eventdata"].package_details.package_people + " invitation now your invitation limit exceed please upgrade your package")
+            }
+            else {
+
+                invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": this.state.selectedLists, "ImageData": invitedata["ImageData"] }
+                Keys.invitealldata = invitedata
+                if (invitedata["ImageData"] == undefined || invitedata["ImageData"] == "")
+                    this.props.navigation.navigate('Todos')
+                else
+                    this.props.navigation.navigate('SendEditor')
+
+            }
         }
         else {
-
-            invitedata = { "Eventdata": invitedata["Eventdata"], "PackageData": invitedata["PackageData"], "CategoriesData": this.state.selectedLists, "ImageData": invitedata["ImageData"] }
-            Keys.invitealldata = invitedata
-            if (invitedata["ImageData"] == undefined || invitedata["ImageData"] == "")
-                this.props.navigation.navigate('Todos')
-            else
-                this.props.navigation.navigate('SendEditor')
-
+            this.pdfAlert(Trans.translate('pdfcategoryhint'))
         }
     }
+
+    pdfAlert = (message) =>
+        Alert.alert(
+            Trans.translate("alert"),
+            message,
+            [{
+                text: Trans.translate("cancel"),
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+            },
+            { text:Trans.translate("Ok"), onPress: () => this.props.navigation.goBack() }
+            ]
+        );
+
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener('focus', () => {
             this.getAllCategories()
@@ -195,7 +212,7 @@ export default class ChooseCategory extends Component {
         var parsedata = JSON.parse(userdata)
 
         // ApiCalls.getapicall("get_categories", "?user_id=" + parsedata.id + "&event_id=" + Keys.invitealldata["Eventdata"].event_id).then(data => {
-        ApiCalls.getapicall("get_categories", "?event_id=" + Keys.invitealldata["Eventdata"].event_id).then(data => {
+        ApiCalls.getapicall("get_categories", "?event_id=" + Keys.invitealldata["Eventdata"].event_id + "&category_type=" + Keys.SELECTED_MAINCATEGORY).then(data => {
             this.logCallback("Response came" + JSON.stringify(data), this.state.contentLoading = false, this.state.isFetching = false);
             if (data.status == true) {
                 this.setState({ isChecked: [], selectedLists: [] })
@@ -213,14 +230,6 @@ export default class ChooseCategory extends Component {
                 } else {
                     arr = eventCategories
                 }
-
-                // for (let i in data.data.categories) {
-                //     for (let j in arr) {
-                //         if (data.data.categories[i].id == arr[j].category_id || data.data.categories[i].id == arr[j].id) {
-                //             this.choosecategory(data.data.categories[i], i);
-                //         }
-                //     }
-                // }
                 for (let i in data.data.categories) {
                     for (let j in arr) {
                         if (data.data.categories[i].id == arr[j].id) {

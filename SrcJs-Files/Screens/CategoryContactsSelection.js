@@ -74,12 +74,10 @@ export default class CategoryContactsSelection extends Component {
 
                 <Modal
                     animationType="slide"
-                    // transparent={true}
                     presentationStyle={'pageSheet'}
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                        // this.setModalVisible(!modalVisible);
+                        this.setState({ modalVisible: false })
                     }}
                 >
                     <View style={{ flex: 1 }}>
@@ -171,6 +169,7 @@ export default class CategoryContactsSelection extends Component {
         formadata.append("user_id", parsedata.id)
         formadata.append("participants", JSON.stringify(this.state.selectedLists))
         formadata.append("event_id", Keys.invitealldata["Eventdata"].event_id)
+        formadata.append("category_type", Keys.SELECTED_MAINCATEGORY)
 
         if (this.props.route.params.categorydata.iseditcategory) {
             formadata.append("id", this.props.route.params.categorydata.categoryid)
@@ -429,7 +428,7 @@ export default class CategoryContactsSelection extends Component {
                         }
                         obj.participant_id = "",
                             obj.isphoneallow = isphoneallow;
-                        obj.name = (Platform.OS === "android") ? obj.displayName : (obj.givenName +" "+obj.familyName).trim()
+                        obj.name = (Platform.OS === "android") ? obj.displayName : (obj.givenName + " " + obj.familyName).trim()
                         obj.isselected = isselected
                         obj.number = obj.phoneNumbers[0]?.number.replace(/\s/g, '')
 

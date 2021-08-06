@@ -325,11 +325,11 @@ export default class ImageEditor extends Component {
           </View>
 
           <View style={{ paddingRight: 10, paddingLeft: 10, marginTop: 50 }}>
-            <ViewShot ref="viewShot" options={{ format: "jpg", quality: 1.0 }}>
+            <ViewShot style={{}} ref="viewShot" options={{ format: "jpg", quality: 1.0 }}>
               <ImageBackground
                 resizeMode='contain'
                 source={{ uri: Keys.invitealldata["ImageData"] == "" || Keys.invitealldata["ImageData"] == undefined ? this.props.route.params.imagedata : Keys.invitealldata["ImageData"] }}
-                style={{ width: WINDOW.width - 20, height: WINDOW.height / 2, backgroundColor: '#fff' }}>
+                style={{ width: WINDOW.width - 20, height: WINDOW.height/2, backgroundColor: '#fff' }}>
                 {ADDED_TEXTS}
               </ImageBackground>
             </ViewShot>

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import mycolor from '../Constants/Colors';
 import OptionsMenu from "react-native-options-menu";
 import Trans from '../Translation/translation';
+import Keys from '../Constants/keys';
 
 class CategoryComp extends Component {
 
@@ -18,7 +19,7 @@ class CategoryComp extends Component {
                     <Image source={this.props.lefticon} style={[styles.photo, this.props.imagestyle || {}]} />
                     <View style={[styles.container_text, this.props.containerStyle || {}]}>
                         <Text style={[styles.title, this.props.titlestyle || {}]}>
-                            {this.props.title}{this.props.count == undefined ? " " : "(" + this.props.count + "x"+ this.props.item.people_per_qr + "="+(this.props.count*this.props.item.people_per_qr)+")"}
+                            {Keys.SELECTED_MAINCATEGORY == "whatsapp" ? "(E)" : "(PDF)"} {this.props.title}{this.props.count == undefined ? " " : "(" + this.props.count * this.props.item.people_per_qr + ")"}
                         </Text>
                     </View>
                     <View style={{ flex: 1, alignSelf: "center", marginRight: 10 }}>
@@ -34,8 +35,6 @@ class CategoryComp extends Component {
         );
     }
 };
-
-
 
 const styles = StyleSheet.create({
     container: {

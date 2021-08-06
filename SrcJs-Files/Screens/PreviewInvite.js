@@ -28,7 +28,7 @@ export default class PreviewInvite extends Component {
         if (this.ext == 'mp4' || this.ext == 'mov') {
             this.type = 'video'
         }
-        console.log("CategoriesData",Keys.invitealldata["CategoriesMessages"])
+        console.log("CategoriesData", Keys.invitealldata["CategoriesMessages"])
     }
 
     state = {
@@ -46,7 +46,7 @@ export default class PreviewInvite extends Component {
 
     displayMessages(category) {
         return (
-            <View style={{flexDirection: 'row', marginTop: 15, marginLeft: 15}}>
+            <View style={{ flexDirection: 'row', marginTop: 15, marginLeft: 15 }}>
                 <Text style={styles.textstyle}>{category.categoryname}</Text>
                 <Text>{category.message}</Text>
             </View>
@@ -59,7 +59,7 @@ export default class PreviewInvite extends Component {
         let categoryMessages = []
         for (let i = 0; i < Keys.invitealldata["CategoriesMessages"].length; i++) {
             let item = Keys.invitealldata["CategoriesMessages"][i]
-            console.log({item})
+            console.log({ item })
             categoryMessages.push(this.displayMessages(Keys.invitealldata["CategoriesMessages"][i]))
         }
         return (
@@ -97,7 +97,7 @@ export default class PreviewInvite extends Component {
                             <Text style={styles.textstyle}>{Trans.translate('Place')}</Text>
                             <Text style={[styles.textstyle, { color: 'black' } || {}]}>{Keys.invitealldata["Eventdata"].event_address}</Text>
                         </View>
-                        {categoryMessages.length > 0 && <Text style={[styles.textstyle, {marginTop: 20, fontSize: 16, fontWeight: 'bold'}]}>Messages</Text>}
+                        {categoryMessages.length > 0 && <Text style={[styles.textstyle, { marginTop: 20, fontSize: 16, fontWeight: 'bold' }]}>Messages</Text>}
                         {
                             categoryMessages
                         }
@@ -117,17 +117,12 @@ export default class PreviewInvite extends Component {
                 </ScrollView>
                 {this.state.contentLoading && <View style={{ flex: 1, position: 'absolute', backgroundColor: 'rgba(52, 52, 52, 0.8)', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator color={'#fff'} size='large' />
-                    <Text style={{marginHorizontal: 40, textAlign: 'center', marginTop: 20, color: '#fff'}}>{Trans.translate('invite_wait_msg')}</Text>
+                    <Text style={{ marginHorizontal: 40, textAlign: 'center', marginTop: 20, color: '#fff' }}>{Trans.translate('invite_wait_msg')}</Text>
                 </View>}
             </View>
         );
     }
 
-    componentDidMount() {
-        // console.log("Event Data KEYS");
-        // console.log(Keys.invitealldata["Eventdata"]);
-        // console.log(Keys.invitealldata["Eventdata"].event_date);
-    }
 
     async myAsyncPDFFunction() {
         console.log("myAsyncPDFFunction()");
@@ -164,7 +159,7 @@ export default class PreviewInvite extends Component {
 
     async CreateEvent() {
         const isConnected = await NetworkUtils.isNetworkAvailable()
-        
+
         if (!isConnected) {
             Alert.alert(Trans.translate("network_error"), Trans.translate("no_internet_msg"))
             return
@@ -175,7 +170,12 @@ export default class PreviewInvite extends Component {
         var alleventdata = Keys.invitealldata
         var uriArr = alleventdata["ImageData"].split('.')
         let ext = uriArr[uriArr.length - 1].toLowerCase()
+
+    console.log("IMGGGGGGGGGGG"+alleventdata["ImageData"])
+ 
+
         var formadata = new FormData()
+        formadata.append("width", Keys.IMAGE_WIDTHDIMENSIONS)
         var photo = {
             uri: Platform.OS === "android" ? alleventdata["ImageData"] : alleventdata["ImageData"].replace("file://", ""),
             type: 'video/*',
@@ -185,7 +185,7 @@ export default class PreviewInvite extends Component {
         formadata.append("event_id", alleventdata["Eventdata"].event_id)
         formadata.append("categories_messages", JSON.stringify(alleventdata["CategoriesMessages"]))
 
-        // var categories = alleventdata["CategoriesData"].SelectedCategories
+      
         var categories = alleventdata["CategoriesData"]
         categories.map((item, index) => {
             formadata.append("categories[" + index + "]", item.id)
@@ -213,6 +213,11 @@ export default class PreviewInvite extends Component {
         }
         )
     }
+
+    requireddimensions(path) {
+
+    }
+
 }
 
 const styles = StyleSheet.create({
