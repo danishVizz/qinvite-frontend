@@ -11,9 +11,9 @@ import {
   Platform,
   SafeAreaView,
   Alert,
-  Keyboard
+  Keyboard,
+  ScrollView
 } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import NetworkUtils from "../Constants/NetworkUtils";
 import { CheckBox } from 'react-native-elements';
 import RadioButtonComp from "../Components/RadioComp";
@@ -37,14 +37,45 @@ export default class SignUp extends Component {
     isSelectedRB2: false,
     shouldShow: false,
     signupLoading: false,
-    isChecked: false
+    isChecked: false,
+    displayLogo: true
   }
+
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        this._keyboardDidShow.bind(this),
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        this._keyboardDidHide.bind(this),
+    );
+}
+
+componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+}
+
+_keyboardDidShow(event) {
+    this.setState({
+      displayLogo: false
+    })
+}
+
+_keyboardDidHide() {
+    this.setState({
+      displayLogo: true
+    })
+}
+
   render() {
     return (
+      
       <SafeAreaView style={styles.container}>
-        <View style={styles.container}>
-          <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-            <View style={styles.logocontainer}>
+     
+     <ScrollView  keyboardShouldPersistTaps="always">
+            <View style={[styles.logocontainer, {display: this.state.displayLogo ? "flex" : "none"}]}>
               <Image style={styles.image} source={require('../../assets/icon_logo.png')}></Image>
             </View>
             <View style={styles.innerview}>
@@ -151,9 +182,10 @@ export default class SignUp extends Component {
                 textstyle={{ color: mycolor.white }} />
 
             </View>
-          </ScrollView>
-        </View>
+        
+            </ScrollView>
       </SafeAreaView>
+    
     );
   }
 

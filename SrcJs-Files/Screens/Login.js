@@ -9,7 +9,7 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-  Keyboard, Dimensions
+  Keyboard, Dimensions, ScrollView
 } from "react-native";
 import { CheckBox } from 'react-native-elements';
 import NetworkUtils from "../Constants/NetworkUtils";
@@ -37,10 +37,10 @@ export default class Login extends Component {
 
   render() {
     return (
+      <ScrollView contentContainerStyle={styles.container} style={{flex:1}}>
       <View style={styles.container}>
         <Image style={styles.image} source={require("../../assets/icon_logo.png")} />
         <StatusBar style="auto" />
-
         <View style={styles.innerview}>
           <TextInputComp
             placeholder={Trans.translate("IDCard")}
@@ -102,6 +102,7 @@ export default class Login extends Component {
           </View>
         </View>
       </View>
+      </ScrollView>
     );
   }
 

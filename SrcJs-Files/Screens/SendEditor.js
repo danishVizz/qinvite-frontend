@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, StatusBar, Dimensions, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, StatusBar, Dimensions, Alert, Keyboard } from 'react-native';
 import { ScrollView, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -94,6 +94,9 @@ export default class SendEditor extends Component {
                 placeholderTextColor={mycolor.lightgray}
                 textinstyle={{ width: "100%" }}
                 value={this.state.message}
+                returnKeyType='done'
+                
+                OnsubmitEditing={Keyboard.dismiss}
                 onChangeText={(message) => this.setState({ message: message, eventnameError: false })}
               />
               {this.state.eventnameError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.eventNameErrortxt}</Text> : <View></View>}
@@ -122,7 +125,7 @@ export default class SendEditor extends Component {
                 <Text style={{ fontSize: 14, marginLeft: 7, color: mycolor.txtGray }}>{Trans.translate("send_to_all")}</Text>
               </View>
 
-              <View style={{ width: '100%', marginTop: 30, marginBottom: 10 }}>
+              <View style={{ width: '100%', marginTop: 30, marginBottom: 10,paddingBottom:'5%'}}>
                 <ButtonComp textstyle={{ color: 'white' }} text={Trans.translate('Preview')}
                   // onPress={() => this.props.navigation.navigate('Packages')}
                   onPress={() => this.CreateEvent()}

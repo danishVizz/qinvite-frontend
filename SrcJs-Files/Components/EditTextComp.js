@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import {StyleSheet,View, Image, TextInput,Text} from 'react-native';
+import {StyleSheet,View, Image, TextInput,Text, Keyboard} from 'react-native';
 import mycolor from "../Constants/Colors";
 export default class EditTextComp extends Component {
   state = {
@@ -25,6 +25,8 @@ export default class EditTextComp extends Component {
           value = {this.props.value}
           onFocus={() => this.onFocus()}
           selectionColor={mycolor.pink}
+          returnKeyType='done'
+          OnsubmitEditing={Keyboard.dismiss}
           onChangeText={this.props.onChangeText}
           editable={(this.props.isEnable === undefined || this.props.isEnable === true) ? true : false}
           secureTextEntry={this.props.isSecureTextEntry} />

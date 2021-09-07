@@ -140,7 +140,7 @@ export default class CreateEvent extends Component {
             }
 
             {this.state.eventAddressError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.selectedvaluesErrortxt}</Text> : <View></View>}
-            <View style={{ width: '100%', marginTop: 30, marginBottom: 30 }}>
+            <View style={{ width: '100%', marginTop: 30, paddingBottom: '55%' }}>
               <ButtonComp textstyle={{ color: 'white' }} text={this.state.buttontxt}
                 isloading={this.state.isLoading}
                 textcolor={mycolor.white}
@@ -150,7 +150,6 @@ export default class CreateEvent extends Component {
             </View>
           </View>
         </ScrollView>
-        <SafeAreaView></SafeAreaView>
       </View>
 
     );

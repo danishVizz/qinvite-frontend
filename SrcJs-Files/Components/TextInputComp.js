@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   TextInput: {
     width: '80%',
     paddingLeft: 20,
+    height: 60,
     // fontFamily: "NotoSansKR-Regular",
     alignItems: 'center',
     justifyContent: 'center',

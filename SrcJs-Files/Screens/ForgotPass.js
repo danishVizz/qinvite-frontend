@@ -7,6 +7,7 @@ import {
     Text,
     View,
     Image,
+    Keyboard,
     Alert,
 } from "react-native";
 import { ScrollView, TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -54,6 +55,8 @@ export default class ForgotPass extends Component {
                                 placeholder={Trans.translate('Phonenumber')}
                                 leftIcon={require('../../assets/icon_phone2x.png')}
                                 placeholderTextColor={mycolor.lightgray}
+                                OnsubmitEditing={Keyboard.dismiss}
+                                returnKeyType='done'
                                 onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
                             />
                             {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}

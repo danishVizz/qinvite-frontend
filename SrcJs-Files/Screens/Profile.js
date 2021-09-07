@@ -73,10 +73,12 @@ export default class Profile extends Component {
                             <Text style={{ alignItems: 'center', marginLeft: 10, fontSize: 14, color: mycolor.pink }}>{Trans.translate('DeleteAcc')}</Text>
 
                         </TouchableOpacity>
+                        <View style={{paddingBottom:'55%'}}>
                         <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center' }} onPress={() => this.logout()}>
                             <Image style={{ height: 17, width: 15 }} resizeMode='contain' source={require('../../assets/logout.png')}></Image>
                             <Text style={{ alignItems: 'center', marginLeft: 10, fontSize: 14, color: mycolor.pink }}>{Trans.translate('logout')}</Text>
                         </TouchableOpacity>
+                        </View>
 
                     </View>
                 </ScrollView>
