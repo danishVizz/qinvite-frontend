@@ -5,26 +5,26 @@ import mycolor from "../Constants/Colors";
 export default class HeaderComp2 extends Component {
   render() {
     return (
-    
+
       <View style={[styles.containerView, this.props.headerStyle,]}>
         <TouchableOpacity style={{ flex: 1, justifyContent: 'center', paddingLeft: 10 }} onPress={this.props.leftBtnClicked}>
           <Image style={{ width: 30, height: 30, left: this.props.fromleft, tintColor: this.props.lefttintColor }} source={this.props.leftBtn}></Image>
         </TouchableOpacity>
-       
-        <View style={{flex: 6}}>
-          <View style={{justifyContent: 'center' ,alignSelf:this.props.selfalign,paddingLeft:10}}>
-          <TouchableOpacity  onPress={this.props.titleclick}>
-            <Text style={{ fontSize: this.props.textsize, fontWeight: this.props.textfonts, color: this.props.titleColor || mycolor.white, textAlign: this.props.titlepos }}>{this.props.title}</Text>
-          </TouchableOpacity>
+
+        <View style={{ flex: 6 }}>
+          <View style={{ justifyContent: 'center', alignSelf: this.props.selfalign, paddingLeft: 10 }}>
+            <TouchableOpacity onPress={this.props.titleclick}>
+              <Text style={{ fontSize: this.props.textsize, fontWeight: this.props.textfonts, color: this.props.titleColor || mycolor.white, textAlign: this.props.titlepos }}>{this.props.title}</Text>
+            </TouchableOpacity>
           </View>
-         
+
         </View >
-        <View style={{flex: 1}}>
-      
-        <TouchableOpacity style={{justifyContent: 'center', paddingRight: 10}} onPress={this.props.rightBtnClicked}>
-        <Text style={{ fontSize: this.props.textsize, fontWeight: this.props.righttextfonts, color: this.props.titleColor || mycolor.white, textAlign: 'right' }}>{this.props.righttitle}</Text>
+        <View style={{ flex: 1 }}>
+
+          <TouchableOpacity style={{ justifyContent: 'center', paddingRight: 10 }} onPress={this.props.rightBtnClicked}>
+            <Text style={{ fontSize: this.props.textsize, fontWeight: this.props.righttextfonts, color: this.props.titleColor || mycolor.white, textAlign: 'right' }}>{this.props.righttitle}</Text>
           </TouchableOpacity>
-          </View>
+        </View>
       </View>
 
     );

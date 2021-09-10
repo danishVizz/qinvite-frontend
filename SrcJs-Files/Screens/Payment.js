@@ -117,14 +117,16 @@ export class Payment extends Component {
     }
 
     handleMessage(message) {
+        console.log("I am in Handle Message")
         if (message.toLowerCase() == "transaction successful")
             this.setState({ showAlert: true })
         else {
-            Alert("Payment Failed Please Try again")
+            Alert.alert("Payment Failed Please Try again")
         }
     }
 
     onpaymentsuccess() {
+        console.log("I am in Payment Success")
         this.setState({ showAlert: false })
         if (this.props.route.params.Type == "upgrade") {
             this.upgradePackage()
@@ -140,6 +142,7 @@ export class Payment extends Component {
     }
 
     alertView() {
+        console.log("i am in alertview")
         return (
             <View style={{ width: '100%' }}>
                 <Text style={{ fontSize: 28, marginTop: 5, textAlign: 'center', fontWeight: 'bold', color: mycolor.darkgray }}>{Trans.translate("Paymentsuccess")}</Text>

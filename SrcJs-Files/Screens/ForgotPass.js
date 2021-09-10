@@ -21,7 +21,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComp2 from "../Components/HeaderComp2";
 import { KeyboardAvoidingView } from "react-native";
 import NetworkUtils from "../Constants/NetworkUtils";
-
+import PhoneInput from 'react-native-phone-number-input';
 export default class ForgotPass extends Component {
 
     state = {
@@ -50,16 +50,27 @@ export default class ForgotPass extends Component {
 
                         <View style={styles.innerview}>
 
+                            <PhoneInput
+                                defaultValue={this.state.phonenumber}
+                                defaultCode="QA"
+                                layout="first"
+                                containerStyle={styles.phoneContainer}
+                                textContainerStyle={styles.textInput}
+                                onChangeFormattedText={text => {
+                                    this.setState({ phonenumber: text, phoneError: false }, () => console.log(this.state.phonenumber))
+                                }}
+                            />
+                            {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
 
-                            <TextInputComp
+                            {/* <TextInputComp
                                 placeholder={Trans.translate('Phonenumber')}
                                 leftIcon={require('../../assets/icon_phone2x.png')}
                                 placeholderTextColor={mycolor.lightgray}
                                 OnsubmitEditing={Keyboard.dismiss}
                                 returnKeyType='done'
                                 onChangeText={(phonenumber) => this.setState({ phonenumber: phonenumber, phoneError: false })}
-                            />
-                            {this.state.phoneError ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.phoneerrortxt}</Text> : <View></View>}
+                            /> */}
+
 
                             <View style={{ width: '100%' }}>
                                 <ButtonComp
@@ -100,10 +111,11 @@ export default class ForgotPass extends Component {
         }
         var formadata = new FormData()
         formadata.append("number", this.state.phonenumber)
+        console.log("params", formadata)
 
         const data = null
         this.logCallback('Forgot Pass Call Started', this.state.setLoading = true);
-        ApiCalls.getGenericCall("forget_password", "?number=" + this.state.phonenumber).then(data => {
+        ApiCalls.postApicall(formadata, "forget_password").then(data => {
             this.logCallback("Response came", this.state.setLoading = false);
             if (data.status == true) {
                 console.log("successdata " + JSON.stringify(data))
@@ -144,7 +156,26 @@ const styles = StyleSheet.create({
 
 
     },
+    phoneContainer: {
+        paddingLeft: 20,
+        height: 60,
+        borderRadius: 5,
+        borderColor: 'black',
 
+        borderWidth: 1,
+        // fontFamily: "NotoSansKR-Regular",
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: "center",
+        fontSize: 14,
+        includeFontPadding: false,
+    },
+
+    textInput: {
+        paddingVertical: 0,
+        height: 60,
+        backgroundColor: null
+    },
     image: {
         marginBottom: 10,
         marginTop: 40,
@@ -159,7 +190,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 30,
         marginLeft: 33, marginRight: 33
-    },
-
+    }
 
 });

@@ -15,7 +15,7 @@ import { CheckBox } from 'react-native-elements';
 import NetworkUtils from "../Constants/NetworkUtils";
 import TextInputComp from "../Components/TextInputComp";
 import ButtonComp from "../Components/ButtonComp";
-import Trans from "../Translation/translation"
+import Trans from "../Translation/translation";
 import ApiCalls from "../Services/ApiCalls";
 import Prefs from "../Prefs/Prefs";
 import Keys from "../Constants/keys";
@@ -37,71 +37,71 @@ export default class Login extends Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container} style={{flex:1}}>
-      <View style={styles.container}>
-        <Image style={styles.image} source={require("../../assets/icon_logo.png")} />
-        <StatusBar style="auto" />
-        <View style={styles.innerview}>
-          <TextInputComp
-            placeholder={Trans.translate("IDCard")}
-            leftIcon={require('../../assets/icon_user.png')}
-            placeholderTextColor={mycolor.lightgray}
-            empty={this.state.emailEmpty}
-            value={this.state.emailtxt}
-            returnKeyType='done'
-            onChangeText={(email) => this.setState({ emailtxt: email, emailEmpty: false })}
-            OnsubmitEditing={Keyboard.dismiss}
-          />
-          {this.state.emailEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.Emailerrortxt}</Text> : <View></View>}
-          <TextInputComp
-            placeholder={Trans.translate("Password")}
-            marginTop='20'
-            empty={this.state.passEmpty}
-            value={this.state.passwordtxt}
-            leftIcon={require('../../assets/icon_pass.png')}
-            placeholderTextColor={mycolor.lightgray}
-            rightIcon={require('../../assets/icon_visiblity.png')}
-            onPressEyeBtn={() => this.setState({ isSecureTextEntry: !(this.state.isSecureTextEntry) })}
-            isSecureTextEntry={this.state.isSecureTextEntry}
-            returnKeyType='done'
-            onChangeText={(pass) => this.setState({ passwordtxt: pass, passEmpty: false })}
-            OnsubmitEditing={Keyboard.dismiss}
-          />
-          {this.state.passEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
+      <ScrollView contentContainerStyle={styles.container} style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <Image style={styles.image} source={require("../../assets/icon_logo.png")} />
+          <StatusBar style="auto" />
+          <View style={styles.innerview}>
+            <TextInputComp
+              placeholder={Trans.translate("IDCard")}
+              leftIcon={require('../../assets/icon_user.png')}
+              placeholderTextColor={mycolor.lightgray}
+              empty={this.state.emailEmpty}
+              value={this.state.emailtxt}
+              returnKeyType='done'
+              onChangeText={(email) => this.setState({ emailtxt: email, emailEmpty: false })}
+              OnsubmitEditing={Keyboard.dismiss}
+            />
+            {this.state.emailEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.Emailerrortxt}</Text> : <View></View>}
+            <TextInputComp
+              placeholder={Trans.translate("Password")}
+              marginTop='20'
+              empty={this.state.passEmpty}
+              value={this.state.passwordtxt}
+              leftIcon={require('../../assets/icon_pass.png')}
+              placeholderTextColor={mycolor.lightgray}
+              rightIcon={require('../../assets/icon_visiblity.png')}
+              onPressEyeBtn={() => this.setState({ isSecureTextEntry: !(this.state.isSecureTextEntry) })}
+              isSecureTextEntry={this.state.isSecureTextEntry}
+              returnKeyType='done'
+              onChangeText={(pass) => this.setState({ passwordtxt: pass, passEmpty: false })}
+              OnsubmitEditing={Keyboard.dismiss}
+            />
+            {this.state.passEmpty ? <Text style={{ fontSize: 12, marginTop: 10, color: "red" }}>{this.state.passworderrortxt}</Text> : <View></View>}
 
-          <View style={{ flexDirection: 'row', width: WIDTH, paddingHorizontal: 33, marginTop: 15, alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <CheckBox
-                containerStyle={{ marginLeft: 0, paddingLeft: 0, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, marginRight: 0 }}
-                checked={this.state.rememberMe}
-                checkedIcon={<Image source={require('../../assets/icon_checked.png')} style={{ height: 20, width: 20 }} />}
-                uncheckedIcon={<Image source={require('../../assets/uncheckbox.png')} style={{ height: 20, width: 20, borderColor: mycolor.lightgray, borderWidth: 1 }} />}
-                onPress={() => this.onPressCheckbox()}
-              ></CheckBox>
-              <Text style={{ color: '#707070', marginTop: 0, paddingTop: 0 }}>{Trans.translate('remember_me')}</Text>
+            <View style={{ flexDirection: 'row', width: WIDTH, paddingHorizontal: 33, marginTop: 15, alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <CheckBox
+                  containerStyle={{ marginLeft: 0, paddingLeft: 0, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, marginRight: 0 }}
+                  checked={this.state.rememberMe}
+                  checkedIcon={<Image source={require('../../assets/icon_checked.png')} style={{ height: 20, width: 20 }} />}
+                  uncheckedIcon={<Image source={require('../../assets/uncheckbox.png')} style={{ height: 20, width: 20, borderColor: mycolor.lightgray, borderWidth: 1 }} />}
+                  onPress={() => this.onPressCheckbox()}
+                ></CheckBox>
+                <Text style={{ color: '#707070', marginTop: 0, paddingTop: 0 }}>{Trans.translate('remember_me')}</Text>
+              </View>
+              <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => this.props.navigation.navigate('ForgotPass')}>
+                <Text style={{ color: '#707070' }}>{Trans.translate('Forgotpass')}</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => this.props.navigation.navigate('ForgotPass')}>
-              <Text style={{ color: '#707070' }}>{Trans.translate('Forgotpass')}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ minWidth: "100%" }}>
-            <ButtonComp
-              onPress={() => this.onLoginPress()}
-              text={Trans.translate("Login")}
-              isloading={this.state.setLoginLoading}
-              style={{ backgroundColor: mycolor.pink, marginTop: 20, }}
-              textcolor={mycolor.white}
-              textstyle={{ color: mycolor.white }} />
+            <View style={{ minWidth: "100%" }}>
+              <ButtonComp
+                onPress={() => this.onLoginPress()}
+                text={Trans.translate("Login")}
+                isloading={this.state.setLoginLoading}
+                style={{ backgroundColor: mycolor.pink, marginTop: 20, }}
+                textcolor={mycolor.white}
+                textstyle={{ color: mycolor.white }} />
 
-            <ButtonComp
-              onPress={() => this.props.navigation.navigate('SignUpScreen')}
-              text={Trans.translate("SignUp")}
-              style={{ backgroundColor: mycolor.white, marginTop: 20 }}
-              textcolor={mycolor.darkgray}
-              textstyle={{ color: mycolor.pink }} />
+              <ButtonComp
+                onPress={() => this.props.navigation.navigate('SignUpScreen')}
+                text={Trans.translate("SignUp")}
+                style={{ backgroundColor: mycolor.white, marginTop: 20 }}
+                textcolor={mycolor.darkgray}
+                textstyle={{ color: mycolor.pink }} />
+            </View>
           </View>
         </View>
-      </View>
       </ScrollView>
     );
   }

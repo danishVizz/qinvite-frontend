@@ -5,6 +5,7 @@ import HeaderComp2 from '../Components/HeaderComp2';
 import StatusBarComp from '../Components/StatusBarComp';
 import ApiCalls from "../Services/ApiCalls";
 import NetworkUtils from "../Constants/NetworkUtils";
+import Translation from '../Translation/translation'
 
 export default class WeddingDetails extends Component {
 
@@ -67,7 +68,7 @@ export default class WeddingDetails extends Component {
                         <Text style={{ fontSize: 14, color: "#C9C9C9", marginTop: 3 }}>{"Contact Number"}</Text>
                     </View>
                 </View>
-                <Text style={{ marginTop: 70, fontSize: 14, fontWeight: '700', color: mycolor.darkgray }}>Participants</Text>
+                <Text style={{ marginTop: 70, fontSize: 14, fontWeight: '700', color: mycolor.darkgray }}>{Translation.translate('guest')}</Text>
             </View>
         );
     }

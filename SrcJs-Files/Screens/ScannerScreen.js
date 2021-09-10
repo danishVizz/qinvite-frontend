@@ -71,8 +71,8 @@ export default class ScannerScreen extends Component {
                 /> */}
                 <View style={{ flexDirection: 'row', height: 60, width: '100%', alignItems: 'center', paddingLeft: 20, paddingRight: 20, backgroundColor: mycolor.pink }}>
 
-                    <Text style={{ color: '#FFF', fontSize: 16 }}>{Trans.translate('event_ends_in')} </Text>
-                    <CountDown
+                    <Text style={{ color: '#FFF', fontSize: 16 }}>{Trans.translate('scan')} </Text>
+                    {/* <CountDown
                         size={10}
                         until={1000}
                         onFinish={() => alert('Finished')}
@@ -82,7 +82,7 @@ export default class ScannerScreen extends Component {
                         timeLabels={{ m: null, s: null }}
                         showSeparator
                         separatorStyle={{ color: '#FFF', margin: -20 }}
-                    />
+                    /> */}
                     <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => this.logout()}>
                         <Image style={{ width: 20, height: 20 }} source={require('../../assets/power-off.png')}></Image>
                     </TouchableOpacity>

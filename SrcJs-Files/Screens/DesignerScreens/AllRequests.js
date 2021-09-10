@@ -77,7 +77,7 @@ export default class AllRequests extends Component {
                             onPress={() => this.changeDesignerStatus('accept')}
                             textstyle={{ color: 'white' }}
                             text={Trans.translate("set_as_deadline")}></ButtonComp>
-                        <TouchableOpacity style={{alignSelf: 'center', padding: 15}} onPress={() => this.setState({ showDatePicker: false })}>
+                        <TouchableOpacity style={{ alignSelf: 'center', padding: 15 }} onPress={() => this.setState({ showDatePicker: false })}>
                             <Text>{Trans.translate("cancel")}</Text>
                         </TouchableOpacity>
                     </View>

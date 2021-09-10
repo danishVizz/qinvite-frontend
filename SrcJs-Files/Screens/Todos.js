@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Modal, Dimensions, TouchableOpacity,Image } from 'react-native';
+import { View, Text, StyleSheet, Modal, Dimensions, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import Keys from '../Constants/keys'
 import EventDetailsComp from '../Components/EventDetailsComp'
 import mycolor from '../Constants/Colors';
@@ -56,8 +56,9 @@ export default class Todos extends Component {
                         transparent={true}
                         visible={this.state.modalVisible}
                         onRequestClose={() => { this.setModalVisible(false) }}>
-                        <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('ChooseCategory')} textfonts={'normal'} textsize={16} titlepos="center" />
-
+                        <SafeAreaView>
+                            <HeaderComp2 textfonts={'bold'} fromleft={10} title={Trans.translate('ChooseCategory')} textfonts={'normal'} textsize={16} titlepos="center" leftBtn={require('../../assets/icon_back.png')} lefttintColor='white' leftBtnClicked={() => this.setModalVisible(false)} />
+                        </SafeAreaView>
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 <TouchableOpacity onPress={this.onSelection.bind(this, "whatsapp")}>
@@ -77,7 +78,7 @@ export default class Todos extends Component {
         );
     }
 
- 
+
 
     onSelection = (type) => {
         this.setState({ modalVisible: false })
