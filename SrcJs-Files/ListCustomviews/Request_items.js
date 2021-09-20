@@ -31,16 +31,15 @@ class Request_items extends Component {
                     </View>
                 </View>
 
-                <View style={{ display: this.props.showMenu == true ? 'flex' : 'none'}}>
+                {this.props.item.design_status == "0" && <View style={{ display: this.props.showMenu == true ? 'flex' : 'none' }}>
                     <OptionsMenu
-                    
                         button={require('../../assets/icon_option.png')}
                         buttonStyle={{ width: 32, height: 15, margin: 5, resizeMode: "contain", justifyContent: 'flex-end' }}
                         destructiveIndex={2}
                         options={[Trans.translate('accept'), Trans.translate('reject'), Trans.translate('cancel')]}
                         actions={[() => this.onPressButtonChildren("accept", this.props.item), () => this.onPressButtonChildren("reject", this.props.item), () => this.onPressButtonChildren("cancel", this.props.item)]} />
 
-                </View>
+                </View>}
 
             </View>
         );

@@ -9,6 +9,7 @@ import Trans from "../../Translation/translation";
 import Keys from "../../Constants/keys";
 import moment from 'moment';
 import StatusBarComp from '../../Components/StatusBarComp';
+import UploadMediaWeb from '../../Screens/DesignerScreens/UploadMediaWeb';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default class RequestDetails extends Component {
@@ -17,6 +18,7 @@ export default class RequestDetails extends Component {
     }
 
     render() {
+        console.log(this.props.route.params.detail.design_status)
         return (
             <View style={styles.container}>
                 <StatusBarComp backgroundColor={mycolor.pink} />
@@ -70,7 +72,7 @@ export default class RequestDetails extends Component {
                                 <ButtonComp text={Trans.translate('SubmitDesign')}
                                     textstyle={{ color: mycolor.white, fontWeight: 'bold' }}
                                     isloading={this.state.contentLoading}
-                                    onPress={() => this.props.navigation.navigate('UploadDesign', { event: this.props.route.params.detail, from: 'request_details' })}>
+                                    onPress={() => this.props.navigation.navigate('UploadMediaWeb', { event: this.props.route.params.detail, from: 'request_details' })}>
                                 </ButtonComp>
                             </View>
                         }

@@ -49,6 +49,7 @@ import CodeVerification from './SrcJs-Files/Screens/CodeVerification';
 import ChangePassword from './SrcJs-Files/Screens/ChangePassword';
 import UpgradePackage from './SrcJs-Files/Screens/UpgradePackage';
 import Global from './SrcJs-Files/Constants/Global';
+import UploadMediaWeb from './SrcJs-Files/Screens/DesignerScreens/UploadMediaWeb';
 import TermsConditions from './SrcJs-Files/Screens/TermsConditions';
 
 const RootStack = createStackNavigator();
@@ -60,7 +61,7 @@ function handleLocalizationChange() {
 export default class App extends Component {
   constructor(props) {
     super(props)
-    
+
     // Trans.setI18nConfig("ar");
     // RNLocalize.addEventListener("change", handleLocalizationChange());
     // RNLocalize.removeEventListener("change", handleLocalizationChange());
@@ -74,7 +75,7 @@ export default class App extends Component {
 
   render() {
     return this.state.language != null ? this.mainStack() : <View></View>
-      
+
   }
 
   mainStack() {
@@ -123,6 +124,7 @@ export default class App extends Component {
           <RootStack.Screen name="ReceivedDesign" component={ReceivedDesign} options={{ headerShown: false }} />
           <RootStack.Screen name="CategoryList" component={CategoryList} options={{ headerShown: false }} />
           <RootStack.Screen name="TermsConditions" component={TermsConditions} options={{ headerShown: false }} />
+          <RootStack.Screen name="UploadMediaWeb" component={UploadMediaWeb} options={{ headerShown: false }} />
         </RootStack.Navigator>
       </NavigationContainer>
     );

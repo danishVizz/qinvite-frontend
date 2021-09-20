@@ -94,7 +94,6 @@ export default class UploadDesign extends Component {
                             <Image style={{ height: 25, width: 25 }} source={require('../../../assets/icon_camera.png')}></Image>
                             <Progress.Bar borderColor='#FBEEF1' indeterminate={false} style={{ margin: 10, backgroundColor: '#FBEEF1' }} progress={this.state.progress} width={200} color={mycolor.pink} />
                         </View>
-
                         <ButtonComp style={{ marginTop: 30 }} textstyle={{ color: 'white', fontWeight: 'bold' }} text={Trans.translate('Send')}
                             onPress={() => this.checkConditions()}
                             isloading={this.state.isLoading}>
@@ -189,13 +188,13 @@ export default class UploadDesign extends Component {
             {
                 mediaType: mediaType, // 'photo', 'video
                 includeBase64: false,
+                quality:1
                 // maxHeight: WINDOW.height / 2,
                 // maxWidth: WINDOW.width - 20,
             },
             (responses) => {
                 this.requireddimensions(responses.uri)
                 if (responses.fileSize > 2000000) {
-                    // this.setState({ imageuri: '', progress: 0 })
                     Alert.alert(Trans.translate("alert"), Trans.translate('filesize'))
                 } else {
                     console.log("I AM IN MEDIA SUCCESS")

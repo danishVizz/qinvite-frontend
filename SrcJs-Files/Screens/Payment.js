@@ -117,7 +117,6 @@ export class Payment extends Component {
     }
 
     handleMessage(message) {
-        console.log("I am in Handle Message")
         if (message.toLowerCase() == "transaction successful")
             this.setState({ showAlert: true })
         else {

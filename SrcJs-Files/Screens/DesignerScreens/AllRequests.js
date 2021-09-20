@@ -124,9 +124,12 @@ export default class AllRequests extends Component {
         }
     }
     componentDidMount() {
-        console.log('Mounted');
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            console.log("Events Focused")
+            this.getAllEvents();
+        });
 
-        this.getAllEvents();
+
     }
 
     logCallback = (log, callback) => {
