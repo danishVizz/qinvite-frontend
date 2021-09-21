@@ -76,13 +76,13 @@ export default class ForgotPass extends Component {
         );
     }
     verifyCode() {
-        // var verificationdata = this.props.route.params.Forgotpassdata
-        // if (verificationdata.otp == this.state.code) {
-        //     this.props.navigation.navigate("ChangePassword", { "Forgotpassdata": verificationdata })
-        // }
-        // else {
-        //     this.notifyMessage("Please enter a valid otp sent to your phone number")
-        // }
+        var verificationdata = this.props.route.params.Forgotpassdata
+        if (verificationdata.otp == this.state.code) {
+            this.props.navigation.navigate("ChangePassword", { "Forgotpassdata": verificationdata })
+        }
+        else {
+            this.notifyMessage("Please enter a valid otp sent to your phone number")
+        }
     }
 
     notifyMessage(msg) {

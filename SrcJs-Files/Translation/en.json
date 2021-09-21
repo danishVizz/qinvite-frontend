@@ -1,9 +1,9 @@
 {
     "Login": "Login",
-    "IDCard": "ID Card, Phone number or email",
+    "IDCard": "ID Card, Phone number",
     "Password": "Password",
     "SignUp": "Sign up",
-    "Phonenumber": "Enter Phone number with country code",
+    "Phonenumber": "Enter Phone number",
     "Email": "Email",
     "CPass": "Confirm Password",
     "Eventname": "Event name",
@@ -195,6 +195,8 @@
     "whatsappinvitations": "WhatsApp Invitations",
     "pdfinvitations": "PDF Invitations",
     "requireddimens":"Please upload image of dimensions 1000*700.Media below these are not accepted",
-    "pdfcategoryhint":"Pdf of these categories will automatically generate after creation of event now you can select Electronic categories press ok to proceed"
+    "pdfcategoryhint":"Pdf of these categories will automatically generate after creation of event now you can select Electronic categories press ok to proceed",
+    "termsandcons":"Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy",
+      "termsandconshint":"By registerting, I agree to terms & conditions of Qinvite."
 
 }
