@@ -30,6 +30,14 @@ export default class ForgotPass extends Component {
         setLoading: false
     }
 
+    componentWillUnmount() {
+        this.setState({ phonenumber: '' })
+        // this._unsubscribe = this.props.navigation.addListener('focus', () => {
+        //     console.log("Events Focused")
+        //     this.setState({ phonenumber: '' })
+        // });
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
@@ -51,7 +59,7 @@ export default class ForgotPass extends Component {
                         <View style={styles.innerview}>
 
                             <PhoneInput
-                                defaultValue={this.state.phonenumber}
+                                value={this.state.phonenumber}
                                 defaultCode="QA"
                                 layout="first"
                                 containerStyle={styles.phoneContainer}

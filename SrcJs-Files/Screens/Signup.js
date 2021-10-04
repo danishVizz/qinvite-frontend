@@ -12,7 +12,8 @@ import {
   SafeAreaView,
   Alert,
   Keyboard,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from "react-native";
 import NetworkUtils from "../Constants/NetworkUtils";
 import { CheckBox } from 'react-native-elements';
@@ -139,6 +140,7 @@ export default class SignUp extends Component {
               placeholder={Trans.translate('IDCard')}
               leftIcon={require('../../assets/icon_user.png')}
               placeholderTextColor={mycolor.lightgray}
+              inputtype={'numeric'}
               onChangeText={(idcard) => this.setState({ idcardTxt: idcard, idcardError: false })}
               OnsubmitEditing={Keyboard.dismiss}
             />
@@ -186,9 +188,11 @@ export default class SignUp extends Component {
                 checked={this.state.isChecked}
                 checkedIcon={<Image source={require('../../assets/icon_checked.png')} style={{ height: 20, width: 20 }} />}
                 uncheckedIcon={<Image source={require('../../assets/uncheckbox.png')} style={{ height: 20, width: 20, borderColor: mycolor.lightgray, borderWidth: 1 }} />}
-                onPress={() => this.onPressCheckbox()}
+                onPress={() => this.setState({ isChecked: !(this.state.isChecked) })}
               ></CheckBox>
-              <Text style={{ flex: 1, fontSize: 12, color: mycolor.lightgray, includeFontPadding: false }}>{'By registerting, I agree to terms & conditions of Qinvite.'}</Text>
+              <TouchableOpacity style={{ flex: 1, fontSize: 12, color: mycolor.lightgray, includeFontPadding: false }} onPress={() => this.onPressCheckbox()}>
+                <Text style={{ marginTop: 15 }}>{'By registerting, I agree to terms & conditions of Qinvite.'}</Text>
+              </TouchableOpacity>
             </View>
 
             <ButtonComp
@@ -249,7 +253,7 @@ export default class SignUp extends Component {
   }
 
   onPressCheckbox() {
-    this.setState({ isChecked: !(this.state.isChecked) })
+    // this.setState({ isChecked: !(this.state.isChecked) })
     !this.state.isChecked && this.props.navigation.navigate('TermsConditions')
   }
 
@@ -261,7 +265,8 @@ export default class SignUp extends Component {
     }
 
     if (!this.state.isChecked) {
-      Alert.alert('T&C', 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')
+      // Alert.alert('T&C', 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')
+      Alert.alert('T&C', Trans.translate('termsandcons'))
       return
     }
     var check = this.checkforError()

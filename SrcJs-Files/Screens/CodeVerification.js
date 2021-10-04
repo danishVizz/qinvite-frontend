@@ -43,7 +43,7 @@ export default class ForgotPass extends Component {
                     <StatusBar style="auto" />
 
                     <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, fontSize: 25, fontWeight: 'bold' }}>{Trans.translate('Verifyphone')}</Text>
-                    <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, marginLeft: 50, marginRight: 50, fontSize: 15 }}>{Trans.translate('Verificationhint')+this.props.route.params.Forgotpassdata.phone}</Text>
+                    <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, marginLeft: 50, marginRight: 50, fontSize: 15 }}>{Trans.translate('Verificationhint') + this.props.route.params.Forgotpassdata.phone}</Text>
 
                     <View style={styles.innerview}>
 
@@ -52,10 +52,10 @@ export default class ForgotPass extends Component {
                             // ref={this.pinInput}
                             value={this.state.code}
                             // codeLength={4}
-                            onTextChange={code => this.setState({code: code})}
+                            onTextChange={code => this.setState({ code: code })}
                             // onFulfill={this._checkCode}
                             onBackspace={this._focusePrevInput}
-                            // onBackspace={Keyboard.dismiss()}
+                        // onBackspace={Keyboard.dismiss()}
                         />
 
                         <View style={{ width: '100%' }}>
@@ -76,13 +76,13 @@ export default class ForgotPass extends Component {
         );
     }
     verifyCode() {
-        // var verificationdata = this.props.route.params.Forgotpassdata
-        // if (verificationdata.otp == this.state.code) {
-        //     this.props.navigation.navigate("ChangePassword", { "Forgotpassdata": verificationdata })
-        // }
-        // else {
-        //     this.notifyMessage("Please enter a valid otp sent to your phone number")
-        // }
+        var verificationdata = this.props.route.params.Forgotpassdata
+        if (verificationdata.otp == this.state.code) {
+            this.props.navigation.navigate("ChangePassword", { "Forgotpassdata": verificationdata })
+        }
+        else {
+            this.notifyMessage("Please enter a valid otp sent to your phone number")
+        }
     }
 
     notifyMessage(msg) {

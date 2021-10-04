@@ -47,7 +47,7 @@ export default class ChangePassword extends Component {
                         <StatusBar style="auto" />
 
                         <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, fontSize: 25, fontWeight: 'bold' }}>{Trans.translate('NewPass')}</Text>
-                        <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, marginLeft: 50, marginRight: 50, fontSize: 15 }}>{Trans.translate('Newpasshint')}</Text>
+                        {/* <Text style={{ color: "#474645", textAlign: 'center', alignSelf: 'center', marginTop: 10, marginLeft: 50, marginRight: 50, fontSize: 15 }}>{Trans.translate('Newpasshint')}</Text> */}
 
                         <View style={styles.innerview}>
 
